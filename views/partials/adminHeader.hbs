@@ -1,0 +1,102 @@
+<link rel="stylesheet" href="/stylesheets/w3.css">
+<section class="w3-light-grey">
+
+    <!-- Top container -->
+    <div class="w3-bar w3-top w3-black w3-large" style="z-index:4;position: fixed;">
+        <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey"
+            onclick="w3_open();"><i class="fa fa-bars"></i> Menu</button>
+        <span class="w3-bar-item w3-right">ADMIN PANEL</span>
+    </div>
+
+    <!-- Sidebar/menu -->
+    <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+        <div class="w3-container w3-row">
+            <div class="w3-col s4">
+                <img src="/images/admins/{{admin.username}}.jpg" class="w3-circle w3-margin-right" style="width:46px" alt="pro">
+            </div>
+            <div class="w3-col s8 w3-bar">
+                <span>Welcome, <strong>{{admin.name}}</strong></span><br>
+                <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
+                <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+                <a href="/admin/logout" class="w3-bar-item w3-button"><i class="fa fa-sign-out"></i></a>
+            </div>
+        </div>
+        <hr>
+        <div class="container">
+            <div id=alert></div>
+            {{#if error}}
+            <div class="m-0 alert alert-danger text-box text-center">{{error}}</div>
+            {{/if}}
+            {{#if success_msg}}
+            <div class="m-0 alert alert-success text-box text-center">{{success_msg}}</div>
+            {{/if}}
+            {{#if error_msg}}
+            <div class="m-0 alert alert-danger text-box text-center">{{error_msg}}</div>
+            {{/if}}
+        </div>
+        <div class="w3-container">
+            <h3>Dashboard</h3>
+        </div>
+        <a href="/admin" class="w3-bar-item w3-button w3-padding"><i class="fa fa-home fa-fw"></i> Home</a>
+        {{#if admin.registration}}
+        <div class="w3-bar-block">
+            <div class="w3-container">
+                <h6>Registration</h6>
+            </div>
+            <a href="/admin/registration" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i> New
+                Registration</a>
+            <a href="/admin/viewapplications" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>
+                Views Applications</a>
+            <a href="/admin/pendingapplications" class="w3-bar-item w3-button w3-padding"><i class="fa fa-clock fa-fw"></i> Pending
+                Applications</a>
+            <a href="/admin/verifiedapplicatons" class="w3-bar-item w3-button w3-padding"><i class="fa fa-check fa-fw"></i> Verified
+                Applications</a>
+            <a href="/admin/emailverificationpending" class="w3-bar-item w3-button w3-padding"><i class="fa fa-clock fa-fw"></i> Email Verification
+                Pending</a>
+        </div>
+        {{/if}}
+        {{#if admin.itquiz}}
+        <div class="w3-bar-block">
+            <div class="w3-container">
+                <h6>IT Quiz</h6>
+            </div>
+            <a href="/admin/viewparticipants/itquiz" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i> View Participants</a>
+            <a href="/admin//additquizquestions" class="w3-bar-item w3-button w3-padding"><i class="fa fa-plus fa-fw"></i>
+                Add Questions</a>
+            <a href="/admin/viewquestions" class="w3-bar-item w3-button w3-padding"><i class="fa fa-question fa-fw"></i> View
+                Questions</a>
+            <a href="/admin/verifiedapplicatons" class="w3-bar-item w3-button w3-padding"><i class="fa fa-check fa-fw"></i> Verified
+                Applications</a>
+            <a href="/admin/emailverificationpending" class="w3-bar-item w3-button w3-padding"><i class="fa fa-clock fa-fw"></i> Email Verification
+                Pending</a>
+        </div>
+        {{/if}}
+    </nav>
+    <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer"
+        title="close side menu" id="myOverlay"></div>
+</section>
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+    <script>
+        // Get the Sidebar
+        var mySidebar = document.getElementById("mySidebar");
+
+        // Get the DIV with overlay effect
+        var overlayBg = document.getElementById("myOverlay");
+
+        // Toggle between showing and hiding the sidebar, and add overlay effect
+        function w3_open() {
+            if (mySidebar.style.display === 'block') {
+                mySidebar.style.display = 'none';
+                overlayBg.style.display = "none";
+            } else {
+                mySidebar.style.display = 'block';
+                overlayBg.style.display = "block";
+            }
+        }
+
+        // Close the sidebar with the close button
+        function w3_close() {
+            mySidebar.style.display = "none";
+            overlayBg.style.display = "none";
+        }
+    </script>

@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="/stylesheets/login.css">
+<section class="login-box">
+    <h1>Log in</h1>
+    {{#if error}}
+    <div class="m-0 alert alert-danger text-box text-center">{{error}}</div>
+    {{/if}}
+    {{#if success_msg}}
+    <div class="m-0 alert alert-success text-box text-center">{{success_msg}}</div>
+    {{/if}}
+    {{#if error_msg}}
+    <div class="m-0 alert alert-danger text-box text-center">{{error_msg}}</div>
+    {{/if}}
+    <form action="/login" method="POST">
+        <div class="text-box">
+            <i class="fas fa-user"></i>
+            <input type="email" id="email" name="username" value="" placeholder="Email">
+        </div>
+        <div class="text-box">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" name="password" placeholder="Password">
+        </div>
+        <a href="/registration" class="btn text-light p-0">New Registration</a>
+        <a href="/forgotpassword" class="text-light p-0 btn float-end">Forgot Password?</a>
+        <button class="btn1 btn btn-dark">Log In</button>
+    </form>
+</section>

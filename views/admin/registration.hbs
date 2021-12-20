@@ -1,0 +1,20 @@
+<h1>User Registration</h1>
+<form action="/admin/registration" method="POST">
+    <label>name</label>
+    <br>
+    <input type="text" id="name" name="name">
+    <br>
+    <label>email</label>
+    <br>
+    <input type="text" id="username" name="username">
+    <br>
+    <label for="password">password</label>
+    <br>
+    <input type="password" id="password" name="password">
+    {{!-- <input type="radio" name="payment" value="online">online</input> --}}
+    <input type="radio" name="payment" value="college" hidden></input>
+    <br>
+    <br>
+    <input value="user" name="type" hidden>
+    <input type="submit" value="Submit">
+</form>
