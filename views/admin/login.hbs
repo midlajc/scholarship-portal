@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="/stylesheets/login.css">
+<section class="login-box">
+    <h1>Login</h1>
+    {{#if error}}
+    <div class="m-0 alert alert-dark text-box text-center">{{error}}</div>
+    {{/if}}
+    <form action="/admin/login" method="POST">
+        <div class="text-box">
+            <i class="fas fa-user"></i>
+            <input type="text" id="username" name="username" placeholder="Username">
+        </div>
+        <div class="text-box">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" name="password" placeholder="Password">
+        </div>
+        <button class="btn1 btn btn-info">Sing In</button>
+    </form>
+</section>

@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="/stylesheets/user/scholarship.css">
+<div class="box">
+    <div class="w3-border-bottom">
+        <h5>LIST OF SCHEMES YOU ARE ELIGIBLE TO APPLY</h5>
+    </div>
+    {{#each scholarships}}
+    <div class="scholarships">
+        <div class="card">
+            <div class="cardpart">
+                <div class="scholarshipname">
+                    <div class="namebox">
+                        <h4>
+                            {{this.scholarshipName}}
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <div class="cardpart">
+                <div class="button">
+                    <button class="btn w3-teal" onclick="applyForScholarship({{this.ID}})" id="apply">Apply for
+                        Scholarship</button>
+                </div>
+            </div>
+            <div class="cardpart">
+                <div class="button">
+                    <button class="btn w3-red" onclick="printApplication({{this.ID}})" id="print">Print Application</button>
+                </div>
+            </div>
+            <div class="cardpart">
+                <div class="button">
+                    <button class="btn w3-blue" onclick="applicationStatus({{this.ID}})" id="status">Application Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>
+<script src="/js/scholaship.js"></script>

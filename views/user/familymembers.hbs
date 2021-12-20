@@ -1,0 +1,137 @@
+<style>
+    label {
+        margin: .3rem 0;
+        margin-top: .6rem;
+        font-size: small;
+    }
+</style>
+<div class="box">
+    <div class="mb-5">
+        <button class="btn w3-green float-end" onclick="addMember()">
+            <i class="fas fa-plus"></i>
+            Add Member</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Relation</th>
+                    <th>Occupation</th>
+                    <th>Organisation/institution</th>
+                    <th>Mobile</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each falimyMembers}}
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td>{{this.relation}}</td>
+                    <td>{{this.occupation}}</td>
+                    <td>{{this.organisation}}</td>
+                    <td>{{this.mobile}}</td>
+                    <td><button class="btn w3-red" onclick="deleteMember('{{this._id}}')"><i
+                                class="fas fa-trash"></i></button></td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let deleteMember = (id) => {
+        swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true,
+            preConfirm: () => {
+                $.ajax({
+                    url: '/deletemember',
+                    method: 'post',
+                    data: {
+                        id: id
+                    },
+                    success: (response) => {
+                        location.reload()
+                    }
+                })
+            }
+        })
+    }
+    let addMember = () => {
+        Swal.fire({
+            title: 'Add New Member',
+            html: `
+            <div class="row m-1 font-weight-light">
+    <div class="col-lg-6">
+        <label class="fw-bold text-left">Name
+            <span class="text-danger">*</span>
+        </label>
+        <div class="form-group">
+            <input class="form-control" type="text" name="name" id="name" required>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <label class="fw-bold text-left">Relation
+            <span class="text-danger">*</span>
+        </label>
+        <div class="form-group">
+            <input class="form-control" type="text" name="relation" id="relation" required>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <label class="fw-bold text-left">Occupation
+            <span class="text-danger">*</span>
+        </label>
+        <div class="form-group">
+            <input class="form-control" type="text" name="occupation" id="occupation" required>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <label class="fw-bold text-left">Organisation/institution
+            <span class="text-danger"></span>
+        </label>
+        <div class="form-group">
+            <input class="form-control" type="text" name="organisation" id="organisation">
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <label class="fw-bold text-left">Mobile
+            <span class="text-danger"></span>
+        </label>
+        <div class="form-group">
+            <input class="form-control" type="number" name="mobile" id="mobile">
+        </div>
+    </div>
+</div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Add',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                let data = {
+                    name: $('#name').val(),
+                    relation: $('#relation').val(),
+                    occupation: $('#occupation').val(),
+                    organisation: $('#organisation').val(),
+                    mobile: $('#mobile').val(),
+                }
+                $.ajax({
+                    url: '/addfamilymember',
+                    data: data,
+                    method: 'post',
+                    success: (response => {
+                        location.reload()
+                    })
+                })
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        })
+    }
+</script>

@@ -1,0 +1,19 @@
+body{
+    background-color: rgb(228, 228, 228);
+}
+.box{
+    margin: 2rem;
+    width: calc(100% - 4rem);
+    padding: 1rem;
+    position: relative;
+    background-color: white;
+    border: 1px rgb(199, 199, 199) solid;
+    border-radius: .3rem;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+@media (min-width: 993px) {
+    .box{
+        margin-left:20rem;
+        width:calc(100% - 22rem)
+    }   
+}

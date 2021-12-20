@@ -1,0 +1,75 @@
+.scholarships{
+    width: 100%;
+}
+
+.scholarships .card{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 2rem 0;
+    padding: 0;
+}
+
+.card .cardpart{
+    width: calc(100% / 4);
+}
+
+.scholarshipname{
+    padding: 5%;
+    width: 100%;
+    height: 9rem;
+    border-right: .1rem rgb(218, 218, 218) solid;
+}
+
+.scholarshipname .namebox{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    text-align: center;
+    background-color: #607D8B;
+    width: 95%;
+    height: 95%;
+    color: white;
+    padding: 1rem;
+    border-radius: .1rem;
+}
+
+h4{
+    font-size: 1rem;
+    width: 100%;
+    margin: 0;
+}
+
+.button{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: center;
+    height: 9rem;
+}
+
+@media (max-width: 992px) {
+    .card .cardpart{
+        width: 100%;
+    }   
+    .button{
+        height: auto;
+        padding-top: 0;
+        padding: .3rem;
+    }
+    button{
+        display: block;
+        width: 95%;
+        border: none;
+    }
+    .scholarshipname{
+        border-right:none;
+        padding: 3% .3rem;
+    }
+    
+    .scholarshipname .namebox{
+        background-color: #607D8B;
+        width: 100%;
+    }
+}

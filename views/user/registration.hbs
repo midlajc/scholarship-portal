@@ -1,0 +1,167 @@
+<link rel="stylesheet" href="/stylesheets/form.css">
+<link rel="stylesheet" href="/stylesheets/registration.css">
+<script src="https://www.google.com/recaptcha/api.js">
+
+</script>
+
+
+<div class="registration-from">
+    <form id="form" class="row form" action="/registration" method="post">
+        <div class="modal-content col-md-8 " style="border-radius: 1rem;">
+            <div id="alert" class=""></div>
+            {{#if success_msg}}
+            <script>
+                swal.fire("", success_msg, "info")
+            </script>
+            {{/if}}
+            {{#if error_msg}}
+            <script>
+                swal.fire("", error_msg, "error")
+            </script>
+            {{/if}}
+            <div class="modal-">
+                <h4 class="modal-title fw-bold" style="padding-top: 1rem;" id="">Fresh Registration
+                    <div class="pull-right">
+                        <a class="btn btn-primary btn-sm" href="./" role="button">Log in</a>
+                    </div>
+                </h4>
+            </div>
+            <div class="modal-body p-0 pt-4">
+                <div class="panel" style="display: block;">
+                    <div class="mt">
+                        <div class="row">
+                            <div class="col-lg-6 col-xs-12" tooltip="Name" ng-reflect-content="Name">
+                                <label class="fw-bold">Name of Student
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-group">
+                                    <input class="form-control ng-untouched ng-pristine ng-valid" name="name"
+                                        placeholder="Name" style="text-transform: uppercase" type="text"
+                                        autocapitalize="on" ng-reflect-name="name" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-xs-12" tooltip="Name" ng-reflect-content="Name">
+                                <label class="fw-bold">Email
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-group">
+                                    <input class="form-control ng-untouched ng-pristine ng-valid" name="email"
+                                        placeholder="Email" type="email" ng-reflect-name="email" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-xs-12">
+                                <label class="fw-bold">Date Of Birth
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-group" tooltip="Date Of Birth" ng-reflect-content="Date Of Birth">
+                                    <input class="form-control ng-untouched ng-pristine ng-valid" required
+                                        name="dateOfBirth" placeholder="Date Of Birth" type="date"
+                                        ng-reflect-name="dateOfBirth">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-xs-12" tooltip="Course" ng-reflect-content="Course">
+                                <label class="fw-bold">Gender
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-group">
+                                    <select required class="form-control ng-untouched ng-pristine ng-valid"
+                                        data-style="btn-secondary" data-width="auto" name="gender"
+                                        ng-reflect-name="gender" id="gender">
+                                        <option disabled="true" selected value="">Select Gender
+                                        </option>
+                                        {{#each gender}}
+                                        <option value="{{this.ID}}">{{this.genderName}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-xs-12">
+                                <label class="fw-bold">Mobile
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-group" tooltip="mobile" ng-reflect-content="mobile">
+                                    <input class="form-control ng-untouched ng-pristine ng-valid" name="mobile"
+                                        placeholder="Mobile" type="number" ng-reflect-name="mobile" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-xs-12" tooltip="Course" ng-reflect-content="Course">
+                                <label class="fw-bold">Department
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-group">
+                                    <select required class="form-control ng-untouched ng-pristine ng-valid"
+                                        data-style="btn-secondary" data-width="auto" name=""
+                                        ng-reflect-name="department" id="department" onchange="getCourse()">
+                                        <option disabled="true" selected value="">Select Department
+                                        </option>
+                                        {{#each departments}}
+                                        <option value="{{this.ID}}">{{this.DEPARTMENTNAME}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-xs-12" tooltip="Course" ng-reflect-content="Course">
+                                <label class="fw-bold">Course
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-group">
+                                    <select required class="form-control ng-untouched ng-pristine ng-valid"
+                                        data-style="btn-secondary" data-width="auto" name="" ng-reflect-name="course"
+                                        id="course" onchange="getBatch()">
+                                        <option disabled="true" selected value="">Select Course
+                                        </option>
+                                        <option disabled="true" value="">Select Department First
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-xs-12" tooltip="" ng-reflect-content="">
+                                <label class="fw-bold">Batch
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-group">
+                                    <select required class="form-control ng-untouched ng-pristine ng-valid"
+                                        data-style="btn-secondary" data-width="auto" name="batch"
+                                        ng-reflect-name="batch" id="batch">
+                                        <option disabled="true" selected value="">Select Batch
+                                        </option>
+                                        <option disabled="true" value="">Select Course First
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-xs-12" tooltip="Name" ng-reflect-content="Name">
+                                <label class="fw-bold">Password
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-group">
+                                    <input class="form-control ng-untouched ng-pristine ng-valid" name="password"
+                                        placeholder="Password" type="password" ng-reflect-name="password" id="password"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-xs-12" tooltip="" ng-reflect-content="">
+                                <label class="fw-bold">Confirm Password
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-group">
+                                    <input class="form-control ng-untouched ng-pristine ng-valid" name="c_password"
+                                        placeholder="Confirm Password" type="password" ng-reflect-name="c_password"
+                                        id="c_password" required>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="g-recaptcha" style="width: 100%;" data-sitekey='{{captchaSitekey}}''>
+                </div>
+                <button class="btn btn-success" style="margin-top: 0.5rem;" id="submit" type="submit"> Submit </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="js/registration.js"></script>

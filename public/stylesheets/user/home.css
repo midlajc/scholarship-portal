@@ -1,0 +1,15 @@
+.profile
+{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+    width: 100%;
+    padding: .5rem 0px;
+    background-color:wheat;
+}
+img{
+    width: 6rem;
+    border-radius: 50%;
+}

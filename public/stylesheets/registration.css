@@ -1,0 +1,17 @@
+body {
+    position: relative;
+    margin: 0;
+    padding: 1rem;
+    background: url('../images/login_background.jpg');
+    background-repeat: no-repeat;
+    background-size:100% 400% ;
+}
+
+.registration-from{
+    position: relative;
+    /* margin-bottom: ; */
+    /* width:90%; */
+    /* top: 0%;
+    left: 50%;
+    transform: translate(-50%, -50%); */
+}

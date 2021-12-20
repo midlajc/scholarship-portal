@@ -1,0 +1,28 @@
+<section class="container m-5">
+    <div class="row">
+        <section class="col-lg-6">
+            <form action="/changepassword" method="POST" class="">
+                <fieldset class="scheduler-border">
+                    <legend class="scheduler-border">Change Password</legend>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" class="form-control" name="currentPassword" id="currentPassword"
+                                placeholder="enter your current password">
+                        </div>
+
+                        <div class="col">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" class="form-control" name="newPassword" id="newPassword" placeholder="enter new password">
+                        </div>
+                        <div class="col">
+                            <label for="newPassword">Confirm New Password</label>
+                            <input type="password" name="confirmNewPassword" id="confirmNewPassword" class="form-control" placeholder="enter new password again">
+                        </div>
+                    </div>
+                </fieldset>
+                <button type="submit" class="btn btn-info mt-2">Update Password</button>
+            </form>
+        </section>
+    </div>
+</section>
