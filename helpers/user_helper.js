@@ -20,7 +20,7 @@ module.exports = {
         })
     },
     getUserById: (id, callback) => {
-        db.get().collection(collection.USER_COLLECTION).findOne({ _id: id }).then((response) => {
+        db.get().collection(collection.USER_COLLECTION).findOne({ _id: ObjectId(id) }).then((response) => {
             callback(null, response)
         }).catch((response) => {
             callback(response, null)
@@ -38,10 +38,10 @@ module.exports = {
                             .insertOne({
                                 name: data.name,
                                 email: data.email,
-                                mobile: data.mobile,
-                                batchId: data.batch,
-                                genderId: data.gender,
-                                dateOfBirth: data.dateOfBirth,
+                                mobile: parseInt(data.mobile),
+                                batchId: parseInt(data.batch),
+                                genderId: parseInt(data.gender),
+                                dateOfBirth: new Date(data.dateOfBirth),
                                 password: data.password,
                                 emailVerificationToken: token,
                                 emailVerificationStatus: false,
@@ -58,6 +58,8 @@ module.exports = {
                     } else {
                         reject('Already Registered')
                     }
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -73,9 +75,9 @@ module.exports = {
                                     "$set": {
                                         _id: ObjectId(data._id),
                                         name: data.name,
-                                        genderId: data.genderId,
+                                        genderId: parseInt(data.genderId),
                                         email: data.email,
-                                        mobile: data.mobile,
+                                        mobile: parseInt(data.mobile),
                                         dob: new Date(data.dateOfBirth),
                                         password: data.password,
                                         batchId: parseInt(data.batchId),
@@ -84,22 +86,30 @@ module.exports = {
                                 },
                                 { upsert: true }).then(() => {
                                     resolve()
-                                }).catch
+                                }).catch(err => {
+                                    reject(err)
+                                })
                         })
                     }
                     function updateRegistrationStatus(email) {
                         return new Promise((resolve, reject) => {
                             db.get().collection(collection.REGISTRATION_COLLECTION).updateOne({ email: email }, { "$set": { "emailVerificationStatus": true } }).then((response) => {
                                 resolve()
+                            }).catch(err => {
+                                reject(err)
                             })
                         })
                     }
                     Promise.all([addNewUser(response), updateRegistrationStatus(response.email)]).then(() => {
                         resolve('Email Verified')
+                    }).catch(err => {
+                        reject(err)
                     })
                 } else {
                     reject('User not Found or Token is invalid')
                 }
+            }).catch(err => {
+                reject(err)
             })
         })
     },
@@ -108,6 +118,8 @@ module.exports = {
             db.get().collection(collection.GENDER_COLLECTION).find().toArray()
                 .then(response => {
                     reslove(response);
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -125,6 +137,8 @@ module.exports = {
             db.get().collection(collection.DEPARTMENTS_COLLECTION).find().toArray()
                 .then(response => {
                     resolve(response)
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -133,6 +147,8 @@ module.exports = {
             db.get().collection(collection.COURSES_COLLECTION).find({ DEPARTMENTID: id }).toArray()
                 .then(response => {
                     resolve(response);
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -141,6 +157,8 @@ module.exports = {
             db.get().collection(collection.BATCHES_COLLECTION).find({ COURSEID: id }).toArray()
                 .then(response => {
                     resolve(response);
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -177,6 +195,8 @@ module.exports = {
                     }
                 ]).toArray().then(response => {
                     resolve(response[0])
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -185,6 +205,8 @@ module.exports = {
             db.get().collection(collection.GENDER_COLLECTION)
                 .findOne({ ID: parseInt(genderId) }).then(response => {
                     resolve(response.genderName)
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -200,6 +222,8 @@ module.exports = {
                             eligibleList.push(response[x])
                     }
                     resolve(eligibleList)
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -233,6 +257,8 @@ module.exports = {
                             resolve({ statusId: -4 })
                         }
                     })
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -245,6 +271,8 @@ module.exports = {
                     } else {
                         resolve(response)
                     }
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -253,6 +281,8 @@ module.exports = {
             db.get().collection(collection.FAMILY_MEMBERS_COLLECTION)
                 .find({ userId: ObjectId(userId) }).toArray().then(response => {
                     resolve(response)
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -262,6 +292,8 @@ module.exports = {
             db.get().collection(collection.FAMILY_MEMBERS_COLLECTION)
                 .insertOne(data).then(() => {
                     resolve()
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -270,6 +302,8 @@ module.exports = {
             db.get().collection(collection.FAMILY_MEMBERS_COLLECTION)
                 .deleteOne({ _id: ObjectId(id) }).then(() => {
                     resolve()
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -312,7 +346,9 @@ module.exports = {
                                     upsert: true
                                 }).then(
                                     resolve()
-                                )
+                                ).catch(err => {
+                                    reject(err)
+                                })
                     })
                     let storeContactDetails = new Promise(async (resolve, reject) => {
                         db.get().collection(collection.APPLICATION_CONTACT_DETAILS_COLLECTION)
@@ -337,7 +373,9 @@ module.exports = {
                                     upsert: true
                                 }).then(
                                     resolve()
-                                )
+                                ).catch(err => {
+                                    reject(err)
+                                })
                     })
                     let storeAcademicDetails = new Promise((resolve, reject) => {
                         db.get().collection(collection.APPLICATION_ACADEMIC_DETAILS_COLLECTION)
@@ -359,12 +397,18 @@ module.exports = {
                                     upsert: true
                                 }).then(
                                     resolve()
-                                )
+                                ).catch(err => {
+                                    reject(err)
+                                })
                     })
                     Promise.all([storePersonalDetails, storeContactDetails, storeAcademicDetails])
                         .then((response) => {
                             resolve()
+                        }).catch(err => {
+                            reject(err)
                         })
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -379,28 +423,38 @@ module.exports = {
                         db.get().collection(collection.APPLICATION_PERSONAL_DETAILS_COLLECTION)
                             .findOne({ _id: ObjectId(application_details._id) }).then(response => {
                                 resolve(response)
+                            }).catch(err => {
+                                reject(err)
                             })
                     });
                     let academic_details = new Promise((resolve, reject) => {
                         db.get().collection(collection.APPLICATION_ACADEMIC_DETAILS_COLLECTION)
                             .findOne({ _id: ObjectId(application_details._id) }).then(response => {
                                 resolve(response)
+                            }).catch(err => {
+                                reject(err)
                             })
                     });
                     let contact_details = new Promise((resolve, reject) => {
                         db.get().collection(collection.APPLICATION_CONTACT_DETAILS_COLLECTION)
                             .findOne({ _id: ObjectId(application_details._id) }).then(response => {
                                 resolve(response)
+                            }).catch(err => {
+                                reject(err)
                             })
                     });
                     Promise.all([personal_details, academic_details, contact_details])
                         .then(allDetails => {
                             allDetails.push(application_details)
                             resolve(allDetails)
+                        }).catch(err => {
+                            reject(err)
                         })
                 } else {
                     resolve()
                 }
+            }).catch(err => {
+                reject(err)
             })
         })
     },
@@ -409,6 +463,8 @@ module.exports = {
             db.get().collection(collection.BANK_DETAILS_COLLECTION)
                 .findOne({ _id: ObjectId(userId) }).then(response => {
                     resolve(response)
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -424,6 +480,8 @@ module.exports = {
                     branch: data.branch
                 }).then(response => {
                     resolve()
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -435,6 +493,8 @@ module.exports = {
                     passData.currentPassword = await bcrypt.hash(passData.newPassword, 10)
                     db.get().collection(collection.USER_COLLECTION).updateOne({ username: user.username }, { "$set": { password: passData.currentPassword } }).then(() => {
                         resolve(passData.currentPassword)
+                    }).catch(err => {
+                        reject(err)
                     })
                 }
             }
@@ -469,6 +529,8 @@ module.exports = {
                 } else {
                     reject('User not Found')
                 }
+            }).catch(err => {
+                reject(err)
             })
         })
     },
@@ -482,6 +544,8 @@ module.exports = {
                     } else {
                         reject()
                     }
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
@@ -496,7 +560,7 @@ module.exports = {
                             .then(() => {
                                 db.get().collection(collection.PASSWORD_FORGOT_COLEECTION).updateOne(
                                     {
-                                        _id:ObjectId(response._id)
+                                        _id: ObjectId(response._id)
                                     },
                                     {
                                         "$set": {
@@ -504,12 +568,17 @@ module.exports = {
                                         }
                                     }).then(() => {
                                         resolve()
+                                    }).catch(err => {
+                                        reject(err)
                                     })
+                            }).catch(err => {
+                                reject(err)
                             })
                     } else {
                         reject()
                     }
-                }).catch(() => {
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },

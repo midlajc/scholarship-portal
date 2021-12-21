@@ -183,7 +183,7 @@ function buildPDF(data, dataCallback, endCallback) {
 
     doc.moveTo(25, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85).lineTo(540 + 25, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85).stroke()
     doc.fontSize(10)
-    doc.moveTo(25 + 270 - 120, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85).lineTo(164 + 30 + 40 + 60 - 120, 164 + 30 + 40 + 25 + 55 + 25 + 30).stroke()
+    // doc.moveTo(25 + 270 - 120, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85).lineTo(164 + 30 + 40 + 60 - 120, 164 + 30 + 40 + 25 + 55 + 25 + 30).stroke()
     doc.text(`Are you preparing for competitive exams?`, 25, 175 + 35 + 32 + 38 + 42 + 28 + 28, {
         width: 150,
         align: 'center'
@@ -205,8 +205,8 @@ function buildPDF(data, dataCallback, endCallback) {
     // doc.font('Courier-Bold');
 
     doc.fontSize(10)
-    doc.moveTo(25 + 270 - 120, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85).lineTo(164 + 30 + 40 + 60 - 120, 164 + 30 + 40 + 25 + 55 + 25 + 30).stroke()
-    doc.text(`If so, which Competitive Exam and coaching Institute?`, 25, 175 + 35 + 32 + 38 + 42 + 28 + 63, {
+    // doc.moveTo(25 + 270 - 120, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85).lineTo(164 + 30 + 40 + 60 - 120, 164 + 30 + 40 + 25 + 55 + 25 + 30).stroke()
+    doc.text(`If so, which Competitive Exam and coaching Institute?`, 28, 175 + 35 + 32 + 38 + 42 + 28 + 63, {
         width: 150,
         align: 'center'
     }
@@ -214,7 +214,7 @@ function buildPDF(data, dataCallback, endCallback) {
     // doc.font('Courier');
 
     doc.fontSize(10)
-    doc.text(`${data.academic.competitiveExamName}`, 25 + 150 + 10, 175 + 35 + 32 + 38 + 42 + 28 + 70, {
+    doc.text(`${data.academic.competitiveExamName}`, 25 + 150 + 8, 175 + 35 + 32 + 38 + 42 + 28 + 70, {
         width: 105,
         align: 'center'
     }
@@ -366,13 +366,29 @@ function buildPDF(data, dataCallback, endCallback) {
     }
     );
 
-    doc.text(`place:`, 40, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50)
-    doc.text(`date:`, 40, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50 + 20)
+    doc.font('Courier-Bold').fontSize(11);
+    doc.text(`List of documents to be attached with Application`, 0, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 50 - 40, {
+        width: 595,
+        align: 'center',
+        // underline:true
+    })
+    doc.font('Courier').fontSize(11);
+    doc.text(`1)Income Certificate (copy)`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 100 - 50)
+    doc.text(`2)Bank Pass Book (copy)`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 115 - 50)
+    doc.text(`3)+2 Mark List (copy)`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 130 - 50)
+    doc.text(`4)SSLC Certificate (copy)`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 145 - 50)
+    doc.text(`5)Semester Exam Mark List`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 160 - 50)
 
-    doc.text(`Applicant Name`, 40 + 270, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50)
-    doc.text(`Sign`, 40 + 270, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50 + 20)
+    // doc.font('Courier-Bold').fontSize(11);
 
-    doc.rect(25, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50 + 20 + 40, 540, 170).stroke()
+    doc.text(`place:`, 40, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50 + 165)
+    doc.text(`date:`, 40, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50 + 20 + 165)
+
+    doc.text(`Applicant Sign`, 40 + 360, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50 + 165)
+    doc.text(`Name`, 40 + 360, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50 + 20 + 165)
+
+    // doc.rect(25, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50 + 20 + 40, 540, 170).stroke()
+
 
     doc.end();
 }
