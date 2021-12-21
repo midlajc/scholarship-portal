@@ -1,6 +1,5 @@
 let getPanchayathTaluk = () => {
     let districtId = $('#district').val()
-    console.log(districtId)
     $.get('/getVillageMunicipality/' + districtId, (data, status, jqXHR) => {
         let html = `<option disabled="'true'" selected="" value="">Select Any Option</option>`
         for (x in data) {

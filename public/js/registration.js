@@ -26,7 +26,6 @@ $("#form").submit((e) => {
                         location.reload()
                     })
                 } else {
-                    console.log(response);
                     swal.fire({
                         title: 'Error',
                         text: response.errors,
