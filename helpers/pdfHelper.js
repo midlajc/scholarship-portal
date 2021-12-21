@@ -30,7 +30,7 @@ function buildPDF(data, dataCallback, endCallback) {
     doc.text(' ')
     doc.text(`Application No: ${data.applicationNo}`)
     doc.text(' ')
-    
+
 
     // doc.font('Helvetica');
 
@@ -109,14 +109,14 @@ function buildPDF(data, dataCallback, endCallback) {
 
     // doc.font('Courier');
     doc.moveTo(25, 164 + 30 + 40 + 25 + 55).lineTo(540 + 25, 164 + 30 + 40 + 25 + 55).stroke()
-    data.personal.pAddress = data.personal.pAddress.replace(/(\r\n|\n|\r)/gm, ",").replace(/.$/, "").replace(/,/g,"");
+    data.personal.pAddress = data.personal.pAddress.replace(/,/g, "").replace(/(\r\n|\n|\r)/gm, ",").replace(/.$/, "");
     doc.text(`${data.personal.pAddress}`, 25, 175 + 35 + 32 + 24, {
         width: 180,
         align: 'center'
     }
     );
     doc.moveTo(25 + 180, 164 + 30 + 40 + 25 + 55).lineTo(164 + 30 + 11, 180 + 15).stroke()
-    data.personal.cAddress = data.personal.cAddress.replace(/(\r\n|\n|\r)/gm, ",").replace(/.$/, "").replace(/,/g,"");
+    data.personal.cAddress = data.personal.cAddress.replace(/,/g, "").replace(/(\r\n|\n|\r)/gm, ",").replace(/.$/, "");
     doc.text(`${data.personal.cAddress}`, 25 + 180, 175 + 35 + 32 + 24, {
         width: 180,
         align: 'center'
@@ -369,11 +369,11 @@ function buildPDF(data, dataCallback, endCallback) {
     doc.text(`place:`, 40, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50)
     doc.text(`date:`, 40, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50 + 20)
 
-    doc.text(`Applicant Name`, 40+270, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50)
-    doc.text(`Sign`, 40+270, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50 + 20)
+    doc.text(`Applicant Name`, 40 + 270, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50)
+    doc.text(`Sign`, 40 + 270, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50 + 20)
 
-    doc.rect(25, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50 + 20+40, 540, 170).stroke()
-    
+    doc.rect(25, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50 + 20 + 40, 540, 170).stroke()
+
     doc.end();
 }
 
