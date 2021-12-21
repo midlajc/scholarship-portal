@@ -88,6 +88,6 @@ let printApplication = (id) => {
     })
 }
 
-let aboutScolarship=(id)=>{
-    location.replace('/aboutscholarship/'+id)
+let prospectus=(id)=>{
+    location.replace('/prospectus/'+id)
 }
