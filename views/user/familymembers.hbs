@@ -68,6 +68,7 @@
         Swal.fire({
             title: 'Add New Member',
             html: `
+            <form id='form'>
             <div class="row m-1 font-weight-light">
     <div class="col-lg-6">
         <label class="fw-bold text-left">Name
@@ -110,26 +111,29 @@
         </div>
     </div>
 </div>
+</form>
             `,
             showCancelButton: true,
             confirmButtonText: 'Add',
             showLoaderOnConfirm: true,
             preConfirm: () => {
-                let data = {
-                    name: $('#name').val(),
-                    relation: $('#relation').val(),
-                    occupation: $('#occupation').val(),
-                    organisation: $('#organisation').val(),
-                    mobile: $('#mobile').val(),
-                }
-                $.ajax({
-                    url: '/addfamilymember',
-                    data: data,
-                    method: 'post',
-                    success: (response => {
-                        location.reload()
+                if (document.getElementById('form').reportValidity()) {
+                    let data = {
+                        name: $('#name').val(),
+                        relation: $('#relation').val(),
+                        occupation: $('#occupation').val(),
+                        organisation: $('#organisation').val(),
+                        mobile: $('#mobile').val(),
+                    }
+                    $.ajax({
+                        url: '/addfamilymember',
+                        data: data,
+                        method: 'post',
+                        success: (response => {
+                            location.reload()
+                        })
                     })
-                })
+                }
             },
             allowOutsideClick: () => !Swal.isLoading()
         })
