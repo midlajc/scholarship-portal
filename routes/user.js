@@ -350,13 +350,13 @@ router.get('/printapplication/:id', auth.ensureUserAuthenticated, (req, res) => 
         })
 })
 
-router.get('/aboutscholarship/:id', (req, res) => {
+router.get('/prospectus/:id', (req, res) => {
     let scholarshipId=req.params.id
     var file = fs.createReadStream('./public/pdf/scolarship/'+scholarshipId+'.pdf');
     var stat = fs.statSync('./public/pdf/scolarship/'+scholarshipId+'.pdf');
     res.setHeader('Content-Length', stat.size);
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'inline; filename=About Scholarship.pdf');
+    res.setHeader('Content-Disposition', 'inline; filename=prospectus.pdf');
     file.pipe(res);
 })
 
