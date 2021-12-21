@@ -9,16 +9,16 @@
     </div>
 
     <!-- Sidebar/menu -->
-    <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+    <nav class="w3-sidebar w3-collapse w3-black w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
         <div class="w3-container w3-row">
             <div class="w3-col s4">
-                <img src="/images/admins/{{admin.username}}.jpg" class="w3-circle w3-margin-right" style="width:46px" alt="pro">
+                <img src="/images/user.png" class="w3-circle w3-margin-right" style="width:46px" alt="pro">
             </div>
             <div class="w3-col s8 w3-bar">
                 <span>Welcome, <strong>{{admin.name}}</strong></span><br>
-                <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
-                <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
-                <a href="/admin/logout" class="w3-bar-item w3-button"><i class="fa fa-sign-out"></i></a>
+                {{!-- <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
+                <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a> --}}
+                <a href="/admin/logout" class="w3-bar-item w3-button float-end"><i class="fa fa-sign-out"></i></a>
             </div>
         </div>
         <hr>

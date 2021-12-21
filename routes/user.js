@@ -7,12 +7,21 @@ const { body, validationResult } = require('express-validator');
 const axios = require('axios');
 const Helper = require('../helpers/Helper');
 const pdfHelper = require('../helpers/pdfHelper');
-const fs=require('fs')
+const fs = require('fs')
 
 /* GET home page. */
 
 router.get('/', (req, res) => {
-    res.render('user/index')
+    if (req.isAuthenticated()) {
+        if (req.user.type === 'user')
+            res.redirect('/home')
+        else if (req.user.type === 'admin')
+            res.redirect('/admin')
+        else
+            res.render('user/login')
+    } else {
+        res.render('user/index')
+    }
 })
 
 router.get('/home', auth.ensureUserAuthenticated, function (req, res, next) {
@@ -24,6 +33,9 @@ router.get('/home', auth.ensureUserAuthenticated, function (req, res, next) {
             req.user.gender = await userHelper.getGenderNameByGenderId(req.user.genderId)
             req.user.dob = req.user.dob.getDate() + '/' + (req.user.dob.getMonth() + 1) + '/' + req.user.dob.getFullYear();
             res.render('user/home');
+        }).catch(err => {
+            console.log(err);
+            res.redirect('/home')
         })
 });
 
@@ -311,8 +323,9 @@ router.post('/resetpassword/:token',
         }
     })
 
-router.get('/printapplication/:id', auth.ensureUserAuthenticated, (req, res) => {
+router.get('/printapplication/:id',auth.ensureUserAuthenticated, (req, res) => {
     let scholarshipListId = req.params.id
+
     userHelper.getscholarshipListByscholarshipListId(scholarshipListId)
         .then((scholarship) => {
             userHelper.applicationStatus(scholarship.scholarshipId, req.user)
@@ -351,9 +364,9 @@ router.get('/printapplication/:id', auth.ensureUserAuthenticated, (req, res) => 
 })
 
 router.get('/prospectus/:id', (req, res) => {
-    let scholarshipId=req.params.id
-    var file = fs.createReadStream('./public/pdf/scolarship/'+scholarshipId+'.pdf');
-    var stat = fs.statSync('./public/pdf/scolarship/'+scholarshipId+'.pdf');
+    let scholarshipId = req.params.id
+    var file = fs.createReadStream('./public/pdf/scolarship/' + scholarshipId + '.pdf');
+    var stat = fs.statSync('./public/pdf/scolarship/' + scholarshipId + '.pdf');
     res.setHeader('Content-Length', stat.size);
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'inline; filename=prospectus.pdf');
