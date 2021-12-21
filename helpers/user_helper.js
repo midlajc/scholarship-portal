@@ -28,7 +28,8 @@ module.exports = {
     },
     useRegistration: (data, domine) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.REGISTRATION_COLLECTION).findOne({ email: data.email })
+            db.get().collection(collection.REGISTRATION_COLLECTION)
+                .findOne({ '$or': [{ email: data.email }, { mobile: parseInt(data.mobile) }] })
                 .then(async (response) => {
                     if (response == null) {
                         let token = crypto.randomBytes(20)
