@@ -86,7 +86,7 @@ function buildPDF(data, dataCallback, endCallback) {
     // doc.font('Courier-Bold');
 
     doc.moveTo(25, 164 + 30 + 40 + 25).lineTo(540 + 25, 164 + 30 + 40 + 25).stroke()
-    doc.text(`Permenent Address`, 25, 175 + 35 + 32, {
+    doc.text(`Permanent Address`, 25, 175 + 35 + 32, {
         width: 180,
         align: 'center'
     }
@@ -109,14 +109,14 @@ function buildPDF(data, dataCallback, endCallback) {
 
     // doc.font('Courier');
     doc.moveTo(25, 164 + 30 + 40 + 25 + 55).lineTo(540 + 25, 164 + 30 + 40 + 25 + 55).stroke()
-    data.personal.pAddress = data.personal.pAddress.replace(/(\r\n|\n|\r)/gm, ",").replace(/.$/, "");
+    data.personal.pAddress = data.personal.pAddress.replace(/(\r\n|\n|\r)/gm, ",").replace(/.$/, "").replace(/,/g,"");
     doc.text(`${data.personal.pAddress}`, 25, 175 + 35 + 32 + 24, {
         width: 180,
         align: 'center'
     }
     );
     doc.moveTo(25 + 180, 164 + 30 + 40 + 25 + 55).lineTo(164 + 30 + 11, 180 + 15).stroke()
-    data.personal.cAddress = data.personal.cAddress.replace(/(\r\n|\n|\r)/gm, ",").replace(/.$/, "");
+    data.personal.cAddress = data.personal.cAddress.replace(/(\r\n|\n|\r)/gm, ",").replace(/.$/, "").replace(/,/g,"");
     doc.text(`${data.personal.cAddress}`, 25 + 180, 175 + 35 + 32 + 24, {
         width: 180,
         align: 'center'
@@ -184,7 +184,7 @@ function buildPDF(data, dataCallback, endCallback) {
     doc.moveTo(25, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85).lineTo(540 + 25, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85).stroke()
     doc.fontSize(10)
     doc.moveTo(25 + 270 - 120, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85).lineTo(164 + 30 + 40 + 60 - 120, 164 + 30 + 40 + 25 + 55 + 25 + 30).stroke()
-    doc.text(`Are you preparing for competitive exams`, 25, 175 + 35 + 32 + 38 + 42 + 28 + 28, {
+    doc.text(`Are you preparing for competitive exams?`, 25, 175 + 35 + 32 + 38 + 42 + 28 + 28, {
         width: 150,
         align: 'center'
     }
@@ -226,7 +226,7 @@ function buildPDF(data, dataCallback, endCallback) {
     doc.fontSize(10)
     doc.moveTo(25 + 270 - 120, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85).lineTo(164 + 30 + 40 + 60 - 120, 164 + 30 + 40 + 25 + 55 + 25 + 30).stroke()
 
-    doc.text(`is Hosteler`, 25 + 270, 175 + 35 + 32 + 38 + 42 + 28 + 30, {
+    doc.text(`is Hosteler?`, 25 + 270, 175 + 35 + 32 + 38 + 42 + 28 + 30, {
         width: 150,
         align: 'center'
     }
@@ -248,7 +248,7 @@ function buildPDF(data, dataCallback, endCallback) {
 
     doc.fontSize(10)
     doc.moveTo(25 + 270 - 120, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85).lineTo(164 + 30 + 40 + 60 - 120, 164 + 30 + 40 + 25 + 55 + 25 + 30).stroke()
-    doc.text(`Do you work part time`, 22 + 270, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 25, {
+    doc.text(`Do you work part time?`, 22 + 270, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 25, {
         width: 150,
         align: 'center'
     }
