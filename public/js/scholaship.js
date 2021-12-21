@@ -30,7 +30,6 @@ let applicationStatus = (id) => {
         url: '/applicationstatus/' + id,
         method: 'get',
         success: (response) => {
-            console.log(response);
             switch (response.statusId) {
                 case -4:
                     swal.fire(response.message, "", "error");
@@ -42,7 +41,7 @@ let applicationStatus = (id) => {
                     swal.fire(response.message, "", "info");
                     break;
                 case -1:
-                    swal.fire(response.message, "", "warning");
+                    swal.fire(response.message, "please resubmit", "warning");
                     break;
                 case 0:
                     swal.fire(response.message, "", "info");
@@ -66,6 +65,29 @@ let applicationStatus = (id) => {
     })
 }
 let printApplication = (id) => {
-    swal.fire("hello world")
+    $('#print').prop("disabled", true);
+    $('#print').html("<span class=" + "'spinner-border spinner-border-sm'" + "></span><span class=" + "" + ">Print Application</span>")
+    $.ajax({
+        url: '/applicationstatus/' + id,
+        method: 'get',
+        success: (response) => {
+            $('#print').prop("disabled", false);
+            $('#print').html("Print Application")
+            let isSubmitted = response.statusId == 2 || response.statusId == 3 || response.statusId == 4;
+            if (isSubmitted) {
+                window.location.replace('/printapplication/' + response.scholarshipListId)
+            } else if (response.statusId == -3 || response.statusId == -2) {
+                swal.fire(response.message, "", "info");
+            } else if (response.statusId == -1) {
+                swal.fire(response.message, "please resubmit", "error");
+            }
+            else {
+                swal.fire("Application not Submitted", "", "info");
+            }
+        }
+    })
+}
 
+let aboutScolarship=(id)=>{
+    location.replace('/aboutscholarship/'+id)
 }

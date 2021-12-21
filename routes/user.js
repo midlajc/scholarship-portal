@@ -6,14 +6,21 @@ const auth = require('../configs/auth');
 const { body, validationResult } = require('express-validator');
 const axios = require('axios');
 const Helper = require('../helpers/Helper');
+const pdfHelper = require('../helpers/pdfHelper');
+const fs=require('fs')
 
 /* GET home page. */
-router.get('/', auth.ensureUserAuthenticated, function (req, res, next) {
+
+router.get('/', (req, res) => {
+    res.render('user/index')
+})
+
+router.get('/home', auth.ensureUserAuthenticated, function (req, res, next) {
     userHelper.getDeptAndCourseAndBatchByBatchId(req.user.batchId)
         .then(async response => {
-            req.user.department = response[0].department.DEPARTMENTNAME;
-            req.user.batch = response[0].BATCHNAME;
-            req.user.course = response[0].course.COURSENAME;
+            req.user.department = response.department.DEPARTMENTNAME;
+            req.user.batch = response.BATCHNAME;
+            req.user.course = response.course.COURSENAME;
             req.user.gender = await userHelper.getGenderNameByGenderId(req.user.genderId)
             req.user.dob = req.user.dob.getDate() + '/' + (req.user.dob.getMonth() + 1) + '/' + req.user.dob.getFullYear();
             res.render('user/home');
@@ -23,7 +30,7 @@ router.get('/', auth.ensureUserAuthenticated, function (req, res, next) {
 router.get("/registration", (req, res) => {
     if (req.isAuthenticated()) {
         if (req.user.type === 'user')
-            res.redirect('/')
+            res.redirect('/home')
         else if (req.user.type === 'admin')
             res.redirect('/admin')
         else
@@ -148,12 +155,12 @@ router.get('/scholarshipform/:id', auth.ensureUserAuthenticated,
                         }
                         else {
                             req.flash('error_msg', response.message)
-                            res.redirect('/')
+                            res.redirect('/scholarships')
                         }
                     })
             }).catch((err) => {
                 req.flash('error_msg', err)
-                res.redirect('/')
+                res.redirect('/scholarships')
             })
     })
 
@@ -250,45 +257,13 @@ router.post("/bankdetails", auth.ensureUserAuthenticated, async (req, res) => {
     }
 })
 
-router.get("/login", (req, res) => {
-    if (req.isAuthenticated()) {
-        if (req.user.type === 'user')
-            res.redirect('/')
-        else if (req.user.type === 'admin')
-            res.redirect('/admin')
-        else
-            res.render('user/login')
-    } else
-        res.render('user/login')
-})
 
-router.post('/login',
-    passport.authenticate('user', { successRedirect: '/', failureRedirect: '/login', failureFlash: true }), (req, res) => {
-        res.redirect('/')
-    });
 
-router.get('/logout', auth.ensureUserAuthenticated,
-    (req, res) => {
-        req.logout();
-        res.redirect('/login')
-    })
-
-//need
-router.get('/settings', auth.ensureUserAuthenticated, (req, res) => {
-    res.render('user/settings')
-})
-
-router.post('/changepassword', auth.ensureUserAuthenticated, (req, res) => {
-    userHelper.updatePassword(req.user, req.body).then(response => {
-        req.user.password = response;
-        res.redirect('/settings')
-    })
-})
 
 router.get('/forgotpassword', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.user.type === 'user')
-            res.redirect('/')
+            res.redirect('/home')
         else if (req.user.type === 'admin')
             res.redirect('/admin')
         else
@@ -336,7 +311,88 @@ router.post('/resetpassword/:token',
         }
     })
 
+router.get('/printapplication/:id', auth.ensureUserAuthenticated, (req, res) => {
+    let scholarshipListId = req.params.id
+    userHelper.getscholarshipListByscholarshipListId(scholarshipListId)
+        .then((scholarship) => {
+            userHelper.applicationStatus(scholarship.scholarshipId, req.user)
+                .then(async (response) => {
+                    isTrue = response.statusId == 2 || response.statusId == 3 || response.statusId == 4
+                    if (isTrue) {
+                        Helper.getApplicationDetailes(req.user._id, scholarshipListId).then(async data => {
+                            const stream = res.writeHead(200, {
+                                'Content-Type': 'application/pdf',
+                                'Content-Disposition': `inline;filename=scholarship.pdf`,
+                                // 'Content-Disposition': `attachment;filename=scholarship.pdf`,
+                            });
 
+                            let batchDetails = await userHelper.getDeptAndCourseAndBatchByBatchId(data.user.batchId)
+
+                            data.user.department = batchDetails.department.DEPARTMENTNAME;
+                            data.user.batch = batchDetails.BATCHNAME;
+                            data.user.course = batchDetails.course.COURSENAME;
+                            data.user.gender = await userHelper.getGenderNameByGenderId(data.user.genderId)
+                            data.user.dob = data.user.dob.getDate() + '/' + (data.user.dob.getMonth() + 1) + '/' + data.user.dob.getFullYear();
+                            pdfHelper.buildPDF(data,
+                                (chunk) => stream.write(chunk),
+                                () => stream.end()
+                            );
+                        })
+                    }
+                    else {
+                        req.flash('error_msg', response.message)
+                        res.redirect('/home')
+                    }
+                })
+        }).catch((err) => {
+            req.flash('error_msg', err)
+            res.redirect('/home')
+        })
+})
+
+router.get('/aboutscholarship/:id', (req, res) => {
+    let scholarshipId=req.params.id
+    var file = fs.createReadStream('./public/pdf/scolarship/'+scholarshipId+'.pdf');
+    var stat = fs.statSync('./public/pdf/scolarship/'+scholarshipId+'.pdf');
+    res.setHeader('Content-Length', stat.size);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'inline; filename=About Scholarship.pdf');
+    file.pipe(res);
+})
+
+router.get("/login", (req, res) => {
+    if (req.isAuthenticated()) {
+        if (req.user.type === 'user')
+            res.redirect('/home')
+        else if (req.user.type === 'admin')
+            res.redirect('/admin')
+        else
+            res.render('user/login')
+    } else
+        res.render('user/login')
+})
+
+router.post('/login',
+    passport.authenticate('user', { successRedirect: '/home', failureRedirect: '/login', failureFlash: true }), (req, res) => {
+        res.redirect('/home')
+    });
+
+router.get('/logout', auth.ensureUserAuthenticated,
+    (req, res) => {
+        req.logout();
+        res.redirect('/login')
+    })
+//need
+router.get('/settings', auth.ensureUserAuthenticated, (req, res) => {
+    res.render('user/settings')
+})
+
+router.post('/changepassword', auth.ensureUserAuthenticated, (req, res) => {
+    userHelper.updatePassword(req.user, req.body).then(response => {
+        req.user.password = response;
+        res.redirect('/settings')
+    })
+})
 
 
 module.exports = router;

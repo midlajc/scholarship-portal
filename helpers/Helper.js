@@ -103,5 +103,74 @@ module.exports = {
                     resolve(response.message)
                 })
         })
+    },
+    getApplicationDetailes: (userId, scholarshipId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.APPLICATION_COLLECTION).aggregate([
+                {
+                  '$match': {
+                    'userId': new ObjectId('61ba8c113f65121c0a4e4e4d'), 
+                    'scholarshipListId': 2
+                  }
+                }, {
+                  '$lookup': {
+                    'from': 'user', 
+                    'localField': 'userId', 
+                    'foreignField': '_id', 
+                    'as': 'user'
+                  }
+                }, {
+                  '$lookup': {
+                    'from': 'application_personal_details', 
+                    'localField': '_id', 
+                    'foreignField': '_id', 
+                    'as': 'personal'
+                  }
+                }, {
+                  '$lookup': {
+                    'from': 'application_academic_details', 
+                    'localField': '_id', 
+                    'foreignField': '_id', 
+                    'as': 'academic'
+                  }
+                }, {
+                  '$lookup': {
+                    'from': 'application_contact_details', 
+                    'localField': '_id', 
+                    'foreignField': '_id', 
+                    'as': 'contact'
+                  }
+                }, {
+                  '$lookup': {
+                    'from': 'scholarship_list', 
+                    'localField': 'scholarshipListId', 
+                    'foreignField': 'ID', 
+                    'as': 'scholarship'
+                  }
+                }, {
+                  '$unwind': {
+                    'path': '$user'
+                  }
+                }, {
+                  '$unwind': {
+                    'path': '$personal'
+                  }
+                }, {
+                  '$unwind': {
+                    'path': '$academic'
+                  }
+                }, {
+                  '$unwind': {
+                    'path': '$contact'
+                  }
+                }, {
+                  '$unwind': {
+                    'path': '$scholarship'
+                  }
+                }
+              ]).toArray().then(response => {
+                resolve(response[0])
+            })
+        })
     }
 }
