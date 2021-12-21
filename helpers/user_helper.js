@@ -5,9 +5,6 @@ const nodeMailer = require('./nodeMailer')
 const crypto = require('crypto')
 const Helper = require('./Helper')
 const { ObjectId } = require('mongodb')
-const { response } = require('../app')
-const { resolve } = require('path')
-const { reject } = require('promise')
 
 module.exports = {
     getUserByEmailForLogin: (email, callback) => {
@@ -179,7 +176,7 @@ module.exports = {
                         }
                     }
                 ]).toArray().then(response => {
-                    resolve(response)
+                    resolve(response[0])
                 })
         })
     },
