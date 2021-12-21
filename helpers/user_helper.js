@@ -57,7 +57,7 @@ module.exports = {
                                 resolve('check email to verify email')
                             })
                     } else {
-                        reject('Already Registered')
+                        reject('Email or Mobile No Already Used')
                     }
                 }).catch(err => {
                     reject(err)
