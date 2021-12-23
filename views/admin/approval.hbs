@@ -1,3 +1,9 @@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+
 <!-- Modal -->
 <div class="modal fade align-middle" id="myModal">
   <div class="modal-dialog" role="document">
@@ -50,36 +56,41 @@
   </div>
 </div>
 
-<section class="container mt-5 text-center">
-   <h3>All Applications</h3>
-  <table class="table text-center table-bordered" id='myTable'>
-    <thead class="">
-      <tr>
-        <th>Name</th>
-        <th>email</th>
-        <th>Phone No</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each data}}
-      <tr>
-        <td>{{this.name}}</td>
-        <td>{{this.email}}</td>
-        <td>{{this.phoneno}}</td>
-        <td><button type="button" onclick="getUserData('{{this.email}}')" class="btn btn-primary" data-toggle="modal"
-            data-target="#myModal">view
-            more</button></td>
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
-</section>
+<div class="box p-2">
+  <h2 class="text-center">Approve Application</h2>
+  <div class="p-1 table-responsive">
+    <table class="table table-striped" id="table">
+      <thead>
+        <tr>
+          <th>Application No</th>
+          <th>Name</th>
+          <th>Mobile</th>
+          <th>Course</th>
+          <th>Batch</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each data}}
+        <tr>
+          <td>{{this.applicationNo}}</td>
+          <td>{{this.user.name}}</td>
+          <td>{{this.user.mobile}}</td>
+          <td>{{this.course.COURSENAME}}</td>
+          <td>{{this.batch.BATCHNAME}}</td>
+          <td><button class="btn w3-green">
+              <i class="fas fa-eye"></i>
+            </button></td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>
 <script>
   function getUserData(email) {
-    $('#loading').show()
     $.ajax({
-      url: '/admin/viewapplication/' + email,
+      url: '/admin/viewapplication/' + applicationNo,
       method: 'get',
       success: (data) => {
         data = data.data
@@ -111,4 +122,10 @@
       }
     })
   }
+
+  $(document).ready(function () {
+    $('#table').DataTable();
+  });
+
+  console.log({{err}});
 </script>

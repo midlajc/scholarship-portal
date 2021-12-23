@@ -4,10 +4,12 @@ var collection = require('../configs/collection')
 var userHelper = require('./user_helper')
 var nodeMailer = require('./nodeMailer')
 const { ObjectID } = require('mongodb')
+const { resolve, reject } = require('promise')
+const { response } = require('express')
 
 module.exports = {
     userRegistration: (data) => {
-        return new Promise(async(resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             data.password = await bcrypt.hash(data.password, 10)
             data.paymentStatus = "PAID"
             db.get().collection(collection.USER_COLLECTION).insertOne(data)
@@ -33,16 +35,212 @@ module.exports = {
             callback(response, null)
         })
     },
+    getApplicantList: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.APPLICATION_COLLECTION).aggregate([
+                {
+                    '$lookup': {
+                        'from': 'user',
+                        'localField': 'userId',
+                        'foreignField': '_id',
+                        'as': 'user'
+                    }
+                }, {
+                    '$unwind': {
+                        'path': '$user'
+                    }
+                }, {
+                    '$lookup': {
+                        'from': 'batches',
+                        'localField': 'user.batchId',
+                        'foreignField': 'ID',
+                        'as': 'batch'
+                    }
+                }, {
+                    '$lookup': {
+                        'from': 'courses',
+                        'localField': 'batch.COURSEID',
+                        'foreignField': 'ID',
+                        'as': 'course'
+                    }
+                }, {
+                    '$unwind': {
+                        'path': '$batch'
+                    }
+                }, {
+                    '$unwind': {
+                        'path': '$course'
+                    }
+                }
+            ]).toArray().then(response => {
+                resolve(response)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },
+    getSubmittedApplications: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.APPLICATION_COLLECTION)
+                .aggregate([
+                    {
+                        "$match": {
+                            "applicationStatus": parseInt(2)
+                        }
+                    },
+                    {
+                        '$lookup': {
+                            'from': 'user',
+                            'localField': 'userId',
+                            'foreignField': '_id',
+                            'as': 'user'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$user'
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'batches',
+                            'localField': 'user.batchId',
+                            'foreignField': 'ID',
+                            'as': 'batch'
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'courses',
+                            'localField': 'batch.COURSEID',
+                            'foreignField': 'ID',
+                            'as': 'course'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$batch'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$course'
+                        }
+                    }
+                ]).toArray().then(response => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getVerifiedApplications: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.APPLICATION_COLLECTION)
+                .aggregate([
+                    {
+                        "$match": {
+                            "applicationStatus": parseInt(3)
+                        }
+                    },
+                    {
+                        '$lookup': {
+                            'from': 'user',
+                            'localField': 'userId',
+                            'foreignField': '_id',
+                            'as': 'user'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$user'
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'batches',
+                            'localField': 'user.batchId',
+                            'foreignField': 'ID',
+                            'as': 'batch'
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'courses',
+                            'localField': 'batch.COURSEID',
+                            'foreignField': 'ID',
+                            'as': 'course'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$batch'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$course'
+                        }
+                    }
+                ]).toArray().then(response => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getApprovedApplications: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.APPLICATION_COLLECTION)
+                .aggregate([
+                    {
+                        "$match": {
+                            "applicationStatus": parseInt(4)
+                        }
+                    },
+                    {
+                        '$lookup': {
+                            'from': 'user',
+                            'localField': 'userId',
+                            'foreignField': '_id',
+                            'as': 'user'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$user'
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'batches',
+                            'localField': 'user.batchId',
+                            'foreignField': 'ID',
+                            'as': 'batch'
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'courses',
+                            'localField': 'batch.COURSEID',
+                            'foreignField': 'ID',
+                            'as': 'course'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$batch'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$course'
+                        }
+                    }
+                ]).toArray().then(response => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    //need
     getApplicationData: () => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.APPICATION_COLLECTION).find().toArray().then(response => {
-                resolve(response)
-            })
+            db.get().collection(collection.APPLICATION_COLLECTION)
+                .find().toArray().then(response => {
+                    resolve(response)
+                })
         })
     },
     getSingleApplication: (email) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.APPICATION_COLLECTION).findOne({ email: email }).then(response => {
+            db.get().collection(collection.APPLICATION_COLLECTION).findOne({ email: email }).then(response => {
                 let data = {
                     name: response.name,
                     email: response.email,
@@ -65,7 +263,7 @@ module.exports = {
         })
     },
     verifyApplication: (email) => {
-        return new Promise(async(resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             let id = await userHelper.getNewId()
             let username = "TEZLA" + id;
 
@@ -112,13 +310,13 @@ module.exports = {
             })
         })
     },
-    getVerifiedApplication: () => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.APPICATION_COLLECTION).find({ applicationStatus: true }).toArray().then(response => {
-                resolve(response)
-            })
-        })
-    },
+    // getVerifiedApplication: () => {
+    //     return new Promise((resolve, reject) => {
+    //         db.get().collection(collection.APPICATION_COLLECTION).find({ applicationStatus: true }).toArray().then(response => {
+    //             resolve(response)
+    //         })
+    //     })
+    // },
     getEmailVerificationPending: () => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.APPICATION_COLLECTION).find({ emailVerificationStatus: false }).toArray().then(response => {
@@ -140,7 +338,7 @@ module.exports = {
         })
     },
     getParticipantsData: (item) => {
-        return new Promise(async(resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             let data = await db.get().collection(collection.ITQUIZ_COLLECTION).aggregate([{
                 '$lookup': {
                     'from': 'user',
@@ -198,17 +396,17 @@ module.exports = {
             })
         })
     },
-    addItQuizQustion:(qData)=>{
-        return new Promise((resolve,reject)=>{
-            qData.answer=qData.options[qData.answer]
-            db.get().collection(collection.QUIZ_BANK).insertOne(qData).then(()=>{
+    addItQuizQustion: (qData) => {
+        return new Promise((resolve, reject) => {
+            qData.answer = qData.options[qData.answer]
+            db.get().collection(collection.QUIZ_BANK).insertOne(qData).then(() => {
                 resolve()
             })
         })
     },
-    getAllQuestions:()=>{
-        return new Promise((resolve,reject)=>{
-            db.get().collection(collection.QUIZ_BANK).find().toArray().then(response=>{
+    getAllQuestions: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.QUIZ_BANK).find().toArray().then(response => {
                 resolve(response)
             })
         })
@@ -217,14 +415,14 @@ module.exports = {
 
 //to generate unique qustion id
 module.exports.generateQuestionId = () => {
-    db.get().collection(collection.ID_GENERATOR).findOne({_id:"quiz"}).then((response) => {
+    db.get().collection(collection.ID_GENERATOR).findOne({ _id: "quiz" }).then((response) => {
         if (response == null) {
             db.get().collection(collection.ID_GENERATOR).insertOne({ _id: "quiz", seq: 1 })
         }
     })
 }
 module.exports.getNewQuestionId = () => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         let doc = await db.get().collection(collection.ID_GENERATOR).findOneAndUpdate({ _id: "quiz" }, { "$inc": { seq: 1 } })
         resolve(doc.value.seq)
     })

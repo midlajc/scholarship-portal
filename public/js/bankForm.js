@@ -12,7 +12,7 @@ let submitFrom = () => {
                 $('#submit').prop("disabled", true);
                 $('#submit').html("<span class=" + "'spinner-border spinner-border-sm'" + "></span><span class=" + "" + ">Loading...</span>")
                 $.ajax({
-                    url: '/bankdetails',
+                    url: '/bank-details',
                     method: 'post',
                     data: $('#form').serialize(),
                     success: (response) => {
