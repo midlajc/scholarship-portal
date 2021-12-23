@@ -10,7 +10,7 @@ module.exports = {
     APPLICATION_COLLECTION: 'applications',
     SCHOLARSHIP_COLLECTION: 'scholarships',
     ACADEMIC_YEAR_COLLECTION: 'academic_year',
-    APPLICAION_STATUS: 'application_status',
+    APPLICATION_STATUS: 'application_status',
     SCHOLARSHIP_LIST_COLLECTION:'scholarship_list',
     DISTRICT_COLLECTION:'districts',
     STATE_COLLECTION:'states',
@@ -20,5 +20,5 @@ module.exports = {
     APPLICATION_CONTACT_DETAILS_COLLECTION:'application_contact_details',
     APPLICATION_ACADEMIC_DETAILS_COLLECTION:'application_academic_details',
     BANK_DETAILS_COLLECTION:'bank_details',
-    PASSWORD_FORGOT_COLEECTION:'forgot_password'
+    PASSWORD_FORGOT_COLLECTION:'forgot_password'
 }

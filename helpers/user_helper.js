@@ -52,7 +52,7 @@ module.exports = {
                                     recipient: data.email,
                                     subject: "Registration",
                                     message: "Registration Successful\n\nclick this link to verify email" +
-                                        ' https://' + domine + '/verifyemail/' + token + '\n\n'
+                                        ' https://' + domine + '/verify-email/' + token + '\n\n'
                                 })
                                 resolve('check email to verify email')
                             })
@@ -277,7 +277,7 @@ module.exports = {
                 })
         })
     },
-    getFalimyMembers: (userId) => {
+    getFamilyMembers: (userId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.FAMILY_MEMBERS_COLLECTION)
                 .find({ userId: ObjectId(userId) }).toArray().then(response => {
@@ -287,7 +287,7 @@ module.exports = {
                 })
         })
     },
-    addFalimyMembers: (data, userId) => {
+    addFamilyMembers: (data, userId) => {
         return new Promise((resolve, reject) => {
             data.userId = ObjectId(userId)
             db.get().collection(collection.FAMILY_MEMBERS_COLLECTION)
@@ -507,7 +507,7 @@ module.exports = {
                 if (user) {
                     let token = crypto.randomBytes(20)
                     token = token.toString('hex')
-                    db.get().collection(collection.PASSWORD_FORGOT_COLEECTION)
+                    db.get().collection(collection.PASSWORD_FORGOT_COLLECTION)
                         .insertOne({
                             userId: ObjectId(user._id),
                             resetPasswordToken: token,
@@ -519,12 +519,12 @@ module.exports = {
                                 subject: 'Link for Password Reset',
                                 message: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                                     'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                                    'https://' + url + '/resetpassword/' + token + '\n\n' +
+                                    'https://' + url + '/reset-password/' + token + '\n\n' +
                                     'If you did not request this, please ignore this email and your password will remain unchanged.\n'
                             })
                             resolve()
                         }).catch(() => {
-                            reject("Error Occuerd Try Again")
+                            reject("Error Occurred Try Again")
                         })
                     resolve()
                 } else {
@@ -537,7 +537,7 @@ module.exports = {
     },
     resetPasswordTokenValidate: (token) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.PASSWORD_FORGOT_COLEECTION)
+            db.get().collection(collection.PASSWORD_FORGOT_COLLECTION)
                 .findOne({ resetPasswordToken: token, resetPasswordExpires: { "$gt": Date.now() } })
                 .then(response => {
                     if (response) {
@@ -553,13 +553,13 @@ module.exports = {
     resetPassword: (token, password) => {
         return new Promise(async (resolve, reject) => {
             password = await bcrypt.hash(password, 10)
-            db.get().collection(collection.PASSWORD_FORGOT_COLEECTION)
+            db.get().collection(collection.PASSWORD_FORGOT_COLLECTION)
                 .findOne({ resetPasswordToken: token, resetPasswordExpires: { "$gt": Date.now() } })
                 .then(response => {
                     if (response) {
                         db.get().collection(collection.USER_COLLECTION).updateOne({ _id: ObjectId(response.userId) }, { "$set": { password: password } })
                             .then(() => {
-                                db.get().collection(collection.PASSWORD_FORGOT_COLEECTION).updateOne(
+                                db.get().collection(collection.PASSWORD_FORGOT_COLLECTION).updateOne(
                                     {
                                         _id: ObjectId(response._id)
                                     },

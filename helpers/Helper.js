@@ -112,7 +112,7 @@ module.exports = {
   },
   getApplicationStatusMessage: (statusId) => {
     return new Promise((resolve, reject) => {
-      db.get().collection(collection.APPLICAION_STATUS)
+      db.get().collection(collection.APPLICATION_STATUS)
         .findOne({ id: statusId }).then(response => {
           resolve(response.message)
         }).catch(err => {
@@ -120,7 +120,7 @@ module.exports = {
         })
     })
   },
-  getApplicationDetailes: (userId, scholarshipId) => {
+  getApplicationDetails: (userId, scholarshipId) => {
     return new Promise((resolve, reject) => {
       db.get().collection(collection.APPLICATION_COLLECTION).aggregate([
         {

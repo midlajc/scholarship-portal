@@ -45,7 +45,7 @@ $("#form").submit((e) => {
 let getCourse = () => {
     let departmentId = $('#department').val()
     $.ajax({
-        url: '/getcoursebydeptid/' + departmentId,
+        url: '/get-course-by-dept-id/' + departmentId,
         method: 'get',
         success: (response) => {
             let html = `<option disabled="true" selected value="">Select Course</option>`
@@ -60,7 +60,7 @@ let getCourse = () => {
 let getBatch = () => {
     let courseId = $('#course').val()
     $.ajax({
-        url: '/getbatchbycourseid/' + courseId,
+        url: '/get-batch-by-course-id/' + courseId,
         method: 'get',
         success: (response) => {
             let html = `<option disabled="true" selected value="">Select Batch</option>`

@@ -16,7 +16,7 @@ let getPanchayathTaluk = () => {
     })
 }
 
-let subimitData = (submitStatus) => {
+let submitData = (submitStatus) => {
     if (document.getElementById('form').reportValidity()) {
         let data = $('#form').serialize()
         data += '&applicationStatus=' + submitStatus
@@ -30,7 +30,7 @@ let subimitData = (submitStatus) => {
             $('#submit').html("<span class=" + "'spinner-border spinner-border-sm'" + "></span><span class=" + "" + ">Submiting...</span>")
         }
         $.ajax({
-            url: '/scholarshipform',
+            url: '/scholarship-form',
             method: 'post',
             data: data,
             success: (response) => {
@@ -41,7 +41,7 @@ let subimitData = (submitStatus) => {
                 if (response.status) {
                     if (submitStatus == 1) {
                         Swal.fire({
-                            title: "Appication Saved",
+                            title: "Application Saved",
                             text: '',
                             icon: "success",
                             confirmButtonText: 'OK',

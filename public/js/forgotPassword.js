@@ -1,9 +1,9 @@
 $("#form").submit((e) => {
     e.preventDefault()
     $('#submit').prop("disabled", true);
-    $('#submit').html("<span class=" + "'spinner-border spinner-border-sm'" + "></span><span class=" + "" + ">Submiting...</span>")
+    $('#submit').html("<span class=" + "'spinner-border spinner-border-sm'" + "></span><span class=" + "" + ">Submitting...</span>")
     $.ajax({
-        url: '/forgotpassword',
+        url: '/forgot-password',
         method: 'post',
         data: $('#form').serialize(),
         success: (response) => {

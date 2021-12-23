@@ -1,0 +1,133 @@
+{{!--
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css"> --}}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Modal -->
+<div class="modal fade align-middle" id="myModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body ">
+        <div class="card">
+          <div class="card-body">
+            <p>
+            <div class="fs-3">Name</div>
+            <div id="name"></div>
+            </p>
+            <p>
+            <div class="fs-3">Email
+              <span id="badge" class="badge">
+                <i class="fa" id="badgeIcon"></i>
+              </span>
+              </p>
+            </div>
+            <div id="email">
+
+            </div>
+            <p>
+            <div class="fs-3">Gender</div>
+            <div id="gender"></div>
+            </p>
+            <p>
+            <div class="fs-3">College</div>
+            <div id="college"></div>
+            </p>
+            <p>
+            <div class="fs-3">Time</div>
+            <div id="time"></div>
+            </p>
+            <p>
+            <div class="fs-3">Items</div>
+            <ul>
+              <div id="items"></div>
+            </ul>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="box p-2">
+  <h2 class="text-center">Applicant List</h2>
+  <div class="p-1 table-responsive">
+    <table class="table table-striped" id="table">
+      <thead>
+        <tr>
+          <th>Application No</th>
+          <th>Name</th>
+          <th>Mobile</th>
+          <th>Course</th>
+          <th>Batch</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each data}}
+        <tr>
+          <td>{{this.applicationNo}}</td>
+          <td>{{this.user.name}}</td>
+          <td>{{this.user.mobile}}</td>
+          <td>{{this.course.COURSENAME}}</td>
+          <td>{{this.batch.BATCHNAME}}</td>
+          <td><button class="btn w3-green">
+              <i class="fas fa-eye"></i>
+            </button></td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+  function getUserData(email) {
+    $.ajax({
+      url: '/admin/viewapplication/' + applicationNo,
+      method: 'get',
+      success: (data) => {
+        data = data.data
+        $('#name').html(data.name)
+        $('#email').html(data.email)
+        $('#gender').html(data.gender)
+        $('#college').html(data.college)
+        $('#time').html(new Date(data.submissionTime))
+        $('#items').html(() => {
+          let items = ''
+          for (x of data.items) {
+            items += "<li>" + x + "</li>"
+          }
+          return items
+        })
+        if (data.emailVerificationStatus) {
+          $('#badge').removeClass('bg-danger')
+          $('#badge').addClass('bg-success')
+          $('#badgeIcon').removeClass('fa-times')
+          $('#badgeIcon').addClass('fa-check')
+        } else {
+          console.log('hello')
+          $('#badge').removeClass('bg-success')
+          $('#badge').addClass('bg-danger')
+          $('#badgeIcon').removeClass('fa-check')
+          $('#badgeIcon').addClass('fa-times')
+        }
+        $('#loading').hide()
+      }
+    })
+  }
+
+  $(document).ready(function() {
+    $('#table').DataTable();
+} );
+  console.log({{err}});
+
+</script>

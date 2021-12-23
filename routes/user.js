@@ -56,14 +56,14 @@ router.get("/registration", (req, res) => {
     }
 })
 
-router.get('/getcoursebydeptid/:id', (req, res) => {
+router.get('/get-course-by-dept-id/:id', (req, res) => {
     department_id = parseInt(req.params.id);
     userHelper.getCoursesByDeptId(department_id).then(courses => {
         res.json({ courses })
     })
 })
 
-router.get('/getbatchbycourseid/:id', (req, res) => {
+router.get('/get-batch-by-course-id/:id', (req, res) => {
     course_id = parseInt(req.params.id);
     userHelper.getBatchByCoursesId(course_id).then(batches => {
         res.json({ batches })
@@ -72,7 +72,7 @@ router.get('/getbatchbycourseid/:id', (req, res) => {
 
 router.post("/registration",
     body('mobile', 'mobile number must be 10 digits').isLength({ max: 10, min: 10 }),
-    body('password', 'password require minimum 8 charecters').isLength({ min: 8 }),
+    body('password', 'password require minimum 8 characters').isLength({ min: 8 }),
     async (req, res) => {
         const captcha_response_key = req.body["g-recaptcha-response"];
         const url = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.captchaSecretKey}&response=${captcha_response_key}`;
@@ -104,7 +104,7 @@ router.post("/registration",
         }
     })
 
-router.get('/verifyemail/:token', (req, res) => {
+router.get('/verify-email/:token', (req, res) => {
     userHelper.verifyEmail(req.params.token).then(response => {
         req.flash('success_msg', response)
         res.redirect('/login')
@@ -120,7 +120,7 @@ router.get('/scholarships', auth.ensureUserAuthenticated, (req, res) => {
     })
 })
 
-router.get('/applicationstatus/:id', auth.ensureUserAuthenticated, (req, res) => {
+router.get('/application-status/:id', auth.ensureUserAuthenticated, (req, res) => {
     let scholarshipId = req.params.id;
     userHelper.applicationStatus(scholarshipId, req.user).then(applicationStatus => {
         Helper.getApplicationStatusMessage(applicationStatus.statusId).then(message => {
@@ -130,7 +130,7 @@ router.get('/applicationstatus/:id', auth.ensureUserAuthenticated, (req, res) =>
     })
 })
 
-router.get('/scholarshipform/:id', auth.ensureUserAuthenticated,
+router.get('/scholarship-form/:id', auth.ensureUserAuthenticated,
     (req, res) => {
         let scholarshipListId = req.params.id
         userHelper.getscholarshipListByscholarshipListId(scholarshipListId)
@@ -150,7 +150,7 @@ router.get('/scholarshipform/:id', auth.ensureUserAuthenticated,
                                         taluks = await Helper.getTaluks(contact_details.districtId)
                                         panchayaths = await Helper.getPanchayaths(contact_details.districtId)
                                     }
-                                    res.render('user/scholarshipform',
+                                    res.render('user/scholarship-form',
                                         {
                                             personal_details,
                                             academic_details,
@@ -176,7 +176,7 @@ router.get('/scholarshipform/:id', auth.ensureUserAuthenticated,
             })
     })
 
-router.post('/scholarshipform', auth.ensureUserAuthenticated,
+router.post('/scholarship-form', auth.ensureUserAuthenticated,
     body('plusTwo', '+2 Mark Percentage must be Numeric').isDecimal(),
     body('previousSem', 'Previous Sem Mark Percentage must be Numeric').isDecimal(),
     body('wardMemberMobile', 'Mobile number must be 10 digits').isLength({ min: 10, max: 10 }),
@@ -228,35 +228,35 @@ router.get('/getTaluk/:districtId', async (req, res) => {
     res.json(taluks)
 })
 
-router.get('/familymembers', auth.ensureUserAuthenticated, (req, res) => {
-    userHelper.getFalimyMembers(req.user._id).then(response => {
-        res.render('user/familymembers', { falimyMembers: response })
+router.get('/family-members', auth.ensureUserAuthenticated, (req, res) => {
+    userHelper.getFamilyMembers(req.user._id).then(response => {
+        res.render('user/family-members', { familyMembers: response })
     })
 })
 
-router.post('/addfamilymember', auth.ensureUserAuthenticated, (req, res) => {
-    userHelper.addFalimyMembers(req.body, req.user._id).then(response => {
+router.post('/add-family-member', auth.ensureUserAuthenticated, (req, res) => {
+    userHelper.addFamilyMembers(req.body, req.user._id).then(response => {
         res.json({ status: true })
     })
 })
 
-router.post('/deletemember', auth.ensureUserAuthenticated, (req, res) => {
+router.post('/delete-member', auth.ensureUserAuthenticated, (req, res) => {
     userHelper.deleteFamilyMember(req.body.id).then(response => {
         res.json({ status: true })
     })
 })
 
-router.get('/bankdetails', auth.ensureUserAuthenticated, (req, res) => {
+router.get('/bank-details', auth.ensureUserAuthenticated, (req, res) => {
     userHelper.getBankDetails(req.user._id).then(response => {
         if (response) {
-            res.render('user/bankdetails', { data: response })
+            res.render('user/bank-details', { data: response })
         } else {
-            res.render('user/bankform')
+            res.render('user/bank-form')
         }
     })
 })
 
-router.post("/bankdetails", auth.ensureUserAuthenticated, async (req, res) => {
+router.post("/bank-details", auth.ensureUserAuthenticated, async (req, res) => {
     if (req.body.accountNo1 != req.body.accountNo2) {
         res.json({ status: false, message: "Account No Mismatch" })
     } else if (await userHelper.getBankDetails(req.user._id)) {
@@ -272,7 +272,7 @@ router.post("/bankdetails", auth.ensureUserAuthenticated, async (req, res) => {
 
 
 
-router.get('/forgotpassword', (req, res) => {
+router.get('/forgot-password', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.user.type === 'user')
             res.redirect('/home')
@@ -281,28 +281,28 @@ router.get('/forgotpassword', (req, res) => {
         else
             res.render('user/login')
     } else {
-        res.render('user/forgotpassword')
+        res.render('user/forgot-password')
     }
 })
 
-router.post('/forgotpassword', (req, res) => {
+router.post('/forgot-password', (req, res) => {
     userHelper.forgotPassword(req.body.email, req.headers.host).then(response => {
         res.json({ status: true, message: 'An e-mail has been sent to ' + req.body.email + ' with further instructions.' })
     }).catch(response => {
         res.json({ status: false, message: response })
     })
 })
-router.get('/resetpassword/:token', (req, res) => {
+router.get('/reset-password/:token', (req, res) => {
     userHelper.resetPasswordTokenValidate(req.params.token).then(() => {
-        res.render('user/resetpassword')
+        res.render('user/reset-password')
     }).catch(() => {
         req.flash('error_msg', 'Password reset token is invalid or has expired.')
-        res.redirect('/forgotpassword')
+        res.redirect('/forgot-password')
     })
 })
 
-router.post('/resetpassword/:token',
-    body('password', 'Password require minimum 8 charecters').isLength({ min: 8 }),
+router.post('/reset-password/:token',
+    body('password', 'Password require minimum 8 characters').isLength({ min: 8 }),
     (req, res) => {
         const errors = validationResult(req);
         let isErrors = (Array.isArray(errors.errors) && errors.errors.length)
@@ -318,13 +318,13 @@ router.post('/resetpassword/:token',
                 res.redirect('/login')
             }).catch(() => {
                 req.flash('error_msg', 'Password reset token is invalid or has expired.')
-                res.redirect('/forgotpassword')
+                res.redirect('/forgot-password')
             })
         }
     })
 
-router.get('/printapplication/:id',auth.ensureUserAuthenticated, (req, res) => {
-    let scholarshipListId = req.params.id
+router.get('/print-application',auth.ensureUserAuthenticated, (req, res) => {
+    let scholarshipListId = req.query.id
 
     userHelper.getscholarshipListByscholarshipListId(scholarshipListId)
         .then((scholarship) => {
@@ -332,7 +332,7 @@ router.get('/printapplication/:id',auth.ensureUserAuthenticated, (req, res) => {
                 .then(async (response) => {
                     isTrue = response.statusId == 2 || response.statusId == 3 || response.statusId == 4
                     if (isTrue) {
-                        Helper.getApplicationDetailes(req.user._id, scholarshipListId).then(async data => {
+                        Helper.getApplicationDetails(req.user._id, scholarshipListId).then(async data => {
                             const stream = res.writeHead(200, {
                                 'Content-Type': 'application/pdf',
                                 'Content-Disposition': `inline;filename=scholarship.pdf`,
@@ -363,10 +363,10 @@ router.get('/printapplication/:id',auth.ensureUserAuthenticated, (req, res) => {
         })
 })
 
-router.get('/prospectus/:id', (req, res) => {
-    let scholarshipId = req.params.id
-    var file = fs.createReadStream('./public/pdf/scolarship/' + scholarshipId + '.pdf');
-    var stat = fs.statSync('./public/pdf/scolarship/' + scholarshipId + '.pdf');
+router.get('/prospectus', (req, res) => {
+    let scholarshipId = req.query.id;
+    var file = fs.createReadStream('./public/pdf/scholarship/' + scholarshipId + '.pdf');
+    var stat = fs.statSync('./public/pdf/scholarship/' + scholarshipId + '.pdf');
     res.setHeader('Content-Length', stat.size);
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'inline; filename=prospectus.pdf');
@@ -400,7 +400,7 @@ router.get('/settings', auth.ensureUserAuthenticated, (req, res) => {
     res.render('user/settings')
 })
 
-router.post('/changepassword', auth.ensureUserAuthenticated, (req, res) => {
+router.post('/change-password', auth.ensureUserAuthenticated, (req, res) => {
     userHelper.updatePassword(req.user, req.body).then(response => {
         req.user.password = response;
         res.redirect('/settings')

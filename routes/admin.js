@@ -4,19 +4,57 @@ var adminHelper = require('../helpers/admin_helper')
 var passport = require('passport')
 var auth = require('../configs/auth');
 const user_helper = require('../helpers/user_helper');
+const Helper = require('../helpers/Helper');
 
 //HOME
 
 router.get('/', auth.ensureAdminAuthenticated,
     (req, res, next) => {
-        res.render('admin/home')
+        res.redirect('/admin/applicant-list')
+        // res.render('admin/home')
     });
 
 
-router.get('/viewapplication/:user', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.getSingleApplication(req.params.user).then(data => {
-        res.json({ status: true, data: data })
+router.get('/applicant-list', auth.ensureAdminAuthenticated, (req, res) => {
+    adminHelper.getApplicantList().then(async data => {
+        // console.log(data);
+        // let batch=await Helper.getBatchById(data.user.batchId)
+        res.render('admin/applicant-list', { data })
+    }).catch((err) => {
+        req.flash('error_msg', err)
+        res.render('admin/applicant-list', { err })
     })
+})
+
+router.get('/primary-verification', auth.ensureAdminAuthenticated, (req, res) => {
+    adminHelper.getSubmittedApplications().then(async data => {
+        res.render('admin/primary-verification', { data })
+    }).catch((err) => {
+        req.flash('error_msg', err)
+        res.render('admin/primary-verification', { err })
+    })
+})
+
+router.get('/approval', auth.ensureAdminAuthenticated, (req, res) => {
+    adminHelper.getVerifiedApplications().then(async data => {
+        res.render('admin/approval', { data })
+    }).catch((err) => {
+        req.flash('error_msg', err)
+        res.render('admin/approval', { err })
+    })
+})
+
+router.get('/approved-list', auth.ensureAdminAuthenticated, (req, res) => {
+    adminHelper.getApprovedApplications().then(async data => {
+        res.render('admin/approved-list', { data })
+    }).catch((err) => {
+        req.flash('error_msg', err)
+        res.render('admin/approved-list', { err })
+    })
+})
+
+router.get('/settings',auth.ensureAdminAuthenticated,(req,res)=>{
+    res.render('admin/settings')
 })
 
 //Registration Routers
@@ -32,28 +70,28 @@ router.post("/registration", auth.ensureAdminAuthenticated, (req, res) => {
 
 })
 
-router.get('/viewapplications', auth.ensureAdminAuthenticated, (req, res) => {
+router.get('/view-applications', auth.ensureAdminAuthenticated, (req, res) => {
     if (req.params.user) {
     } else {
         adminHelper.getApplicationData().then(response => {
-            res.render('admin/viewapplications', { data: response })
+            res.render('admin/view-applications', { data: response })
         })
     }
 })
 
-router.get('/pendingapplications', auth.ensureAdminAuthenticated, (req, res) => {
+router.get('/pending-applications', auth.ensureAdminAuthenticated, (req, res) => {
     adminHelper.getPendingData().then(response => {
-        res.render('admin/viewpendingapplication', { data: response })
+        res.render('admin/view-pending-application', { data: response })
     })
 })
 
-router.post('/approveapplication', auth.ensureAdminAuthenticated, (req, res) => {
+router.post('/approve-application', auth.ensureAdminAuthenticated, (req, res) => {
     adminHelper.approveApplication(req.body.email).then(() => {
         res.json({ status: true })
     })
 })
 
-router.get('/verifiedapplicatons', auth.ensureAdminAuthenticated, (req, res) => {
+router.get('/verified applications', auth.ensureAdminAuthenticated, (req, res) => {
     adminHelper.getVerifiedApplication().then(data => {
         res.render('admin/verifiedapplicatons', { data: data })
     })
