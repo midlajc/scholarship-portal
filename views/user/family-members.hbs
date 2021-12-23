@@ -24,12 +24,12 @@
                 </tr>
             </thead>
             <tbody>
-                {{#each falimyMembers}}
+                {{#each familyMembers}}
                 <tr>
                     <td>{{this.name}}</td>
                     <td>{{this.relation}}</td>
                     <td>{{this.occupation}}</td>
-                    <td>{{this.organisation}}</td>
+                    <td>{{this.organization}}</td>
                     <td>{{this.mobile}}</td>
                     <td><button class="btn w3-red" onclick="deleteMember('{{this._id}}')"><i
                                 class="fas fa-trash"></i></button></td>
@@ -52,7 +52,7 @@
             reverseButtons: true,
             preConfirm: () => {
                 $.ajax({
-                    url: '/deletemember',
+                    url: '/delete-member',
                     method: 'post',
                     data: {
                         id: id
@@ -95,11 +95,11 @@
         </div>
     </div>
     <div class="col-lg-6">
-        <label class="fw-bold text-left">Organisation/institution
+        <label class="fw-bold text-left">Organization/institution
             <span class="text-danger"></span>
         </label>
         <div class="form-group">
-            <input class="form-control" type="text" name="organisation" id="organisation">
+            <input class="form-control" type="text" name="organization" id="organization">
         </div>
     </div>
     <div class="col-lg-12">
@@ -122,11 +122,11 @@
                         name: $('#name').val(),
                         relation: $('#relation').val(),
                         occupation: $('#occupation').val(),
-                        organisation: $('#organisation').val(),
+                        organization: $('#organization').val(),
                         mobile: $('#mobile').val(),
                     }
                     $.ajax({
-                        url: '/addfamilymember',
+                        url: '/add-family-member',
                         data: data,
                         method: 'post',
                         success: (response => {

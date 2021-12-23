@@ -30,7 +30,6 @@ module.exports =
 
         passport.use('admin', new localStrategy(
             function(username, password, done) {
-                console.log(username);
                 adminHelper.getAdminByUserName(username, (err, admin) => {
                     if (err) {
                         throw err;
