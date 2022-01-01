@@ -1,1 +1,1 @@
-# TEZLA
+# Scholarship Management System
