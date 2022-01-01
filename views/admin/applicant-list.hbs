@@ -1,62 +1,29 @@
-{{!--
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css"> --}}
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
 
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
 
-<!-- Modal -->
-<div class="modal fade align-middle" id="myModal">
-  <div class="modal-dialog" role="document">
+<div class="modal fade bd-example-modal-lg" id="model" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog model-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <h5 class="modal-title">Application</h5>
+        <button type="button" class="close btn" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body ">
-        <div class="card">
-          <div class="card-body">
-            <p>
-            <div class="fs-3">Name</div>
-            <div id="name"></div>
-            </p>
-            <p>
-            <div class="fs-3">Email
-              <span id="badge" class="badge">
-                <i class="fa" id="badgeIcon"></i>
-              </span>
-              </p>
-            </div>
-            <div id="email">
-
-            </div>
-            <p>
-            <div class="fs-3">Gender</div>
-            <div id="gender"></div>
-            </p>
-            <p>
-            <div class="fs-3">College</div>
-            <div id="college"></div>
-            </p>
-            <p>
-            <div class="fs-3">Time</div>
-            <div id="time"></div>
-            </p>
-            <p>
-            <div class="fs-3">Items</div>
-            <ul>
-              <div id="items"></div>
-            </ul>
-            </p>
-          </div>
-        </div>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
+
 
 <div class="box p-2">
   <h2 class="text-center">Applicant List</h2>
@@ -80,9 +47,12 @@
           <td>{{this.user.mobile}}</td>
           <td>{{this.course.COURSENAME}}</td>
           <td>{{this.batch.BATCHNAME}}</td>
-          <td><button class="btn w3-green">
+          <td>
+            <button class="btn w3-green" type="button" class="btn btn-primary" onclick="viewApplication()"
+              data-toggle="" data-target=".bd-example-modal-lg">
               <i class="fas fa-eye"></i>
-            </button></td>
+            </button>
+          </td>
         </tr>
         {{/each}}
       </tbody>
@@ -92,7 +62,7 @@
 <script>
   function getUserData(email) {
     $.ajax({
-      url: '/admin/viewapplication/' + applicationNo,
+      url: '/admin/view-application/' + applicationNo,
       method: 'get',
       success: (data) => {
         data = data.data
@@ -125,9 +95,13 @@
     })
   }
 
-  $(document).ready(function() {
+  $(document).ready(function () {
     $('#table').DataTable();
-} );
-  console.log({{err}});
+  });
+  console.log({{ err }});
+
+  let viewApplication = (applicationNo) => {
+    $('#model').modal()
+  }
 
 </script>
