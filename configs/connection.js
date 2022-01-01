@@ -6,7 +6,7 @@ const state = {
 
 module.exports.connect = (done) => {
     const url = process.env.dbLink
-    const dbname = 'amj-scholarship'
+    const dbname = process.env.dbName
 
     mongoClient.connect(url, { useUnifiedTopology: true }, (err, data) => {
         if (err) return done(err)
