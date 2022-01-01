@@ -5,7 +5,7 @@ var userHelper = require('./user_helper')
 var nodeMailer = require('./nodeMailer')
 const { ObjectID } = require('mongodb')
 const { resolve, reject } = require('promise')
-const { response } = require('express')
+const { response, application } = require('express')
 
 module.exports = {
     userRegistration: (data) => {
@@ -227,6 +227,108 @@ module.exports = {
                 }).catch(err => {
                     reject(err)
                 })
+        })
+    },
+    getApplicationByApplicationNo: (applicationNo) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.APPLICATION_COLLECTION).aggregate([
+                {
+                    "$match": {
+                        "applicationNo": applicationNo
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'user',
+                        'localField': 'userId',
+                        'foreignField': '_id',
+                        'as': 'user'
+                    }
+                }, {
+                    '$unwind': {
+                        'path': '$user'
+                    }
+                }, {
+                    '$lookup': {
+                        'from': 'batches',
+                        'localField': 'user.batchId',
+                        'foreignField': 'ID',
+                        'as': 'batch'
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'courses',
+                        'localField': 'batch.COURSEID',
+                        'foreignField': 'ID',
+                        'as': 'course'
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'application_academic_details',
+                        'localField': '_id',
+                        'foreignField': '_id',
+                        'as': 'academic'
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'application_personal_details',
+                        'localField': '_id',
+                        'foreignField': '_id',
+                        'as': 'personal'
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'application_contact_details',
+                        'localField': '_id',
+                        'foreignField': '_id',
+                        'as': 'contact'
+                    }
+                },
+                {
+                    '$unwind': {
+                        'path': '$batch'
+                    }
+                }, {
+                    '$unwind': {
+                        'path': '$course'
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'departments',
+                        'localField': 'course.DEPARTMENTID',
+                        'foreignField': 'ID',
+                        'as': 'department'
+                    }
+                },
+                {
+                    '$unwind': {
+                        'path': '$academic'
+                    }
+                }, {
+                    '$unwind': {
+                        'path': '$personal'
+                    }
+                },
+                {
+                    '$unwind': {
+                        'path': '$contact'
+                    }
+                },
+                {
+                    '$unwind': {
+                        'path': '$department'
+                    }
+                },
+            ]).toArray().then(data => {
+                resolve(data[0])
+            }).catch(err => {
+                reject(err)
+            })
         })
     },
     //need

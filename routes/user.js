@@ -323,7 +323,7 @@ router.post('/reset-password/:token',
         }
     })
 
-router.get('/print-application',auth.ensureUserAuthenticated, (req, res) => {
+router.get('/print-application', auth.ensureUserAuthenticated, (req, res) => {
     let scholarshipListId = req.query.id
 
     userHelper.getscholarshipListByscholarshipListId(scholarshipListId)
@@ -335,7 +335,7 @@ router.get('/print-application',auth.ensureUserAuthenticated, (req, res) => {
                         Helper.getApplicationDetails(req.user._id, scholarshipListId).then(async data => {
                             const stream = res.writeHead(200, {
                                 'Content-Type': 'application/pdf',
-                                'Content-Disposition': `inline;filename=scholarship.pdf`,
+                                'Content-Disposition': `inline;filename=` + data.applicationNo + `.pdf`,
                                 // 'Content-Disposition': `attachment;filename=scholarship.pdf`,
                             });
 
@@ -373,6 +373,10 @@ router.get('/prospectus', (req, res) => {
     file.pipe(res);
 })
 
+router.get('/settings', auth.ensureUserAuthenticated, (req, res) => {
+    res.render('user/settings')
+})
+
 router.get("/login", (req, res) => {
     if (req.isAuthenticated()) {
         if (req.user.type === 'user')
@@ -395,11 +399,8 @@ router.get('/logout', auth.ensureUserAuthenticated,
         req.logout();
         res.redirect('/login')
     })
-//need
-router.get('/settings', auth.ensureUserAuthenticated, (req, res) => {
-    res.render('user/settings')
-})
 
+//need
 router.post('/change-password', auth.ensureUserAuthenticated, (req, res) => {
     userHelper.updatePassword(req.user, req.body).then(response => {
         req.user.password = response;
