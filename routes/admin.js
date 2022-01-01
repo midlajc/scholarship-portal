@@ -5,6 +5,7 @@ var passport = require('passport')
 var auth = require('../configs/auth');
 const user_helper = require('../helpers/user_helper');
 const Helper = require('../helpers/Helper');
+const { application, response } = require('express');
 
 //HOME
 
@@ -53,7 +54,28 @@ router.get('/approved-list', auth.ensureAdminAuthenticated, (req, res) => {
     })
 })
 
-router.get('/settings',auth.ensureAdminAuthenticated,(req,res)=>{
+router.get('/view-application', auth.ensureAdminAuthenticated,(req, res) => {
+    let applicationNo=req.query.id
+    adminHelper.getApplicationByApplicationNo(applicationNo).then(response => {
+        res.json({ status: true, message: response })
+    }).catch(err => {
+        res.json({ status: false, message: err })
+    })
+})
+
+router.post('/verify-application', auth.ensureAdminAuthenticated, (req, res) => {
+    res.json({ status: true })
+})
+
+router.post('/approve-application', auth.ensureAdminAuthenticated, (req, res) => {
+    res.json({ status: true })
+})
+
+router.post('/reject-application', auth.ensureAdminAuthenticated, (req, res) => {
+    res.json({ status: true })
+})
+
+router.get('/settings', auth.ensureAdminAuthenticated, (req, res) => {
     res.render('admin/settings')
 })
 
