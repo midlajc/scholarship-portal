@@ -20,7 +20,7 @@ router.get('/', (req, res) => {
         else
             res.render('user/login')
     } else {
-        res.render('user/index')
+        res.render('index')
     }
 })
 
