@@ -14,7 +14,7 @@ module.exports = sendMail = (data) => {
         });
 
         let mailOptions = {
-            from: 'MSF WMOC<' + email + '>',
+            from: process.env.org + '<' + email + '>',
             to: data.recipient,
             subject: data.subject,
             text: data.message
