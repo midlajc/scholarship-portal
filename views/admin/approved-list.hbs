@@ -1,50 +1,321 @@
-<!-- Modal -->
-<div class="modal fade align-middle" id="myModal">
-  <div class="modal-dialog" role="document">
+<link rel="stylesheet" href="/stylesheets/user/scholarshipform.css">
+<style>
+  @media (min-width: 993px) {
+    .modal-dialog {
+      max-width: 65%;
+    }
+  }
+</style>
+<div class="modal fade" id="model" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog model-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <h5 class="modal-title">Application</h5>
+        <button type="button" class="close btn" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body ">
-        <div class="card">
-          <div class="card-body">
-            <p>
-            <div class="fs-3">Name</div>
-            <div id="name"></div>
-            </p>
-            <p>
-            <div class="fs-3">Email
-              <span id="badge" class="badge">
-                <i class="fa" id="badgeIcon"></i>
-              </span>
-              </p>
-            </div>
-            <div id="email">
+      <div class="modal-body">
+        <form id="form" class="row">
+          <div class="col-md-12">
+            <div class="modal-body">
+              <button class="accordion fw-bold active">Scholarship Details</button>
+              <div class="panel" style="display: block;">
+                <div class="mt">
+                  <div class="row">
+                    <div class="col-lg-5 col-xs-12">
+                      <label class="fw-bold">Scholarship
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="scholarshipName">
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">Application No
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="applicationNo">
+                      </div>
+                    </div>
+                    <div class="col-lg-3 col-xs-12">
+                      <label class="fw-bold">Application Status
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="applicationStatus">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="accordion fw-bold active">Personal Details</button>
+              <div class="panel" style="display: block;">
+                <div class="mt">
+                  <div class="row">
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">Name</label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="name">
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">Mobile
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="mobile">
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">Email
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="email">
+                      </div>
+                    </div>
 
+                    <div class="col-lg-4 col-xs-12" tooltip="Name">
+                      <label class="fw-bold">Gender</label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="gender">
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">Date Of Birth
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="dob">
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">Annual Income
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="annualIncome">
+                      </div>
+                    </div>
+                    <div class="col-lg-6 col-xs-12">
+                      <label class="fw-bold">Work part time?
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="partTimeJob">
+                      </div>
+                    </div>
+                    <div class="col-lg-6 col-xs-12">
+                      <label class="fw-bold">Job
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="partTimeJobName">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="accordion fw-bold">Address Information</button>
+              <div class="panel">
+                <div class="mt">
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                        <label class="fw-bold">Permanent Address
+                        </label>
+                        <textarea disabled class="form-control" id="pAddress" rows="4"></textarea>
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                        <label class="fw-bold">Communication Address
+                        </label>
+                        <textarea disabled class="form-control" id="cAddress" rows="4"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="accordion fw-bold active">Contact Details</button>
+              <div class="panel" style="display: block;">
+                <div class="mt">
+                  <div class="row">
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">State
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="state">
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">District
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="district">
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">Village/Municipality
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="panchayath">
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">Taluk
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="taluk">
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">Ward No
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="wardNo">
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">Ward Member Name
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="wardMemberName">
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">Mobile No
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="wardMemberMobile">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="accordion fw-bold ">Academic Details</button>
+              <div class="" style="display: block;">
+                <div class="mt">
+                  <div class="row">
+
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">Department</label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="department">
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">Course
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="course">
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">Batch
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="batch">
+                      </div>
+                    </div>
+
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">
+                        Plus two
+                      </label>
+                      <div class="input-group">
+                        <input class="form-control" disabled id="plusTwo">
+                        <div class="input-group-append">
+                          <span class="input-group-text">%</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">
+                        Previous Sem
+                      </label>
+                      <div class="input-group">
+                        <input class="form-control" disabled id="previousSem">
+                        <div class="input-group-append">
+                          <span class="input-group-text">%</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-xs-12">
+                      <label class="fw-bold">
+                        is Hosteler?
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="isHosteler">
+                      </div>
+                    </div>
+                    <div class="col-lg-5 col-xs-12">
+                      <label class="fw-bold">Preparing for competitive exams
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="competitiveExam">
+                      </div>
+                    </div>
+                    <div class="col-lg-7 col-xs-12">
+                      <label class="fw-bold">Competitive Exam and coaching Institute
+                      </label>
+                      <div class="form-group">
+                        <input class="form-control" disabled id="competitiveExamName">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button class="accordion fw-bold ">Family Members</button>
+              <div class="" style="display: block;">
+                <div class="mt">
+                  <div class="row">
+                    <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Relation</th>
+                            <th>Occupation</th>
+                            <th>Organisation/institution</th>
+                            <th>Mobile</th>
+                          </tr>
+                        </thead>
+                        <tbody id="family_members">
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <p>
-            <div class="fs-3">Gender</div>
-            <div id="gender"></div>
-            </p>
-            <p>
-            <div class="fs-3">College</div>
-            <div id="college"></div>
-            </p>
-            <p>
-            <div class="fs-3">Time</div>
-            <div id="time"></div>
-            </p>
-            <p>
-            <div class="fs-3">Items</div>
-            <ul>
-              <div id="items"></div>
-            </ul>
-            </p>
+
+            <button class="accordion fw-bold ">Bank Details</button>
+            <div class="" style="display: block;">
+              <div class="mt">
+                <div class="row">
+                  <div class="col-lg-6 col-xs-12 mb-3">
+                    <label class="form-label">Account Holder Name</label>
+                    <input type="text" id="accountHolderName" disabled class="form-control">
+                  </div>
+                  <div class="col-lg-6 col-xs-12 mb-3">
+                    <label class="form-label">Account No</label>
+                    <input type="text" class="form-control" disabled id="accountNo">
+                  </div>
+                  <div class="col-lg-4 col-xs-12 mb-3">
+                    <label class="form-label">Bank Name</label>
+                    <input type="text" id="bankName" disabled class="form-control">
+                  </div>
+                  <div class="col-lg-4 col-xs-12 mb-3">
+                    <label class="form-label">IFSC Code</label>
+                    <input type="text" id="ifsc" disabled class="form-control">
+                  </div>
+                  <div class="col-lg-4 col-xs-12 mb-3">
+                    <label class="form-label">Bank Branch</label>
+                    <input type="text" id="branch" disabled class="form-control">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -72,7 +343,7 @@
           <td>{{this.user.mobile}}</td>
           <td>{{this.course.COURSENAME}}</td>
           <td>{{this.batch.BATCHNAME}}</td>
-          <td><button class="btn w3-green">
+          <td><button class="btn w3-green" onclick="viewApplication('{{this.applicationNo}}')">
               <i class="fas fa-eye"></i>
             </button></td>
         </tr>
@@ -81,45 +352,6 @@
     </table>
   </div>
 </div>
-<script>
-  function getUserData(email) {
-    $.ajax({
-      url: '/admin/viewapplication/' + applicationNo,
-      method: 'get',
-      success: (data) => {
-        data = data.data
-        $('#name').html(data.name)
-        $('#email').html(data.email)
-        $('#gender').html(data.gender)
-        $('#college').html(data.college)
-        $('#time').html(new Date(data.submissionTime))
-        $('#items').html(() => {
-          let items = ''
-          for (x of data.items) {
-            items += "<li>" + x + "</li>"
-          }
-          return items
-        })
-        if (data.emailVerificationStatus) {
-          $('#badge').removeClass('bg-danger')
-          $('#badge').addClass('bg-success')
-          $('#badgeIcon').removeClass('fa-times')
-          $('#badgeIcon').addClass('fa-check')
-        } else {
-          console.log('hello')
-          $('#badge').removeClass('bg-success')
-          $('#badge').addClass('bg-danger')
-          $('#badgeIcon').removeClass('fa-check')
-          $('#badgeIcon').addClass('fa-times')
-        }
-        $('#loading').hide()
-      }
-    })
-  }
-
-  $(document).ready(function () {
-    $('#table').DataTable();
-  });
-
-  console.log({{err}});
+<script src="/js/view_application.js">
+  console.log('{{err}}');
 </script>

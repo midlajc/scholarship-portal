@@ -324,6 +324,66 @@ module.exports = {
                         'path': '$department'
                     }
                 },
+                {
+                    '$lookup': {
+                        'from': 'family_members',
+                        'localField': 'user._id',
+                        'foreignField': 'userId',
+                        'as': 'family_members'
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'bank_details',
+                        'localField': 'user._id',
+                        'foreignField': '_id',
+                        'as': 'bank_details'
+                    }
+                },
+                {
+                    '$unwind': {
+                        'path': '$bank_details'
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'scholarship_list',
+                        'localField': 'scholarshipListId',
+                        'foreignField': 'ID',
+                        'as': 'scholarship'
+                    }
+                },
+                {
+                    '$unwind': {
+                        'path': '$scholarship'
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'application_status',
+                        'localField': 'applicationStatus',
+                        'foreignField': 'id',
+                        'as': 'applicationStatus'
+                    }
+                },
+                {
+                    '$unwind': {
+                        'path': '$applicationStatus'
+                    }
+                },
+                {
+                    '$lookup': {
+                        'from': 'gender',
+                        'localField': 'user.genderId',
+                        'foreignField': 'ID',
+                        'as': 'user.gender'
+                    }
+                },
+                {
+                    '$unwind': {
+                        'path': '$user.gender'
+                    }
+                },
             ]).toArray().then(data => {
                 resolve(data[0])
             }).catch(err => {

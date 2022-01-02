@@ -54,10 +54,46 @@ router.get('/approved-list', auth.ensureAdminAuthenticated, (req, res) => {
     })
 })
 
-router.get('/view-application', auth.ensureAdminAuthenticated,(req, res) => {
-    let applicationNo=req.query.id
+router.get('/fetch-application', auth.ensureAdminAuthenticated, (req, res) => {
+    let applicationNo = req.query.id
     adminHelper.getApplicationByApplicationNo(applicationNo).then(response => {
-        res.json({ status: true, message: response })
+        let data={
+            dob : response.user.dob.getDate() + '/' + (response.user.dob.getMonth() + 1) + '/' + response.user.dob.getFullYear(),
+            name:response.user.name,
+            applicationNo:response.applicationNo,
+            applicationStatus:response.applicationStatus.message,
+            email:response.user.email,
+            mobile:response.user.mobile,
+            gender:response.user.gender.genderName,
+            batch:response.batch.BATCHNAME,
+            course:response.course.COURSENAME,
+            department:response.department.DEPARTMENTNAME,
+            competitiveExam:response.academic.competitiveExam,
+            competitiveExamName:response.academic.competitiveExamName,
+            isHostler:response.academic.isHostler,
+            plusTwo:response.academic.plusTwo,
+            previousSem:response.academic.previousSem,
+            annualIncome:response.personal.annualIncome,
+            cAddress:response.personal.cAddress,
+            pAddress:response.personal.pAddress,
+            partTimeJob:response.personal.partTimeJob,
+            partTimeJobName:response.personal.partTimeJobName,
+            district:response.contact.district,
+            panchayath:response.contact.panchayath,
+            state:response.contact.state,
+            taluk:response.contact.taluk,
+            wardMemberMobile:response.contact.wardMemberMobile,
+            wardMemberName:response.contact.wardMemberName,
+            wardNo:response.contact.wardNo,
+            family_members:response.family_members,
+            accountHolderName:response.bank_details.accountHolderName,
+            accountNo:response.bank_details.accountNo,
+            bankName:response.bank_details.bankName,
+            ifsc:response.bank_details.ifsc,
+            branch:response.bank_details.branch,
+            scholarshipName:response.scholarship.scholarshipName
+        }
+        res.json({ status: true, data: data })
     }).catch(err => {
         res.json({ status: false, message: err })
     })
