@@ -1,6 +1,18 @@
-<link rel="stylesheet" href="/stylesheets/index.css">
-<a style="--content: 'Apply Now';" href="/login">
-    <div class="left"></div>
-    Apply Now
-    <div class="right"></div>
-</a>
+<link rel="stylesheet" href="/stylesheets/index/index.css">
+<div class="root">
+    <img class="caption" src="/images/index/caption.png" alt="">
+    <img class="image" src="/images/index/amjad.png" alt="" srcset="">
+    <img class="scholarship" src="/images/index/amj-scholarship.png" alt="" srcset="">
+    <button style="--content: 'Apply Now';" type="button" onclick="redirect()">
+        <div class="left"></div>
+        Apply Now
+        <div class="right"></div>
+    </button>
+    <div><a href="">msf Haritha WMOC</a></div>
+</div>
+
+<script>
+    let redirect=()=>{
+        location.replace('/login')
+    }
+</script>
