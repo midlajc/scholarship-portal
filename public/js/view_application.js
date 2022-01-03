@@ -4,7 +4,6 @@ let viewApplication = (applicationNo) => {
         method: 'get',
         success: (data) => {
             data = data.data
-            console.log(data)
             $('#scholarshipName').val(data.scholarshipName)
             $('#applicationNo').val(data.applicationNo)
             $('#applicationStatus').val(data.applicationStatus)

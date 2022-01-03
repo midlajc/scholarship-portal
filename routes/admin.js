@@ -54,6 +54,15 @@ router.get('/approved-list', auth.ensureAdminAuthenticated, (req, res) => {
     })
 })
 
+router.get('/rejected-list',auth.ensureAdminAuthenticated,(req,res)=>{
+    adminHelper.getRejectedApplications().then(async data => {
+        res.render('admin/rejected-list', { data })
+    }).catch((err) => {
+        req.flash('error_msg', err)
+        res.render('admin/rejected-list', { err })
+    })
+})
+
 router.get('/fetch-application', auth.ensureAdminAuthenticated, (req, res) => {
     let applicationNo = req.query.id
     adminHelper.getApplicationByApplicationNo(applicationNo).then(response => {

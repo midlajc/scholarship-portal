@@ -229,6 +229,56 @@ module.exports = {
                 })
         })
     },
+    getRejectedApplications:()=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.APPLICATION_COLLECTION)
+                .aggregate([
+                    {
+                        "$match": {
+                            "applicationStatus": parseInt(-1)
+                        }
+                    },
+                    {
+                        '$lookup': {
+                            'from': 'user',
+                            'localField': 'userId',
+                            'foreignField': '_id',
+                            'as': 'user'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$user'
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'batches',
+                            'localField': 'user.batchId',
+                            'foreignField': 'ID',
+                            'as': 'batch'
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'courses',
+                            'localField': 'batch.COURSEID',
+                            'foreignField': 'ID',
+                            'as': 'course'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$batch'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$course'
+                        }
+                    }
+                ]).toArray().then(response => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
     getApplicationByApplicationNo: (applicationNo) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.APPLICATION_COLLECTION).aggregate([
