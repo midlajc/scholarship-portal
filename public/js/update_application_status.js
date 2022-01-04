@@ -35,3 +35,31 @@ let verifyApplication = () => {
         }
     })
 }
+
+
+let rejectApplication = () => {
+    $.ajax({
+        url: '/admin/reject-application',
+        method: 'patch',
+        data: {
+            applicationNo: $('#applicationNo').val()
+        },
+        success: (res) => {
+            $('#model').modal('hide')
+            if (res.status) {
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'Application Rejected'
+                })
+                document.getElementById($('#applicationNo').val()).classList.add("d-none");
+            } else {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Error Occured,Please try again'
+                })
+                log(res.err)
+            }
+        }
+    })
+}
+

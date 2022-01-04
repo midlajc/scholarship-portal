@@ -117,11 +117,15 @@ router.patch('/verify-application', auth.ensureAdminAuthenticated, (req, res) =>
     })
 })
 
-router.post('/approve-application', auth.ensureAdminAuthenticated, (req, res) => {
-    res.json({ status: true })
+router.patch('/reject-application', auth.ensureAdminAuthenticated, (req, res) => {
+    adminHelper.rejectApplication(req.body.applicationNo).then(response => {
+        res.json({ status: true })
+    }).catch(err => {
+        res.json({ status: false, err: err })
+    })
 })
 
-router.post('/reject-application', auth.ensureAdminAuthenticated, (req, res) => {
+router.post('/approve-application', auth.ensureAdminAuthenticated, (req, res) => {
     res.json({ status: true })
 })
 

@@ -5,6 +5,7 @@ var userHelper = require('./user_helper')
 var nodeMailer = require('./nodeMailer')
 const { ObjectID } = require('mongodb')
 const Helper = require('./Helper')
+const { resolve, reject } = require('promise')
 
 module.exports = {
     userRegistration: (data) => {
@@ -459,6 +460,26 @@ module.exports = {
             //     })
             // }
         })
+    },
+    rejectApplication: (applicationNo) => {
+        return new Promise((resolve, reject) => {
+            Promise.all([Helper.updateApplicationStatus(applicationNo, -1)]).then(() => {
+                resolve()
+            }).catch(err => {
+                reject(err)
+            })
+        })
+        // function sendRejectEmail() {
+        //     return new Promise((resolve, reject) => {
+        //         nodeMailer({
+        //             recipient: email,
+        //             subject: 'Application Approved',
+        //             message: "Application Approved\nUser Name:" + username + "\n Thank You For Registration"
+        //         }).then(() => {
+        //             resolve()
+        //         })
+        //     })
+        // }
     },
     //need
     getApplicationData: () => {
