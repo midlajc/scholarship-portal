@@ -24,7 +24,7 @@ let verifyApplication = () => {
                     icon: 'success',
                     title: 'Verified successfully'
                 })
-                document.getElementById($('#applicationNo').val()).classList.add("d-none");
+                $("#" + $('#applicationNo').val()).addClass("d-none");
             } else {
                 Toast.fire({
                     icon: 'error',
@@ -51,7 +51,7 @@ let rejectApplication = () => {
                     icon: 'warning',
                     title: 'Application Rejected'
                 })
-                document.getElementById($('#applicationNo').val()).classList.add("d-none");
+                $("#" + $('#applicationNo').val()).addClass("d-none");
             } else {
                 Toast.fire({
                     icon: 'error',
