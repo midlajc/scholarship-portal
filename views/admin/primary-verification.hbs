@@ -335,7 +335,7 @@
       </thead>
       <tbody>
         {{#each data}}
-        <tr>
+        <tr id="{{this.applicationNo}}">
           <td>{{this.applicationNo}}</td>
           <td>{{this.user.name}}</td>
           <td>{{this.user.mobile}}</td>
@@ -350,20 +350,8 @@
     </table>
   </div>
 </div>
-<script src="/js/view_application.js">
-</script>
+<script src="/js/view_application.js"></script>
+<script src="/js/update_application_status.js"></script>
 <script>
-  let verifyApplication = () => {
-    $.ajax({
-      url: '/admin/verify-application',
-      method: 'patch',
-      data: {
-        applicationNo: $('#applicationNo').val()
-      },
-      success: (res) => {
-
-      }
-    })
-  }
-  console.log('{{err}}');
+  console.log({{err}});
 </script>

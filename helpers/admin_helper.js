@@ -4,8 +4,7 @@ var collection = require('../configs/collection')
 var userHelper = require('./user_helper')
 var nodeMailer = require('./nodeMailer')
 const { ObjectID } = require('mongodb')
-const { resolve, reject } = require('promise')
-const { response, application } = require('express')
+const Helper = require('./Helper')
 
 module.exports = {
     userRegistration: (data) => {
@@ -229,7 +228,7 @@ module.exports = {
                 })
         })
     },
-    getRejectedApplications:()=>{
+    getRejectedApplications: () => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.APPLICATION_COLLECTION)
                 .aggregate([
@@ -441,6 +440,26 @@ module.exports = {
             })
         })
     },
+    verifyApplication: (applicationNo) => {
+        return new Promise(async (resolve, reject) => {
+            Promise.all([Helper.updateApplicationStatus(applicationNo, 3)]).then(() => {
+                resolve()
+            }).catch(err => {
+                reject(err)
+            })
+            // function sendApprovalEmail() {
+            //     return new Promise((resolve, reject) => {
+            //         nodeMailer({
+            //             recipient: email,
+            //             subject: 'Application Approved',
+            //             message: "Application Approved\nUser Name:" + username + "\n Thank You For Registration"
+            //         }).then(() => {
+            //             resolve()
+            //         })
+            //     })
+            // }
+        })
+    },
     //need
     getApplicationData: () => {
         return new Promise((resolve, reject) => {
@@ -471,54 +490,6 @@ module.exports = {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.APPICATION_COLLECTION).find({ applicationStatus: false, emailVerificationStatus: true }).toArray().then(response => {
                 resolve(response)
-            })
-        })
-    },
-    verifyApplication: (email) => {
-        return new Promise(async (resolve, reject) => {
-            let id = await userHelper.getNewId()
-            let username = "TEZLA" + id;
-
-            function addNewUser(data) {
-                return new Promise((resolve, reject) => {
-                    db.get().collection(collection.USER_COLLECTION).insertOne({
-                        _id: id,
-                        username: username,
-                        name: data.name,
-                        email: data.email,
-                        phoneno: data.phoneno,
-                        password: data.password,
-                        items: data.items,
-                        type: 'user'
-                    }).then(() => {
-                        resolve()
-                    })
-                })
-            }
-
-            function updateApplicationStatus() {
-                return new Promise((resolve, reject) => {
-                    db.get().collection(collection.APPICATION_COLLECTION).updateOne({ email: email }, { "$set": { "applicationStatus": true } }).then(() => {
-                        resolve()
-                    })
-                })
-            }
-
-            function sendApprovalEmail() {
-                return new Promise((resolve, reject) => {
-                    nodeMailer({
-                        recipient: email,
-                        subject: 'Application Approved',
-                        message: "Application Approved\nUser Name:" + username + "\n Thank You For Registration"
-                    }).then(() => {
-                        resolve()
-                    })
-                })
-            }
-            db.get().collection(collection.APPICATION_COLLECTION).findOne({ email: email }).then(response => {
-                Promise.all([addNewUser(response), updateApplicationStatus(), sendApprovalEmail()]).then(() => {
-                    resolve()
-                })
             })
         })
     },
