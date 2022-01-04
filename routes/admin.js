@@ -6,6 +6,7 @@ var auth = require('../configs/auth');
 const user_helper = require('../helpers/user_helper');
 const Helper = require('../helpers/Helper');
 const { application, response } = require('express');
+const { log } = require('debug');
 
 //HOME
 
@@ -108,8 +109,10 @@ router.get('/fetch-application', auth.ensureAdminAuthenticated, (req, res) => {
     })
 })
 
-router.post('/verify-application', auth.ensureAdminAuthenticated, (req, res) => {
-    res.json({ status: true })
+router.patch('/verify-application', auth.ensureAdminAuthenticated, (req, res) => {
+    adminHelper.verifyApplication(req.body.applicationNo).then(response=>{
+        res.json({ status: true })
+    })
 })
 
 router.post('/approve-application', auth.ensureAdminAuthenticated, (req, res) => {

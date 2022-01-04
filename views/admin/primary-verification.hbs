@@ -310,7 +310,9 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn w3-green" onclick="verifyApplication()">Verify</button>
+        <button type="button" class="btn w3-red" data-dismiss="modal">Reject</button>
+        <button type="button" class="btn w3-dark-grey" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -349,5 +351,19 @@
   </div>
 </div>
 <script src="/js/view_application.js">
+</script>
+<script>
+  let verifyApplication = () => {
+    $.ajax({
+      url: '/admin/verify-application',
+      method: 'patch',
+      data: {
+        applicationNo: $('#applicationNo').val()
+      },
+      success: (res) => {
+
+      }
+    })
+  }
   console.log('{{err}}');
 </script>
