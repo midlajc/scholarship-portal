@@ -310,7 +310,8 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn w3-green" onclick="approveApplication()">Approve</button>
+        <button type="button" class="btn w3-dark-grey" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -349,6 +350,8 @@
     </table>
   </div>
 </div>
-<script src="/js/view_application.js">
-  console.log('{{err}}');
+<script src="/js/view_application.js"></script>
+<script src="/js/update_application_status.js"></script>
+<script>
+  console.log({{err}});
 </script>

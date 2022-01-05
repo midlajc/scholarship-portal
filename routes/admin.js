@@ -126,7 +126,11 @@ router.patch('/reject-application', auth.ensureAdminAuthenticated, (req, res) =>
 })
 
 router.post('/approve-application', auth.ensureAdminAuthenticated, (req, res) => {
-    res.json({ status: true })
+    adminHelper.approveApplication(req.body.applicationNo).then(response => {
+        res.json({ status: true })
+    }).catch(err => {
+        res.json({ status: false, err: err })
+    })
 })
 
 router.get('/settings', auth.ensureAdminAuthenticated, (req, res) => {

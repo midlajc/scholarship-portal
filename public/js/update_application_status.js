@@ -63,3 +63,28 @@ let rejectApplication = () => {
     })
 }
 
+let approveApplication = () => {
+    $.ajax({
+        url: '/admin/approve-application',
+        method: 'patch',
+        data: {
+            applicationNo: $('#applicationNo').val()
+        },
+        success: (res) => {
+            $('#model').modal('hide')
+            if (res.status) {
+                Toast.fire({
+                    icon: 'warning',
+                    title: 'Application Rejected'
+                })
+                $("#" + $('#applicationNo').val()).addClass("d-none");
+            } else {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Error Occured,Please try again'
+                })
+                log(res.err)
+            }
+        }
+    })
+}

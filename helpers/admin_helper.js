@@ -448,7 +448,7 @@ module.exports = {
             }).catch(err => {
                 reject(err)
             })
-            // function sendApprovalEmail() {
+            // function sendVerificationEmail() {
             //     return new Promise((resolve, reject) => {
             //         nodeMailer({
             //             recipient: email,
@@ -468,18 +468,38 @@ module.exports = {
             }).catch(err => {
                 reject(err)
             })
+            // function sendRejectEmail() {
+            //     return new Promise((resolve, reject) => {
+            //         nodeMailer({
+            //             recipient: email,
+            //             subject: 'Application Approved',
+            //             message: "Application Approved\nUser Name:" + username + "\n Thank You For Registration"
+            //         }).then(() => {
+            //             resolve()
+            //         })
+            //     })
+            // }
         })
-        // function sendRejectEmail() {
-        //     return new Promise((resolve, reject) => {
-        //         nodeMailer({
-        //             recipient: email,
-        //             subject: 'Application Approved',
-        //             message: "Application Approved\nUser Name:" + username + "\n Thank You For Registration"
-        //         }).then(() => {
-        //             resolve()
-        //         })
-        //     })
-        // }
+    },
+    approveApplication: () => {
+        return new Promise((resolve, reject) => {
+            Promise.all([Helper.updateApplicationStatus(applicationNo, 4)]).then(() => {
+                resolve()
+            }).catch(err => {
+                reject(err)
+            })
+            // function sendApprovalEmail() {
+            //     return new Promise((resolve, reject) => {
+            //         nodeMailer({
+            //             recipient: email,
+            //             subject: 'Application Approved',
+            //             message: "Application Approved\nUser Name:" + username + "\n Thank You For Registration"
+            //         }).then(() => {
+            //             resolve()
+            //         })
+            //     })
+            // }
+        })
     },
     //need
     getApplicationData: () => {
