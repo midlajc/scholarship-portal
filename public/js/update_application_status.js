@@ -22,7 +22,7 @@ let verifyApplication = () => {
             if (res.status) {
                 Toast.fire({
                     icon: 'success',
-                    title: 'Verified successfully'
+                    title: 'Application Verified'
                 })
                 $("#" + $('#applicationNo').val()).addClass("d-none");
             } else {
@@ -30,7 +30,7 @@ let verifyApplication = () => {
                     icon: 'error',
                     title: 'Error Occured,Please try again'
                 })
-                log(res.err)
+                console.log(res.err)
             }
         }
     })
@@ -57,7 +57,7 @@ let rejectApplication = () => {
                     icon: 'error',
                     title: 'Error Occured,Please try again'
                 })
-                log(res.err)
+                console.log(res.err)
             }
         }
     })
@@ -74,8 +74,8 @@ let approveApplication = () => {
             $('#model').modal('hide')
             if (res.status) {
                 Toast.fire({
-                    icon: 'warning',
-                    title: 'Application Rejected'
+                    icon: 'success',
+                    title: 'Application Approved'
                 })
                 $("#" + $('#applicationNo').val()).addClass("d-none");
             } else {
@@ -83,7 +83,7 @@ let approveApplication = () => {
                     icon: 'error',
                     title: 'Error Occured,Please try again'
                 })
-                log(res.err)
+                console.log(res.err)
             }
         }
     })

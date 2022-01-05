@@ -340,8 +340,7 @@
           <td>{{this.course.COURSENAME}}</td>
           <td>{{this.batch.BATCHNAME}}</td>
           <td>
-            <button class="btn w3-green" type="button" class="btn btn-primary"
-              onclick="viewApplication('{{this.applicationNo}}')" data-toggle="" data-target=".bd-example-modal-lg">
+            <button class="btn w3-green" type="button" onclick="viewApplication('{{this.applicationNo}}')">
               <i class="fas fa-eye"></i>
             </button>
           </td>
@@ -351,6 +350,7 @@
     </table>
   </div>
 </div>
-<script src="/js/view_application.js">
-  console.log('{{err}}');
+<script src="/js/view_application.js"></script>
+<script>
+  console.log({{err}});
 </script>

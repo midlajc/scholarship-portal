@@ -125,7 +125,8 @@ router.patch('/reject-application', auth.ensureAdminAuthenticated, (req, res) =>
     })
 })
 
-router.post('/approve-application', auth.ensureAdminAuthenticated, (req, res) => {
+router.patch('/approve-application', auth.ensureAdminAuthenticated, (req, res) => {
+    console.log(req.body.applicationNo);
     adminHelper.approveApplication(req.body.applicationNo).then(response => {
         res.json({ status: true })
     }).catch(err => {
@@ -165,11 +166,11 @@ router.get('/pending-applications', auth.ensureAdminAuthenticated, (req, res) =>
     })
 })
 
-router.post('/approve-application', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.approveApplication(req.body.email).then(() => {
-        res.json({ status: true })
-    })
-})
+// router.post('/approve-application', auth.ensureAdminAuthenticated, (req, res) => {
+//     adminHelper.approveApplication(req.body.email).then(() => {
+//         res.json({ status: true })
+//     })
+// })
 
 router.get('/verified applications', auth.ensureAdminAuthenticated, (req, res) => {
     adminHelper.getVerifiedApplication().then(data => {

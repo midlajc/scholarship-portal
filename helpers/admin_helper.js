@@ -481,7 +481,7 @@ module.exports = {
             // }
         })
     },
-    approveApplication: () => {
+    approveApplication: (applicationNo) => {
         return new Promise((resolve, reject) => {
             Promise.all([Helper.updateApplicationStatus(applicationNo, 4)]).then(() => {
                 resolve()
