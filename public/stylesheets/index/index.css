@@ -21,6 +21,12 @@ html, body {
   background-size: auto auto;
 }
 
+@media (max-height: 760px) {
+  html, body{
+    height: auto;
+  }
+}
+
 .root button {
   position: absolute;
   position:relative;
