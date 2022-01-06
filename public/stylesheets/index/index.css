@@ -148,7 +148,7 @@ a{
     height: 7rem;
   }
   .image{
-    width: 80%;
+    width: 75%;
     height: 26rem;
   }
 
@@ -156,6 +156,6 @@ a{
     width: 85%;
     height: 7rem;
     margin: 1rem;
-    margin-top: -3.5rem;
+    margin-top: -4rem;
   }
 }
