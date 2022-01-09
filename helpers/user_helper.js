@@ -313,7 +313,7 @@ module.exports = {
             db.get().collection(collection.APPLICATION_COLLECTION).findOneAndUpdate(
                 {
                     userId: ObjectId(user._id),
-                    applicationNo: scholarship.scholarshipCode + user.mobile
+                    scholarshipListId: parseInt(data.scholarshipListId)
                 },
                 {
                     "$set": {
@@ -331,11 +331,12 @@ module.exports = {
                         db.get().collection(collection.APPLICATION_PERSONAL_DETAILS_COLLECTION)
                             .updateOne(
                                 {
-                                    _id: _id
+                                    applicationId: _id
                                 },
                                 {
                                     "$set": {
-                                        _id: _id,
+                                        _id,
+                                        applicationId: _id,
                                         annualIncome: parseInt(data.annualIncome),
                                         partTimeJob: (data.partTimeJob == 1),
                                         partTimeJobName: data.partTimeJobName,
@@ -355,11 +356,12 @@ module.exports = {
                         db.get().collection(collection.APPLICATION_CONTACT_DETAILS_COLLECTION)
                             .updateOne(
                                 {
-                                    _id: _id
+                                    applicationId: _id
                                 },
                                 {
                                     "$set": {
-                                        _id: _id,
+                                        _id,
+                                        applicationId: _id,
                                         state: data.state,
                                         district: await Helper.getDistrictById(data.district),
                                         districtId: parseInt(data.district),
@@ -382,11 +384,12 @@ module.exports = {
                         db.get().collection(collection.APPLICATION_ACADEMIC_DETAILS_COLLECTION)
                             .updateOne(
                                 {
-                                    _id: _id
+                                    applicationId: _id
                                 },
                                 {
                                     "$set": {
-                                        _id: _id,
+                                        _id,
+                                        applicationId: _id,
                                         plusTwo: data.plusTwo,
                                         previousSem: data.previousSem,
                                         isHosteler: (data.isHosteler == 1),
@@ -422,7 +425,7 @@ module.exports = {
                 if (application_details) {
                     let personal_details = new Promise((resolve, reject) => {
                         db.get().collection(collection.APPLICATION_PERSONAL_DETAILS_COLLECTION)
-                            .findOne({ _id: ObjectId(application_details._id) }).then(response => {
+                            .findOne({ applicationId: ObjectId(application_details._id) }).then(response => {
                                 resolve(response)
                             }).catch(err => {
                                 reject(err)
@@ -430,7 +433,7 @@ module.exports = {
                     });
                     let academic_details = new Promise((resolve, reject) => {
                         db.get().collection(collection.APPLICATION_ACADEMIC_DETAILS_COLLECTION)
-                            .findOne({ _id: ObjectId(application_details._id) }).then(response => {
+                            .findOne({ applicationId: ObjectId(application_details._id) }).then(response => {
                                 resolve(response)
                             }).catch(err => {
                                 reject(err)
@@ -438,7 +441,7 @@ module.exports = {
                     });
                     let contact_details = new Promise((resolve, reject) => {
                         db.get().collection(collection.APPLICATION_CONTACT_DETAILS_COLLECTION)
-                            .findOne({ _id: ObjectId(application_details._id) }).then(response => {
+                            .findOne({ applicationId: ObjectId(application_details._id) }).then(response => {
                                 resolve(response)
                             }).catch(err => {
                                 reject(err)
@@ -462,7 +465,7 @@ module.exports = {
     getBankDetails: (userId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.BANK_DETAILS_COLLECTION)
-                .findOne({ _id: ObjectId(userId) }).then(response => {
+                .findOne({ userId: ObjectId(userId) }).then(response => {
                     resolve(response)
                 }).catch(err => {
                     reject(err)
@@ -474,6 +477,7 @@ module.exports = {
             db.get().collection(collection.BANK_DETAILS_COLLECTION)
                 .insertOne({
                     _id: ObjectId(userId),
+                    userId: ObjectId(userId),
                     accountHolderName: data.accountHolderName,
                     accountNo: data.accountNo1,
                     bankName: data.bankName,

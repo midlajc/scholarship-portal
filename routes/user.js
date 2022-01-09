@@ -116,6 +116,7 @@ router.get('/verify-email/:token', (req, res) => {
 
 router.get('/scholarships', auth.ensureUserAuthenticated, (req, res) => {
     userHelper.filterScholarship(req.user).then(response => {
+        // userHelper.checkBankandFamily(req.user)
         res.render('user/scholarships', { scholarships: response })
     })
 })
@@ -265,6 +266,8 @@ router.post("/bank-details", auth.ensureUserAuthenticated, async (req, res) => {
     else {
         userHelper.saveBankDetails(req.body, req.user._id).then(response => {
             res.json({ status: true, message: "Account Details Saved" })
+        }).catch(err=>{
+        res.json({ status: false, message: "Error Occured Try Again" })
         })
     }
 })
@@ -324,8 +327,7 @@ router.post('/reset-password/:token',
     })
 
 router.get('/print-application', auth.ensureUserAuthenticated, (req, res) => {
-    let scholarshipListId = req.query.id
-
+    let scholarshipListId = parseInt(req.query.id)
     userHelper.getscholarshipListByscholarshipListId(scholarshipListId)
         .then((scholarship) => {
             userHelper.applicationStatus(scholarship.scholarshipId, req.user)
@@ -350,6 +352,9 @@ router.get('/print-application', auth.ensureUserAuthenticated, (req, res) => {
                                 (chunk) => stream.write(chunk),
                                 () => stream.end()
                             );
+                        }).catch((err) => {
+                            req.flash('error_msg', err)
+                            res.redirect('/home')
                         })
                     }
                     else {
