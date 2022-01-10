@@ -120,13 +120,13 @@ module.exports = {
         })
     })
   },
-  getApplicationDetails: (userId, scholarshipId) => {
+  getApplicationDetails: (userId, scholarshipListId) => {
     return new Promise((resolve, reject) => {
       db.get().collection(collection.APPLICATION_COLLECTION).aggregate([
         {
           '$match': {
             'userId': ObjectId(userId),
-            'scholarshipListId': 2
+            'scholarshipListId': parseInt(scholarshipListId)
           }
         }, {
           '$lookup': {
@@ -139,21 +139,21 @@ module.exports = {
           '$lookup': {
             'from': 'application_personal_details',
             'localField': '_id',
-            'foreignField': '_id',
+            'foreignField': 'applicationId',
             'as': 'personal'
           }
         }, {
           '$lookup': {
             'from': 'application_academic_details',
             'localField': '_id',
-            'foreignField': '_id',
+            'foreignField': 'applicationId',
             'as': 'academic'
           }
         }, {
           '$lookup': {
             'from': 'application_contact_details',
             'localField': '_id',
-            'foreignField': '_id',
+            'foreignField': 'applicationId',
             'as': 'contact'
           }
         }, {

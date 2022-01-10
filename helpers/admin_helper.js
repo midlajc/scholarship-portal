@@ -318,7 +318,7 @@ module.exports = {
                     '$lookup': {
                         'from': 'application_academic_details',
                         'localField': '_id',
-                        'foreignField': '_id',
+                        'foreignField': 'applicationId',
                         'as': 'academic'
                     }
                 },
@@ -326,7 +326,7 @@ module.exports = {
                     '$lookup': {
                         'from': 'application_personal_details',
                         'localField': '_id',
-                        'foreignField': '_id',
+                        'foreignField': 'applicationId',
                         'as': 'personal'
                     }
                 },
@@ -334,7 +334,7 @@ module.exports = {
                     '$lookup': {
                         'from': 'application_contact_details',
                         'localField': '_id',
-                        'foreignField': '_id',
+                        'foreignField': 'applicationId',
                         'as': 'contact'
                     }
                 },
