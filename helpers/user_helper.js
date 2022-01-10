@@ -54,7 +54,7 @@ module.exports = {
                                     message: "Registration Successful\n\nclick this link to verify email" +
                                         ' https://' + domine + '/verify-email/' + token + '\n\n'
                                 })
-                                resolve('check email to verify email')
+                                resolve('please check email to complete registration')
                             })
                     } else {
                         reject('Email or Mobile No Already Used')
@@ -488,6 +488,32 @@ module.exports = {
                 }).catch(err => {
                     reject(err)
                 })
+        })
+    },
+    checkBankAndFamily: (userId) => {
+        return new Promise((resolve, reject) => {
+            let bank = new Promise((resolve, reject) => {
+                db.get().collection(collection.BANK_DETAILS_COLLECTION)
+                    .findOne({ userId: ObjectId(userId) }).then((response) => {
+                        resolve(response)
+                    })
+            })
+            let family = new Promise((resolve, reject) => {
+                db.get().collection(collection.FAMILY_MEMBERS_COLLECTION)
+                    .find({ userId: ObjectId(userId) }).toArray().then((response) => {
+                        resolve(response)
+                    })
+            })
+            Promise.all([bank, family]).then(([bank, family]) => {
+                if (bank === null || family.length === 0) {
+                    resolve({ status: false })
+                } else {
+                    resolve({ status: true })
+                }
+            }).catch(err => {
+                console.log(err);
+                reject(err)
+            })
         })
     },
     //need
