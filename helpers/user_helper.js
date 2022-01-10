@@ -5,9 +5,6 @@ const nodeMailer = require('./nodeMailer')
 const crypto = require('crypto')
 const Helper = require('./Helper')
 const { ObjectId } = require('mongodb')
-const { resolve } = require('path')
-const { reject } = require('promise')
-const { response } = require('express')
 
 module.exports = {
     getUserByEmailForLogin: (email, callback) => {
