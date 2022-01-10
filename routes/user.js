@@ -115,9 +115,21 @@ router.get('/verify-email/:token', (req, res) => {
 })
 
 router.get('/scholarships', auth.ensureUserAuthenticated, (req, res) => {
-    userHelper.filterScholarship(req.user).then(response => {
-        // userHelper.checkBankandFamily(req.user)
-        res.render('user/scholarships', { scholarships: response })
+    userHelper.filterScholarship(req.user).then(scholarship => {
+        userHelper.checkBankAndFamily(req.user._id).then(response => {
+            if (response.status) {
+                res.render('user/scholarships', { scholarships: scholarship })
+            } else {
+                req.flash('error_msg', "please add bank and family details")
+                res.redirect('/home')
+            }
+        }).catch(err => {
+            req.flash('error_msg', "Error Occured")
+            res.redirect('/home')
+        })
+    }).catch(err => {
+        req.flash('error_msg', "Error Occured")
+        res.redirect('/home')
     })
 })
 
@@ -266,8 +278,8 @@ router.post("/bank-details", auth.ensureUserAuthenticated, async (req, res) => {
     else {
         userHelper.saveBankDetails(req.body, req.user._id).then(response => {
             res.json({ status: true, message: "Account Details Saved" })
-        }).catch(err=>{
-        res.json({ status: false, message: "Error Occured Try Again" })
+        }).catch(err => {
+            res.json({ status: false, message: "Error Occured Try Again" })
         })
     }
 })

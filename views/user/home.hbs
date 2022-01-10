@@ -1,3 +1,8 @@
+{{#if error_msg}}
+<script>
+    swal.fire("Error", '{{error_msg}}', 'error')
+</script>
+{{/if}}
 <link rel="stylesheet" href="/stylesheets/user/home.css">
 <div class="box">
     <div class="profile">
