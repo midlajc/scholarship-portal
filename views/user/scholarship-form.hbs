@@ -6,7 +6,7 @@
                 <h4 class="modal-title fw-bold" style="margin-top: 1rem;" id="">Application Form</h4>
             </div>
             <div class="modal-body">
-                <button class="accordion fw-bold active">Personal Details</button>
+                <button class="accordion fw-bold active" type="button">Personal Details</button>
                 <div class="panel" style="display: block;">
                     <div class="mt">
                         <div class="row">
@@ -75,13 +75,14 @@
                                     <span class="text-danger"></span>
                                 </label>
                                 <div class="form-group">
-                                    <input class="form-control" type="text" value="{{personal_details.partTimeJobName}}" name="partTimeJobName">
+                                    <input class="form-control" type="text" value="{{personal_details.partTimeJobName}}"
+                                        name="partTimeJobName">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button class="accordion fw-bold">Address Information</button>
+                <button class="accordion fw-bold" type="button">Address Information</button>
                 <div class="panel">
                     <div class="mt">
                         <div class="row">
@@ -91,8 +92,8 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <textarea required name="pAddress" value="{{personal_details.pAddress}}"
-                                        class="form-control ng-untouched ng-pristine ng-valid" id="pAddress"
-                                        placeholder="Permanent Address" rows="4" ></textarea>
+                                        class="form-control" id="pAddress" onchange="disableCheck()"
+                                        placeholder="Permanent Address" rows="4"></textarea>
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -101,15 +102,27 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <textarea required name="cAddress"
-                                        class="form-control ng-untouched ng-pristine ng-valid" id="cAddress"
+                                        class="form-control" onchange="disableCheck()" id="cAddress"
                                         placeholder="Communication Address" rows="4"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="fw-bold">
+                                        <input class="form-check-input" type="checkbox" id="copyAddress" onclick="CopyAddress()">
+                                        <span class="text-right">
+                                            Same as Permanent
+                                        </span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <button class="accordion fw-bold active">Contact Details</button>
+                <button class="accordion fw-bold active" type="button">Contact Details</button>
                 <div class="panel" style="display: block;">
                     <div class="mt">
                         <div class="row">
@@ -121,9 +134,9 @@
                                     <select required class="form-control" name="state" id="state">
                                         {{#if contact_details}}
                                         <option selected="">{{contact_details.state}}
-                                        {{else}}
+                                            {{else}}
                                         <option disabled="true" selected="">Select State
-                                        {{/if}}
+                                            {{/if}}
                                         </option>
                                         {{#each states}}
                                         <option>{{this.name}}</option>
@@ -139,11 +152,12 @@
                                     <select required class="form-control" onchange="getPanchayathTaluk()"
                                         name="district" id="district">
                                         {{#if contact_details}}
-                                        <option selected="" value="{{contact_details.districtId}}">{{contact_details.district}}
-                                        {{else}}
+                                        <option selected="" value="{{contact_details.districtId}}">
+                                            {{contact_details.district}}
+                                            {{else}}
                                         <option disabled="true" selected="">Select District
-                                        {{/if}}
-                                        {{#each districts}}
+                                            {{/if}}
+                                            {{#each districts}}
                                         <option value="{{this.id}}">{{this.name}}</option>
                                         {{/each}}
                                     </select>
@@ -154,11 +168,11 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="form-group">
-                                    <input class="form-control" required value="{{contact_details.panchayath}}" list="panchayath" name="panchayath"
-                                        placeholder="Panchayath">
+                                    <input class="form-control" required value="{{contact_details.panchayath}}"
+                                        list="panchayath" name="panchayath" placeholder="Panchayath">
                                     <datalist id="panchayath">
                                         {{#each panchayaths}}
-                                            <option>{{this.name}}</option>
+                                        <option>{{this.name}}</option>
                                         {{/each}}
                                     </datalist>
                                 </div>
@@ -168,10 +182,11 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="form-group">
-                                    <input class="form-control" value="{{contact_details.taluk}}" required list="taluk" name="taluk" placeholder="Taluk">
+                                    <input class="form-control" value="{{contact_details.taluk}}" required list="taluk"
+                                        name="taluk" placeholder="Taluk">
                                     <datalist id="taluk">
                                         {{#each taluks}}
-                                            <option>{{this.name}}</option>
+                                        <option>{{this.name}}</option>
                                         {{/each}}
                                     </datalist>
                                 </div>
@@ -181,8 +196,8 @@
                                     <span class="text-danger">*</span>
                                 </label>
                                 <div class="form-group">
-                                    <input class="form-control" type="number" value="{{contact_details.wardNo}}" placeholder="Ward Number" name="wardNo"
-                                        required>
+                                    <input class="form-control" type="number" value="{{contact_details.wardNo}}"
+                                        placeholder="Ward Number" name="wardNo" required>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-xs-12">
@@ -206,7 +221,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="accordion fw-bold ">Academic Details</button>
+                <button class="accordion fw-bold" type="button">Academic Details</button>
                 <div class="" style="display: block;">
                     <div class="mt">
                         <div class="row">
@@ -230,7 +245,7 @@
                                 </label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" name="previousSem"
-                                      value="{{academic_details.previousSem}}"  placeholder="Previous Sem Percentage">
+                                        value="{{academic_details.previousSem}}" placeholder="Previous Sem Percentage">
                                     <div class="input-group-append">
                                         <span class="input-group-text">%</span>
                                     </div>
@@ -284,10 +299,42 @@
                                     <span class="text-danger"></span>
                                 </label>
                                 <div class="form-group">
-                                    <input class="form-control" type="text" value="{{academic_details.competitiveExamName}}"
+                                    <input class="form-control" type="text"
+                                        value="{{academic_details.competitiveExamName}}"
                                         placeholder="Competitive Exam, coaching Institute" name="competitiveExamName">
                                 </div>
                             </div>
+                            <div class="col-lg-5 col-xs-12">
+                                <label class="fw-bold">Are you receiving any other Scholarships?
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-group">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="otherScholarship"
+                                            id="otherScholarship1" value="1" required>
+                                        <div class="form-check-label">
+                                            Yes
+                                        </div>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="otherScholarship"
+                                            id="otherScholarship2" value="0" required>
+                                        <div class="form-check-label">
+                                            No
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-7 col-xs-12">
+                                <label class="fw-bold">If so, which Scholarships?
+                                    <span class="text-danger"></span>
+                                </label>
+                                <div class="form-group">
+                                    <input class="form-control" type="text" value="{{academic_details.scholarshipName}}"
+                                        placeholder="Scholarship Name" name="scholarshipName">
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -302,25 +349,35 @@
 
 <script>
     {{#if personal_details.partTimeJob}}
-        $('#partTimeJob1').prop('checked',true)
+    $('#partTimeJob1').prop('checked', true)
     {{else}}
-        $('#partTimeJob2').prop('checked',true)
+    $('#partTimeJob2').prop('checked', true)
     {{/if}}
-
     {{#if academic_details.competitiveExam}}
-        $('#competitiveExam1').prop('checked',true)
+    $('#competitiveExam1').prop('checked', true)
     {{else}}
-        $('#competitiveExam2').prop('checked',true)
+    $('#competitiveExam2').prop('checked', true)
     {{/if}}
-    
     {{#if academic_details.isHosteler}}
-        $('#isHosteler1').prop('checked',true)
+    $('#isHosteler1').prop('checked', true)
     {{else}}
-        $('#isHosteler2').prop('checked',true)
+    $('#isHosteler2').prop('checked', true)
     {{/if}}
-
+    {{#if academic_details.otherScholarship}}
+    $('#otherScholarship1').prop('checked', true)
+    {{else}}
+    $('#otherScholarship2').prop('checked', true)
+    {{/if}}
     $('#pAddress').val(`{{personal_details.pAddress}}`)
     $('#cAddress').val(`{{personal_details.cAddress}}`)
+    
+
+    let disableCheck=()=>{
+        $('#copyAddress').prop('checked', false);
+    }
+    let CopyAddress=()=>{
+        $('#cAddress').val($('#pAddress').val())
+    }
 </script>
 
 <script src="/js/scholarshipform.js"></script>
