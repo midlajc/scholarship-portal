@@ -417,7 +417,13 @@ router.get('/logout', auth.ensureUserAuthenticated,
         res.redirect('/login')
     })
 
+router.get('/edit-profile', auth.ensureUserAuthenticated,
+    (req, res) => {
+        res.render('user/edit-profile')
+    })
+
 //need
+
 router.post('/change-password', auth.ensureUserAuthenticated, (req, res) => {
     userHelper.updatePassword(req.user, req.body).then(response => {
         req.user.password = response;
