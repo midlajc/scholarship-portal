@@ -248,6 +248,7 @@ router.get('/family-members', auth.ensureUserAuthenticated, (req, res) => {
 })
 
 router.post('/add-family-member', auth.ensureUserAuthenticated, (req, res) => {
+    req.body.age=parseInt(req.body.age)
     userHelper.addFamilyMembers(req.body, req.user._id).then(response => {
         res.json({ status: true })
     })
