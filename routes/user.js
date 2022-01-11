@@ -120,7 +120,7 @@ router.get('/scholarships', auth.ensureUserAuthenticated, (req, res) => {
             if (response.status) {
                 res.render('user/scholarships', { scholarships: scholarship })
             } else {
-                req.flash('error_msg', "please add bank and family details")
+                req.flash('error_msg', response.message)
                 res.redirect('/home')
             }
         }).catch(err => {
