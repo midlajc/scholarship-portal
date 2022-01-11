@@ -120,7 +120,7 @@ router.get('/scholarships', auth.ensureUserAuthenticated, (req, res) => {
             if (response.status) {
                 res.render('user/scholarships', { scholarships: scholarship })
             } else {
-                req.flash('error_msg', "please add bank and family details")
+                req.flash('error_msg', response.message)
                 res.redirect('/home')
             }
         }).catch(err => {
@@ -417,7 +417,13 @@ router.get('/logout', auth.ensureUserAuthenticated,
         res.redirect('/login')
     })
 
+router.get('/edit-profile', auth.ensureUserAuthenticated,
+    (req, res) => {
+        res.render('user/edit-profile')
+    })
+
 //need
+
 router.post('/change-password', auth.ensureUserAuthenticated, (req, res) => {
     userHelper.updatePassword(req.user, req.body).then(response => {
         req.user.password = response;

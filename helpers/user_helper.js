@@ -52,7 +52,7 @@ module.exports = {
                                     recipient: data.email,
                                     subject: "Registration",
                                     message: "Registration Successful\n\nclick this link to verify email" +
-                                        ' https://' + process.env.domine + '/verify-email/' + token + '\n\n'
+                                        ' https://' + process.env.domaine + '/verify-email/' + token + '\n\n'
                                 })
                                 resolve('please check email to complete registration')
                             })
@@ -395,6 +395,8 @@ module.exports = {
                                         isHosteler: (data.isHosteler == 1),
                                         competitiveExam: (data.competitiveExam == 1),
                                         competitiveExamName: data.competitiveExamName,
+                                        otherScholarship: (data.otherScholarship == 1),
+                                        scholarshipName: data.scholarshipName
                                     }
                                 },
                                 {
@@ -505,13 +507,17 @@ module.exports = {
                     })
             })
             Promise.all([bank, family]).then(([bank, family]) => {
-                if (bank === null || family.length === 0) {
-                    resolve({ status: false })
+                if (bank === null && family.length === 0) {
+                    resolve({ status: false, message: "please add bank and family details" })
+                }
+                else if (bank === null) {
+                    resolve({ status: false, message: "please add bank details" })
+                } else if (family.length === 0) {
+                    resolve({ status: false, message: "please add family details" })
                 } else {
                     resolve({ status: true })
                 }
             }).catch(err => {
-                console.log(err);
                 reject(err)
             })
         })
@@ -549,7 +555,7 @@ module.exports = {
                                 subject: 'Link for Password Reset',
                                 message: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                                     'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                                    'https://' + url + '/reset-password/' + token + '\n\n' +
+                                    'https://' + process.env.domaine + '/reset-password/' + token + '\n\n' +
                                     'If you did not request this, please ignore this email and your password will remain unchanged.\n'
                             })
                             resolve()
