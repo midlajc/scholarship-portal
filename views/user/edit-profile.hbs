@@ -1,51 +1,94 @@
 <div class="box">
     <h5 class="mt-3">Edit Profile</h5>
-    <form action="" id="form" class="p-3">
-        <div class="row ">
-            <div class="col-lg-4 col-xs-12 mb-3">
-                <label class="form-label">Name</label>
-                <input type="text" id="name"
-                    name="name" required class="form-control">
-            </div>
+    <form action="/edit-profile" method="post" id="form" class="p-3">
+        <div class="row">
             <div class="col-lg-5 col-xs-12 mb-3">
-                <label class="form-label">Email</label>
-                <input type="text" class="form-control" placeholder="Enter Bank Account No" name="accountNo2" required
-                    id="accountNo2">
+                <label class="form-label">Name</label>
+                <input type="text" id="name" name="name" required value="{{user.name}}" class="form-control">
             </div>
             <div class="col-lg-3 col-xs-12 mb-3">
-                <label class="form-label">Mobile</label>
-                <input type="text" class="form-control" placeholder="Enter Bank Account No" name="accountNo2" required
-                    id="accountNo2">
+                <label class="form-label">Gender</label>
+                <select required class="form-control" disabled id="gender" name="gender">
+                    <option selected value="{{user.genderId}}">{{user.gender}}
+                    </option>
+                    {{#each genders}}
+                    <option value="{{this.ID}}">{{this.genderName}}</option>
+                    {{/each}}
+                </select>
             </div>
             <div class="col-lg-4 col-xs-12 mb-3">
-                <label class="form-label">Gender</label>
-                <input type="password" class="form-control" placeholder="Enter Bank Account No" name="accountNo1"
-                    required id="accountNo1">
-            </div>
-            <div class="col-lg-3 col-xs-12 mb-3">
                 <label class="form-label">Date of Birth</label>
-                <input type="text" id="bankName" placeholder="Enter Bank Name" name="bankName" required
-                    class="form-control">
+                <input type="date" id="dob" name="dob" required value="{{user.dob}}" class="form-control">
             </div>
-            <div class="col-lg-3 col-xs-12 mb-3">
+            <div class="col-lg-6 col-xs-12 mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" value="{{user.email}}" required id="email">
+            </div>
+            <div class="col-lg-6 col-xs-12 mb-3">
+                <label class="form-label">Mobile</label>
+                <input type="number" class="form-control"  name="mobile" value="{{user.mobile}}" required maxlength="10" id="mobile">
+            </div>
+            <div class="col-lg-4 col-xs-12 mb-3">
                 <label class="form-label">Department</label>
-                <input type="text" id="ifsc" placeholder="Enter IFSC Code" name="ifsc" required class="form-control">
+                <select required class="form-control" id="department" onchange="getCourse()">
+                    <option disabled="true" selected>{{user.department}}
+                    </option>
+                    {{#each departments}}
+                    <option value="{{this.ID}}">{{this.DEPARTMENTNAME}}</option>
+                    {{/each}}
+                </select>
             </div>
-            <div class="col-lg-3 col-xs-12 mb-3">
+            <div class="col-lg-4 col-xs-12 mb-3">
                 <label class="form-label">Course</label>
-                <input type="text" id="branch" placeholder="Enter Bank Branch" name="branch" required
-                    class="form-control">
+                <select required class="form-control" id="course" onchange="getBatch()">
+                    <option disabled="true" selected>{{user.course}}
+                    </option>
+                </select>
             </div>
-            <div class="col-lg-3 col-xs-12 mb-3">
-                <label class="form-label">Batch</label>
-                <input type="text" id="branch" placeholder="Enter Bank Branch" name="branch" required
-                    class="form-control">
+            <div class="col-lg-4 col-xs-12 mb-3">
+                <label class="form-label">Batch</label> 
+                <label class="form-label">Course</label>
+                <select required class="form-control" id="batch" name="batch">
+                    <option selected value="{{user.batchId}}">{{user.batch}}
+                    </option>
+                </select>
             </div>
             <div class="">
-                <button class="btn btn-primary float-end" type="button" onclick="submitFrom()" id="submit">Submit</button>
+                <button class="btn btn-primary float-end" type="submit"
+                    id="submit">Update</button>
             </div>
         </div>
     </form>
 </div>
 
-<script src="/js/bankForm.js"></script>
+<script>
+    let getCourse = () => {
+        let departmentId = $('#department').val()
+        $.ajax({
+            url: '/get-course-by-dept-id/' + departmentId,
+            method: 'get',
+            success: (response) => {
+                let html = `<option disabled="true" selected value="">Select Course</option>`
+                for (x in response.courses) {
+                    html += '<option value=' + response.courses[x].ID + '>' + response.courses[x].COURSENAME + '</option>'
+                }
+                $('#course').html(html)
+            }
+        })
+    }
+
+    let getBatch = () => {
+        let courseId = $('#course').val()
+        $.ajax({
+            url: '/get-batch-by-course-id/' + courseId,
+            method: 'get',
+            success: (response) => {
+                let html = `<option disabled="true" selected value="">Select Batch</option>`
+                for (x in response.batches) {
+                    html += '<option value=' + response.batches[x].ID + '>' + response.batches[x].BATCHNAME + '</option>'
+                }
+                $('#batch').html(html)
+            }
+        })
+    }
+</script>

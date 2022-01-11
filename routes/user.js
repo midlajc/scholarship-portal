@@ -420,7 +420,34 @@ router.get('/logout', auth.ensureUserAuthenticated,
 
 router.get('/edit-profile', auth.ensureUserAuthenticated,
     (req, res) => {
-        res.render('user/edit-profile')
+        userHelper.getDeptAndCourseAndBatchByBatchId(req.user.batchId)
+            .then(async response => {
+                const departments = await userHelper.getDepartments()
+                const genders = await userHelper.getGenders()
+                req.user.department = response.department.DEPARTMENTNAME;
+                // departments.pop(departments.DEPARTMENTNAME)
+                req.user.batch = response.BATCHNAME;
+                req.user.course = response.course.COURSENAME;
+                req.user.gender = await userHelper.getGenderNameByGenderId(req.user.genderId)
+                req.user.dob = req.user.dob.toLocaleString('en-CA').slice(0, 10)
+                res.render('user/edit-profile', { departments, genders })
+            }).catch(err => {
+                console.log(err);
+                res.redirect('/edit-profile')
+            })
+    })
+
+router.post('/edit-profile', auth.ensureUserAuthenticated,
+    (req, res) => {
+        console.log(req.body);
+        userHelper.updateProfile(req.user._id, req.body).then(() => {
+            req.flash('success_msg', "Profile Upadated")
+            res.redirect('/edit-profile')
+        }).catch(err => {
+            console.log(err);
+            req.flash('error_msg', "Error occured")
+            res.redirect('/edit-profile')
+        })
     })
 
 //need
