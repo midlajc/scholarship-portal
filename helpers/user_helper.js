@@ -5,6 +5,8 @@ const nodeMailer = require('./nodeMailer')
 const crypto = require('crypto')
 const Helper = require('./Helper')
 const { ObjectId } = require('mongodb')
+const { resolve } = require('path')
+const { reject } = require('promise')
 
 module.exports = {
     getUserByEmailForLogin: (email, callback) => {
@@ -619,6 +621,26 @@ module.exports = {
                 })
         })
     },
+    updateProfile: (userId, data) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION)
+                .updateOne({ _id: ObjectId(userId) },
+                    {
+                        "$set": {
+                            name: data.name,
+                            //genderId: parseInt(data.gender),
+                            dob: new Date(data.dob),
+                            //email: data.email,
+                            mobile: parseInt(data.mobile),
+                            batchId: parseInt(data.batch)
+                        }
+                    }).then(() => {
+                        resolve()
+                    }).catch(err => {
+                        reject(err)
+                    })
+        })
+    }
 }
 
 module.exports.getNewId = () => {
