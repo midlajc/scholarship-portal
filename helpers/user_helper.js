@@ -52,7 +52,7 @@ module.exports = {
                                     recipient: data.email,
                                     subject: "Registration",
                                     message: "Registration Successful\n\nclick this link to verify email" +
-                                        ' https://' + domine + '/verify-email/' + token + '\n\n'
+                                        ' https://' + process.env.domine + '/verify-email/' + token + '\n\n'
                                 })
                                 resolve('please check email to complete registration')
                             })
