@@ -18,6 +18,8 @@ let viewApplication = (applicationNo) => {
             $('#department').val(data.department)
             $('#competitiveExam').val((data.competitiveExam) ? "Yes" : "No")
             $('#competitiveExamName').val(data.competitiveExamName)
+            $('#otherScholarship').val((data.otherScholarship) ? "Yes" : "No")
+            $('#otherScholarshipName').val(data.otherScholarshipName)
             $('#isHosteler').val((data.isHosteler) ? "Yes" : "No")
             $('#plusTwo').val(data.plusTwo)
             $('#previousSem').val(data.previousSem)
@@ -42,6 +44,7 @@ let viewApplication = (applicationNo) => {
                 html += `
             <tr>
               <td>${x.name}</td>
+              <td>${x.age}</td>
               <td>${x.relation}</td>
               <td>${x.occupation}</td>
               <td>${x.organization}</td>

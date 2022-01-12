@@ -82,6 +82,8 @@ router.get('/fetch-application', auth.ensureAdminAuthenticated, (req, res) => {
             competitiveExamName: response.academic.competitiveExamName,
             isHostler: response.academic.isHostler,
             plusTwo: response.academic.plusTwo,
+            otherScholarship: response.academic.otherScholarship,
+            otherScholarshipName: response.academic.scholarshipName,
             previousSem: response.academic.previousSem,
             annualIncome: response.personal.annualIncome,
             cAddress: response.personal.cAddress,
