@@ -157,7 +157,26 @@ module.exports = {
     },
     getBatchByCoursesId: (id) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.BATCHES_COLLECTION).find({ COURSEID: id }).toArray()
+            db.get().collection(collection.BATCHES_COLLECTION).
+                aggregate([
+                    {
+                        "$match": {
+                            "$and": [
+                                {
+                                    "COURSEID": parseInt(id)
+                                },
+                                {
+                                    "STARTDATE": { "$lte": new Date() }
+                                },
+                                {
+                                    "LASTDATE": { "$gte": new Date() }
+                                }
+                            ]
+                        }
+                    },
+
+                ])
+                .toArray()
                 .then(response => {
                     resolve(response);
                 }).catch(err => {

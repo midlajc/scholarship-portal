@@ -347,6 +347,7 @@ router.post('/reset-password/:token',
 
 router.get('/print-application', auth.ensureUserAuthenticated, (req, res) => {
     let scholarshipListId = parseInt(req.query.id)
+
     userHelper.getscholarshipListByscholarshipListId(scholarshipListId)
         .then((scholarship) => {
             userHelper.applicationStatus(scholarship.scholarshipId, req.user)
