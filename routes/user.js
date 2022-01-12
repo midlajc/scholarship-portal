@@ -191,13 +191,19 @@ router.get('/scholarship-form/:id', auth.ensureUserAuthenticated,
 
 router.post('/scholarship-form', auth.ensureUserAuthenticated,
     body('plusTwo', '+2 Mark Percentage must be Numeric').isDecimal(),
-    body('previousSem', 'Previous Sem Mark Percentage must be Numeric').isDecimal(),
+    // body('previousSem', 'Previous Sem Mark Percentage must be Numeric').isDecimal(),
     body('wardMemberMobile', 'Mobile number must be 10 digits').isLength({ min: 10, max: 10 }),
     (req, res) => {
         const errors = validationResult(req);
         let error = []
+        if (req.body.previousSem != '') {
+            req.body.previousSem = parseFloat(req.body.previousSem)
+            if (isNaN(req.body.previousSem)) {
+                error.push("Previous Sem Mark Percentage must be Numeric")
+            }
+        }
         isErrors = (Array.isArray(errors.errors) && errors.errors.length)
-        if (isErrors) {
+        if (isErrors || error.length > 0) {
             for (x in errors.errors) {
                 error.push(errors.errors[x].msg)
             }
