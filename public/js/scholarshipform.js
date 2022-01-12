@@ -23,11 +23,11 @@ let submitData = (submitStatus) => {
         if (submitStatus == 1) {
             $('#save').prop("disabled", true);
             $('#submit').prop("disabled", true);
-            $('#save').html("<span class=" + "'spinner-border spinner-border-sm'" + "></span><span class=" + "" + ">Saveing...</span>")
+            $('#save').html("<span class=" + "'spinner-border spinner-border-sm'" + "></span><span class=" + "" + ">Saving...</span>")
         } else {
             $('#save').prop("disabled", true);
             $('#submit').prop("disabled", true);
-            $('#submit').html("<span class=" + "'spinner-border spinner-border-sm'" + "></span><span class=" + "" + ">Submiting...</span>")
+            $('#submit').html("<span class=" + "'spinner-border spinner-border-sm'" + "></span><span class=" + "" + ">Submitting...</span>")
         }
         $.ajax({
             url: '/scholarship-form',

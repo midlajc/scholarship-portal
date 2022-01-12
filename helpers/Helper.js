@@ -6,7 +6,7 @@ module.exports = {
   checkEligibility: (criteria, user) => {
     //need to write code
     return new Promise((resolve, reject) => {
-      if (user.genderId == 1)
+      if (user.genderId == 2)
         resolve({ status: true })
       else
         resolve({ status: false, statusId: -4 })

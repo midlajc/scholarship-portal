@@ -5,6 +5,8 @@ const nodeMailer = require('./nodeMailer')
 const crypto = require('crypto')
 const Helper = require('./Helper')
 const { ObjectId } = require('mongodb')
+const { resolve } = require('path')
+const { reject } = require('promise')
 
 module.exports = {
     getUserByEmailForLogin: (email, callback) => {
@@ -52,9 +54,9 @@ module.exports = {
                                     recipient: data.email,
                                     subject: "Registration",
                                     message: "Registration Successful\n\nclick this link to verify email" +
-                                        ' https://' + domine + '/verify-email/' + token + '\n\n'
+                                        ' https://' + process.env.domaine + '/verify-email/' + token + '\n\n'
                                 })
-                                resolve('check email to verify email')
+                                resolve('please check email to complete registration')
                             })
                     } else {
                         reject('Email or Mobile No Already Used')
@@ -414,6 +416,8 @@ module.exports = {
                                         isHosteler: (data.isHosteler == 1),
                                         competitiveExam: (data.competitiveExam == 1),
                                         competitiveExamName: data.competitiveExamName,
+                                        otherScholarship: (data.otherScholarship == 1),
+                                        scholarshipName: data.scholarshipName
                                     }
                                 },
                                 {
@@ -509,6 +513,36 @@ module.exports = {
                 })
         })
     },
+    checkBankAndFamily: (userId) => {
+        return new Promise((resolve, reject) => {
+            let bank = new Promise((resolve, reject) => {
+                db.get().collection(collection.BANK_DETAILS_COLLECTION)
+                    .findOne({ userId: ObjectId(userId) }).then((response) => {
+                        resolve(response)
+                    })
+            })
+            let family = new Promise((resolve, reject) => {
+                db.get().collection(collection.FAMILY_MEMBERS_COLLECTION)
+                    .find({ userId: ObjectId(userId) }).toArray().then((response) => {
+                        resolve(response)
+                    })
+            })
+            Promise.all([bank, family]).then(([bank, family]) => {
+                if (bank === null && family.length === 0) {
+                    resolve({ status: false, message: "please add bank and family details" })
+                }
+                else if (bank === null) {
+                    resolve({ status: false, message: "please add bank details" })
+                } else if (family.length === 0) {
+                    resolve({ status: false, message: "please add family details" })
+                } else {
+                    resolve({ status: true })
+                }
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    },
     //need
     updatePassword: (user, passData) => {
         return new Promise(async (resolve, reject) => {
@@ -542,7 +576,7 @@ module.exports = {
                                 subject: 'Link for Password Reset',
                                 message: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                                     'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                                    'https://' + url + '/reset-password/' + token + '\n\n' +
+                                    'https://' + process.env.domaine + '/reset-password/' + token + '\n\n' +
                                     'If you did not request this, please ignore this email and your password will remain unchanged.\n'
                             })
                             resolve()
@@ -606,6 +640,26 @@ module.exports = {
                 })
         })
     },
+    updateProfile: (userId, data) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION)
+                .updateOne({ _id: ObjectId(userId) },
+                    {
+                        "$set": {
+                            name: data.name,
+                            //genderId: parseInt(data.gender),
+                            dob: new Date(data.dob),
+                            //email: data.email,
+                            mobile: parseInt(data.mobile),
+                            batchId: parseInt(data.batch)
+                        }
+                    }).then(() => {
+                        resolve()
+                    }).catch(err => {
+                        reject(err)
+                    })
+        })
+    }
 }
 
 module.exports.getNewId = () => {
