@@ -36,7 +36,7 @@ function buildPDF(data, dataCallback, endCallback) {
 
 
     //main box
-    doc.rect(25, 164, 540, 390).stroke()
+    doc.rect(25, 164, 540, 440).stroke()
     //row 1
     doc.rect(25, 164, 180, 30).stroke()
     doc.moveDown();
@@ -111,14 +111,14 @@ function buildPDF(data, dataCallback, endCallback) {
     doc.moveTo(25, 164 + 30 + 40 + 25 + 55).lineTo(540 + 25, 164 + 30 + 40 + 25 + 55).stroke()
     data.personal.pAddress = data.personal.pAddress.replace(/,/g, "").replace(/(\r\n|\n|\r)/gm, ",").replace(/.$/, "");
     doc.text(`${data.personal.pAddress}`, 25, 175 + 35 + 32 + 24, {
-        width: 180,
+        width: 175,
         align: 'center'
     }
     );
     doc.moveTo(25 + 180, 164 + 30 + 40 + 25 + 55).lineTo(164 + 30 + 11, 180 + 15).stroke()
     data.personal.cAddress = data.personal.cAddress.replace(/,/g, "").replace(/(\r\n|\n|\r)/gm, ",").replace(/.$/, "");
     doc.text(`${data.personal.cAddress}`, 25 + 180, 175 + 35 + 32 + 24, {
-        width: 180,
+        width: 175,
         align: 'center'
     }
     );
@@ -336,6 +336,8 @@ function buildPDF(data, dataCallback, endCallback) {
 
     doc.moveTo(25, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85 + 25 + 50).lineTo(540 + 25, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85 + 25 + 50).stroke()
 
+    doc.moveTo(25, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85 + 25 + 50 + 25).lineTo(540 + 25, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85 + 25 + 50 + 25).stroke()
+
     doc.fontSize(10)
 
     // doc.font('Courier-Bold');
@@ -352,8 +354,6 @@ function buildPDF(data, dataCallback, endCallback) {
     }
     );
 
-    // doc.font('Courier');
-
     doc.fontSize(10)
     doc.text(`${data.academic.plusTwo}%`, 25, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50, {
         width: 270,
@@ -366,18 +366,54 @@ function buildPDF(data, dataCallback, endCallback) {
     }
     );
 
+    //row 10
+    doc.moveTo(24 + 270, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85 + 50 + 50 + 50).lineTo(164 + 30 + 40 + 60, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85 + 50).stroke()
+
+    doc.moveTo(25, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85 + 25 + 50 + 50).lineTo(540 + 25, 164 + 30 + 40 + 25 + 55 + 25 + 30 + 85 + 25 + 50 + 50).stroke()
+
+    doc.fontSize(10)
+
+    // doc.font('Courier-Bold');
+
+    doc.text(`Are you receiving any other Scholarships?`, 25, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 50 + 50, {
+        width: 270,
+        align: 'center'
+    }
+    );
+    doc.fontSize(10)
+    doc.text(`If so, which Scholarships?`, 25 + 270, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 50 + 50, {
+        width: 270,
+        align: 'center'
+    }
+    );
+
+    // doc.font('Courier');
+
+    doc.fontSize(10)
+    data.academic.otherScholarship = (data.academic.otherScholarship) ? 'Yes' : 'No';
+    doc.text(`${data.academic.otherScholarship}`, 25, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50, {
+        width: 270,
+        align: 'center'
+    }
+    );
+    doc.text(`${data.academic.scholarshipName}`, 25 + 270, 175 + 35 + 32 + 38 + 42 + 28 + 30 + 55 + 28 + 26 + 50 + 50, {
+        width: 270,
+        align: 'center'
+    }
+    );
+
     doc.font('Courier-Bold').fontSize(11);
-    doc.text(`List of documents to be attached with Application`, 0, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 50 - 40, {
+    doc.text(`List of documents to be attached with Application`, 0, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 50 - 40 + 20, {
         width: 595,
         align: 'center',
         // underline:true
     })
     doc.font('Courier').fontSize(11);
-    doc.text(`1)Income Certificate (copy)`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 100 - 50)
-    doc.text(`2)Bank Pass Book (copy)`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 115 - 50)
-    doc.text(`3)+2 Mark List (copy)`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 130 - 50)
-    doc.text(`4)SSLC Certificate (copy)`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 145 - 50)
-    doc.text(`5)Semester Exam Mark List`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 160 - 50)
+    doc.text(`1)Income Certificate (copy)`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 100 - 50 + 20)
+    doc.text(`2)Bank Pass Book (copy)`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 115 - 50 + 20)
+    doc.text(`3)+2 Mark List (copy)`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 130 - 50 + 20)
+    doc.text(`4)SSLC Certificate (copy)`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 145 - 50 + 20)
+    doc.text(`5)Semester Exam Mark List`, 40, 175 + 35 + 70 + 200 + 55 + 28 + 26 + 160 - 50 + 20)
 
     // doc.font('Courier-Bold').fontSize(11);
 
