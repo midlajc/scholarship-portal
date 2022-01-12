@@ -190,5 +190,20 @@ module.exports = {
         reject(err)
       })
     })
+  },
+  updateApplicationStatus: (applicationNo, statusId) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.APPLICATION_COLLECTION)
+        .updateOne({ applicationNo: applicationNo },
+          {
+            "$set": {
+              "applicationStatus": parseInt(statusId)
+            }
+          }).then(() => {
+            resolve()
+          }).catch(err => {
+            reject(err)
+          })
+    })
   }
 }

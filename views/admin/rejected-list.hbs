@@ -310,9 +310,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn w3-green" onclick="verifyApplication()">Verify</button>
-        <button type="button" class="btn w3-red" onclick="rejectApplication()">Reject</button>
-        <button type="button" class="btn w3-dark-grey" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -320,7 +318,7 @@
 
 
 <div class="box p-2">
-  <h2 class="text-center">Primary Verification</h2>
+  <h2 class="text-center">Rejected List</h2>
   <div class="p-1 table-responsive">
     <table class="table table-striped" id="table">
       <thead>
@@ -335,7 +333,7 @@
       </thead>
       <tbody>
         {{#each data}}
-        <tr id="{{this.applicationNo}}">
+        <tr>
           <td>{{this.applicationNo}}</td>
           <td>{{this.user.name}}</td>
           <td>{{this.user.mobile}}</td>
@@ -350,8 +348,6 @@
     </table>
   </div>
 </div>
-<script src="/js/view_application.js"></script>
-<script src="/js/update_application_status.js"></script>
-<script>
-  console.log({{err}});
+<script src="/js/view_application.js">
+  console.log('{{err}}');
 </script>
