@@ -136,10 +136,49 @@ router.patch('/approve-application', auth.ensureAdminAuthenticated, (req, res) =
     })
 })
 
+
+router.get('/users/registration-list', auth.ensureAdminAuthenticated, (req, res) => {
+    adminHelper.fetchRegistrationList().then(data => {
+        res.render('admin/users/registration-list', { data })
+    }).catch(err => {
+        req.flash('error_msg', "Error Occured Try Again")
+        res.render('admin/users/registration-list')
+    })
+})
+
+router.patch('/users/delete-registration', auth.ensureAdminAuthenticated,
+    (req, res) => {
+        adminHelper.deleteRegistration(req.body.id).then(response => {
+            res.json({ status: true })
+        }).catch(err => {
+            console.log(err);
+            res.json({ status: false })
+        })
+    })
+
+router.patch('/users/resend-verification-email', auth.ensureAdminAuthenticated,
+    (req, res) => {
+        adminHelper.resendVerificationEmail(req.body.id).then(() => {
+            res.json({ status: true })
+        }).catch(err => {
+            console.log(err);
+            res.json({ status: false })
+        })
+    })
+
+router.get('/users/user-list', auth.ensureAdminAuthenticated, (req, res) => {
+    adminHelper.fetchUsersList().then(data => {
+        res.render('admin/users/user-list', { data })
+    }).catch(err => {
+        console.log(err);
+        req.flash('error_msg', "Error Occured Try Again")
+        res.render('admin/users/user-list')
+    })
+})
+
 router.get('/settings', auth.ensureAdminAuthenticated, (req, res) => {
     res.render('admin/settings')
 })
-
 //Registration Routers
 
 router.get("/registration", auth.ensureAdminAuthenticated, (req, res) => {
