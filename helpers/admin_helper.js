@@ -501,6 +501,123 @@ module.exports = {
             // }
         })
     },
+    fetchRegistrationList: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.REGISTRATION_COLLECTION).aggregate(
+                [
+                    {
+                        '$match': {
+                            'emailVerificationStatus': false
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'batches',
+                            'localField': 'batchId',
+                            'foreignField': 'ID',
+                            'as': 'batch'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$batch'
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'courses',
+                            'localField': 'batch.COURSEID',
+                            'foreignField': 'ID',
+                            'as': 'course'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$course'
+                        }
+                    }, {
+                        '$project': {
+                            'batch': '$batch.BATCHNAME',
+                            'course': '$course.COURSENAME',
+                            'email': 1,
+                            'name': 1,
+                            'mobile': 1
+                        }
+                    }
+                ]).toArray().then(response => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    deleteRegistration: (_id) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.REGISTRATION_COLLECTION)
+                .deleteOne({ _id: ObjectID(_id) }).then(() => {
+                    resolve()
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    resendVerificationEmail: (_id) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.REGISTRATION_COLLECTION)
+                .findOne({ _id: ObjectID(_id) }).then(data => {
+                    nodeMailer({
+                        recipient: data.email,
+                        subject: "Scholarship Registration",
+                        message: "Registration Successful\n\nclick this link to verify email" +
+                            ' https://' + process.env.domaine + '/verifyemail/' + data.emailVerificationToken + '\n\n'
+                    }).then(() => {
+                        resolve()
+                    }).catch(err => {
+                        reject(err)
+                    })
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    fetchUsersList: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION).aggregate(
+                [
+                    {
+                        '$lookup': {
+                            'from': 'batches',
+                            'localField': 'batchId',
+                            'foreignField': 'ID',
+                            'as': 'batch'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$batch'
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'courses',
+                            'localField': 'batch.COURSEID',
+                            'foreignField': 'ID',
+                            'as': 'course'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$course'
+                        }
+                    }, {
+                        '$project': {
+                            'batch': '$batch.BATCHNAME',
+                            'course': '$course.COURSENAME',
+                            'email': 1,
+                            'name': 1,
+                            'mobile': 1
+                        }
+                    }
+                ]).toArray().then(response => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
     //need
     getApplicationData: () => {
         return new Promise((resolve, reject) => {
@@ -527,13 +644,6 @@ module.exports = {
             })
         })
     },
-    getPendingData: () => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.APPICATION_COLLECTION).find({ applicationStatus: false, emailVerificationStatus: true }).toArray().then(response => {
-                resolve(response)
-            })
-        })
-    },
     // getVerifiedApplication: () => {
     //     return new Promise((resolve, reject) => {
     //         db.get().collection(collection.APPICATION_COLLECTION).find({ applicationStatus: true }).toArray().then(response => {
@@ -545,19 +655,6 @@ module.exports = {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.APPICATION_COLLECTION).find({ emailVerificationStatus: false }).toArray().then(response => {
                 resolve(response)
-            })
-        })
-    },
-    resendVerificationEmail: (email, url) => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.APPICATION_COLLECTION).findOne({ email: email }).then(data => {
-                nodeMailer({
-                    recipient: data.email,
-                    subject: "TEZLA Registration",
-                    message: "Application Submitted Successfully\n\nclick this link for email verification " +
-                        'https://' + url + '/verifyemail/' + data.emailVerificationToken + '\n\n'
-                })
-                resolve('Email has been Sended')
             })
         })
     },

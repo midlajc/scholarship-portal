@@ -1,0 +1,45 @@
+<div class="box">
+    {{> admin/usersHeader}}
+</div>
+
+<div class="box">
+    <div class="">
+        <h2 class="text-center">Registration List</h2>
+        <div class="p-1 table-responsive">
+            <table class="table table-striped" id="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Course</th>
+                        <th>Batch</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each data}}
+                    <tr id="{{this._id}}">
+                        <td>{{this.name}}</td>
+                        <td>{{this.email}}</td>
+                        <td>{{this.mobile}}</td>
+                        <td>{{this.course}}</td>
+                        <td>{{this.batch}}</td>
+                        <td>
+                            <button class="btn w3-red" id="delete_{{this._id}}" onclick="deleteUser('{{this._id}}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="btn w3-green" id="resendEmail_{{this._id}}"
+                                onclick="resendVerificationEmail('{{this._id}}')">
+                                Resend <i class="fas fa-envelope-open-text"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="/js/admin/registration-list.js"></script>
