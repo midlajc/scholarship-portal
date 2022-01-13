@@ -52,7 +52,7 @@ module.exports = {
                             }).then(() => {
                                 nodeMailer({
                                     recipient: data.email,
-                                    subject: "Registration",
+                                    subject: "Scholarship Registration",
                                     message: "Registration Successful\n\nclick this link to verify email" +
                                         ' https://' + process.env.domaine + '/verify-email/' + token + '\n\n'
                                 })
