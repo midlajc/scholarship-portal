@@ -39,7 +39,7 @@ module.exports = {
                         data.password = await bcrypt.hash(data.password, 10)
                         db.get().collection(collection.REGISTRATION_COLLECTION)
                             .insertOne({
-                                name: data.name,
+                                name: data.name.toUpperCase(),
                                 email: data.email,
                                 mobile: parseInt(data.mobile),
                                 batchId: parseInt(data.batch),
@@ -77,7 +77,7 @@ module.exports = {
                                 {
                                     "$set": {
                                         _id: ObjectId(data._id),
-                                        name: data.name,
+                                        name: data.name.toUpperCase(),
                                         genderId: parseInt(data.genderId),
                                         email: data.email,
                                         mobile: parseInt(data.mobile),
@@ -311,6 +311,7 @@ module.exports = {
     addFamilyMembers: (data, userId) => {
         return new Promise((resolve, reject) => {
             data.userId = ObjectId(userId)
+            data.name=data.name.toUpperCase()
             db.get().collection(collection.FAMILY_MEMBERS_COLLECTION)
                 .insertOne(data).then(() => {
                     resolve()
@@ -361,8 +362,8 @@ module.exports = {
                                         annualIncome: parseInt(data.annualIncome),
                                         partTimeJob: (data.partTimeJob == 1),
                                         partTimeJobName: data.partTimeJobName,
-                                        pAddress: data.pAddress,
-                                        cAddress: data.cAddress,
+                                        pAddress: data.pAddress.toUpperCase(),
+                                        cAddress: data.cAddress.toUpperCase(),
                                     }
                                 },
                                 {
@@ -389,7 +390,7 @@ module.exports = {
                                         panchayath: data.panchayath,
                                         taluk: data.taluk,
                                         wardNo: parseInt(data.wardNo),
-                                        wardMemberName: data.wardMemberName,
+                                        wardMemberName: data.wardMemberName.toUpperCase(),
                                         wardMemberMobile: parseInt(data.wardMemberMobile),
                                     }
                                 },
@@ -501,11 +502,11 @@ module.exports = {
                 .insertOne({
                     _id: ObjectId(userId),
                     userId: ObjectId(userId),
-                    accountHolderName: data.accountHolderName,
-                    accountNo: data.accountNo1,
-                    bankName: data.bankName,
-                    ifsc: data.ifsc,
-                    branch: data.branch
+                    accountHolderName: data.accountHolderName.toUpperCase(),
+                    accountNo: data.accountNo1.toUpperCase,
+                    bankName: data.bankName.toUpperCase(),
+                    ifsc: data.ifsc.toUpperCase(),
+                    branch: data.branch.toUpperCase()
                 }).then(response => {
                     resolve()
                 }).catch(err => {
@@ -646,7 +647,7 @@ module.exports = {
                 .updateOne({ _id: ObjectId(userId) },
                     {
                         "$set": {
-                            name: data.name,
+                            name: data.name.toUpperCase(),
                             //genderId: parseInt(data.gender),
                             dob: new Date(data.dob),
                             //email: data.email,
