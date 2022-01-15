@@ -176,6 +176,24 @@ router.get('/users/user-list', auth.ensureAdminAuthenticated, (req, res) => {
     })
 })
 
+router.patch('/user/delete-bank-details', auth.ensureAdminAuthenticated, (req, res) => {
+    adminHelper.deleteBankDetail(req.body.id).then(() => {
+        res.json({ status: true, message: "Deletion Successful" })
+    }).catch(err => {
+        res.json({ status: false, err: err })
+    })
+})
+
+router.get('/users/user-bank-list', auth.ensureAdminAuthenticated, (req, res) => {
+    adminHelper.fetchUsersBanks().then(data => {
+        res.render('admin/users/user-bank-list', { data })
+    }).catch(err => {
+        console.log(err);
+        req.flash('error_msg', "Error Occured Try Again")
+        res.render('admin/users/user-bank-list')
+    })
+})
+
 router.get('/settings', auth.ensureAdminAuthenticated, (req, res) => {
     res.render('admin/settings')
 })
