@@ -6,6 +6,7 @@ var nodeMailer = require('./nodeMailer')
 const { ObjectID } = require('mongodb')
 const Helper = require('./Helper')
 const { resolve, reject } = require('promise')
+const { response } = require('express')
 
 module.exports = {
     userRegistration: (data) => {
@@ -609,6 +610,61 @@ module.exports = {
                             'email': 1,
                             'name': 1,
                             'mobile': 1
+                        }
+                    }
+                ]).toArray().then(response => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    fetchUsersBanks: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.BANK_DETAILS_COLLECTION)
+                .aggregate([
+                    {
+                        '$lookup': {
+                            'from': 'user',
+                            'localField': 'userId',
+                            'foreignField': '_id',
+                            'as': 'user'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$user'
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'batches',
+                            'localField': 'user.batchId',
+                            'foreignField': 'ID',
+                            'as': 'batch'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$batch'
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'courses',
+                            'localField': 'batch.COURSEID',
+                            'foreignField': 'ID',
+                            'as': 'course'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$course'
+                        }
+                    }, {
+                        '$project': {
+                            'name': "$user.name",
+                            'batch': '$batch.BATCHNAME',
+                            'course': '$course.COURSENAME',
+                            'mobile': '$user.mobile',
+                            'accountHolderName': 1,
+                            'accountNo': 1,
+                            'branch': 1
                         }
                     }
                 ]).toArray().then(response => {

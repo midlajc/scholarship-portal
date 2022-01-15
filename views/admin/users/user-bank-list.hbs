@@ -1,0 +1,53 @@
+<div class="box">
+    {{> admin/usersHeader}}
+</div>
+
+<div class="box">
+    <div class="">
+        <h2 class="text-center">Users List</h2>
+        <div class="p-1 table-responsive">
+            <table class="table table-striped" id="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Batch</th>
+                        <th>Course</th>
+                        <th>Mobile</th>
+                        <th>Account Holder</th>
+                        <th>Account No</th>
+                        <th>Branch</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each data}}
+                    <tr id="{{this._id}}">
+                        <td>{{this.name}}</td>
+                        <td>{{this.batch}}</td>
+                        <td>{{this.course}}</td>
+                        <td>{{this.mobile}}</td>
+                        <td>{{this.accountHolderName}}</td>
+                        <td>{{this.accountNo}}</td>
+                        <td>{{this.branch}}</td>
+                        <td>
+                            <button class="btn w3-red" id="delete" onclick="deleteUser('{{this._id}}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            {{!-- <button class="btn w3-green" id="resendEmail"
+                                onclick="resendVerificationEmail('{{this._id}}')">
+                                Verification Email</i>
+                            </button> --}}
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#table').DataTable();
+    });
+</script>
