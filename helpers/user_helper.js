@@ -503,7 +503,7 @@ module.exports = {
                     _id: ObjectId(userId),
                     userId: ObjectId(userId),
                     accountHolderName: data.accountHolderName.toUpperCase(),
-                    accountNo: data.accountNo1.toUpperCase,
+                    accountNo: data.accountNo1.toUpperCase(),
                     bankName: data.bankName.toUpperCase(),
                     ifsc: data.ifsc.toUpperCase(),
                     branch: data.branch.toUpperCase()
