@@ -1,0 +1,103 @@
+<div class="box">
+    {{> admin/usersHeader}}
+</div>
+
+<div class="box">
+    <div class="">
+        <h2 class="text-center">BANK List</h2>
+        <div class="p-1 table-responsive">
+            <table class="table table-striped" id="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Batch</th>
+                        <th>Course</th>
+                        <th>Mobile</th>
+                        <th>Account Holder</th>
+                        <th>Account No</th>
+                        <th>Branch</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each data}}
+                    <tr id="{{this._id}}">
+                        <td>{{this.name}}</td>
+                        <td>{{this.batch}}</td>
+                        <td>{{this.course}}</td>
+                        <td>{{this.mobile}}</td>
+                        <td>{{this.accountHolderName}}</td>
+                        <td>{{this.accountNo}}</td>
+                        <td>{{this.branch}}</td>
+                        <td>
+                            <button class="btn w3-red" id="delete" onclick="deleteBank('{{this._id}}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            {{!-- <button class="btn w3-green" id="resendEmail"
+                                onclick="resendVerificationEmail('{{this._id}}')">
+                                Verification Email</i>
+                            </button> --}}
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+    let deleteBank = (id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: 'delete-bank',
+                    method: 'patch',
+                    data: {
+                        id
+                    },
+                    success: (response) => {
+                        if (response.status) {
+                            Toast.fire({
+                                icon: 'warning',
+                                title: 'Entry Deleted'
+                            })
+                            $("#" + id).addClass("d-none");
+                        } else {
+                            Toast.fire({
+                                icon: 'error',
+                                title: 'Error Occured Try Again'
+                            })
+                        }
+                    }
+                })
+            }
+        })
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $('#table').DataTable();
+    });
+</script>
