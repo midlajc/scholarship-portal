@@ -674,6 +674,16 @@ module.exports = {
                 })
         })
     },
+    deleteBank: (_id) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.BANK_DETAILS_COLLECTION)
+                .deleteOne({ _id: ObjectID(_id) }).then(() => {
+                    resolve()
+                }).catch(err => {
+                    reject()
+                })
+        })
+    },
     //need
     getApplicationData: () => {
         return new Promise((resolve, reject) => {

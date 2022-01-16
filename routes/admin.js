@@ -176,8 +176,8 @@ router.get('/users/user-list', auth.ensureAdminAuthenticated, (req, res) => {
     })
 })
 
-router.patch('/user/delete-bank-details', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.deleteBankDetail(req.body.id).then(() => {
+router.patch('/users/delete-bank', auth.ensureAdminAuthenticated, (req, res) => {
+    adminHelper.deleteBank(req.body.id).then(() => {
         res.json({ status: true, message: "Deletion Successful" })
     }).catch(err => {
         res.json({ status: false, err: err })
