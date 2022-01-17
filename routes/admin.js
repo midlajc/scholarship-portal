@@ -5,70 +5,109 @@ var passport = require('passport')
 var auth = require('../configs/auth');
 const user_helper = require('../helpers/user_helper');
 const Helper = require('../helpers/Helper');
-const { application, response } = require('express');
-const { log } = require('debug');
 
 //HOME
 
 router.get('/', auth.ensureAdminAuthenticated,
     (req, res, next) => {
-        res.redirect('/admin/applicant-list')
+        res.redirect('/admin/scholarship')
         // res.render('admin/home')
     });
 
 
-router.get('/scholarship',auth.ensureAdminAuthenticated,(req,res)=>{
+router.get('/scholarship', auth.ensureAdminAuthenticated, (req, res) => {
     res.render('admin/scholarship')
 })
 
-router.get('/applicant-list', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.getApplicantList().then(async data => {
-        // console.log(data);
-        // let batch=await Helper.getBatchById(data.user.batchId)
-        res.render('admin/applicant-list', { data })
-    }).catch((err) => {
-        req.flash('error_msg', err)
-        res.render('admin/applicant-list', { err })
+router.get('/scholarship/applicant-list', auth.ensureAdminAuthenticated,
+    async (req, res) => {
+        let scholarshipId = 1
+        let academicId = 1
+        let scholarshipListId = await Helper.getScholarshipListId(scholarshipId, academicId)
+        adminHelper.getApplicantList(scholarshipListId).then(async data => {
+            res.render('admin/scholarship/applicant-list', { data })
+        }).catch((err) => {
+            req.flash('error_msg', err)
+            res.render('admin/scholarship/applicant-list', { err })
+        })
     })
-})
 
-router.get('/primary-verification', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.getSubmittedApplications().then(async data => {
-        res.render('admin/primary-verification', { data })
-    }).catch((err) => {
-        req.flash('error_msg', err)
-        res.render('admin/primary-verification', { err })
+router.get('/scholarship/primary-verification', auth.ensureAdminAuthenticated,
+    async (req, res) => {
+        let scholarshipId = 1
+        let academicId = 1
+        let scholarshipListId = await Helper.getScholarshipListId(scholarshipId, academicId)
+        adminHelper.getSubmittedApplications(scholarshipListId).then(async data => {
+            res.render('admin/scholarship/primary-verification', { data })
+        }).catch((err) => {
+            req.flash('error_msg', err)
+            res.render('admin/scholarship/primary-verification', { err })
+        })
     })
-})
 
-router.get('/approval', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.getVerifiedApplications().then(async data => {
-        res.render('admin/approval', { data })
-    }).catch((err) => {
-        req.flash('error_msg', err)
-        res.render('admin/approval', { err })
+router.get('/scholarship/approval', auth.ensureAdminAuthenticated,
+    async (req, res) => {
+        let scholarshipId = 1
+        let academicId = 1
+        let scholarshipListId = await Helper.getScholarshipListId(scholarshipId, academicId)
+        adminHelper.getVerifiedApplications(scholarshipListId).then(async data => {
+            res.render('admin/scholarship/approval', { data })
+        }).catch((err) => {
+            req.flash('error_msg', err)
+            res.render('admin/scholarship/approval', { err })
+        })
     })
-})
 
-router.get('/approved-list', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.getApprovedApplications().then(async data => {
-        res.render('admin/approved-list', { data })
-    }).catch((err) => {
-        req.flash('error_msg', err)
-        res.render('admin/approved-list', { err })
+router.get('/scholarship/approved-list', auth.ensureAdminAuthenticated,
+    async (req, res) => {
+        let scholarshipId = 1
+        let academicId = 1
+        let scholarshipListId = await Helper.getScholarshipListId(scholarshipId, academicId)
+        adminHelper.getApprovedApplications(scholarshipListId).then(async data => {
+            res.render('admin/scholarship/approved-list', { data })
+        }).catch((err) => {
+            req.flash('error_msg', err)
+            res.render('admin/scholarship/approved-list', { err })
+        })
     })
-})
 
-router.get('/rejected-list', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.getRejectedApplications().then(async data => {
-        res.render('admin/rejected-list', { data })
-    }).catch((err) => {
-        req.flash('error_msg', err)
-        res.render('admin/rejected-list', { err })
+router.get('/scholarship/rejected-list', auth.ensureAdminAuthenticated,
+    async (req, res) => {
+        let scholarshipId = 1
+        let academicId = 1
+        let scholarshipListId = await Helper.getScholarshipListId(scholarshipId, academicId)
+        adminHelper.getRejectedApplications(scholarshipListId).then(async data => {
+            res.render('admin/scholarship/rejected-list', { data })
+        }).catch((err) => {
+            req.flash('error_msg', err)
+            res.render('admin/scholarship/rejected-list', { err })
+        })
     })
-})
 
-router.get('/fetch-application', auth.ensureAdminAuthenticated, (req, res) => {
+router.get('/scholarship/pending-list', auth.ensureAdminAuthenticated,
+    async (req, res) => {
+        let scholarshipId = 1
+        let academicId = 1
+        let scholarshipListId = await Helper.getScholarshipListId(scholarshipId, academicId)
+        let criteria = await Helper.getScholarshipCriteria(scholarshipId)
+        console.log(criteria);
+        adminHelper.getPendingApplication(scholarshipListId).then(async response => {
+            let data = []
+            for (x in response) {
+                let isEligible = await Helper.checkEligibility(criteria, response[x])
+                if (isEligible.status) {
+                    data.push(response[x])
+                }
+            }
+            console.log(data);
+            res.render('admin/scholarship/pending-list', { data })
+        }).catch((err) => {
+            req.flash('error_msg', err)
+            res.render('admin/scholarship/pending-list', { err })
+        })
+    })
+
+router.get('/scholarship/fetch-application', auth.ensureAdminAuthenticated, (req, res) => {
     let applicationNo = req.query.id
     adminHelper.getApplicationByApplicationNo(applicationNo).then(response => {
         let data = {
@@ -115,7 +154,7 @@ router.get('/fetch-application', auth.ensureAdminAuthenticated, (req, res) => {
     })
 })
 
-router.patch('/verify-application', auth.ensureAdminAuthenticated, (req, res) => {
+router.patch('/scholarship/verify-application', auth.ensureAdminAuthenticated, (req, res) => {
     adminHelper.verifyApplication(req.body.applicationNo).then(response => {
         res.json({ status: true })
     }).catch(err => {
@@ -123,7 +162,7 @@ router.patch('/verify-application', auth.ensureAdminAuthenticated, (req, res) =>
     })
 })
 
-router.patch('/reject-application', auth.ensureAdminAuthenticated, (req, res) => {
+router.patch('/scholarship/reject-application', auth.ensureAdminAuthenticated, (req, res) => {
     adminHelper.rejectApplication(req.body.applicationNo).then(response => {
         res.json({ status: true })
     }).catch(err => {
@@ -131,7 +170,7 @@ router.patch('/reject-application', auth.ensureAdminAuthenticated, (req, res) =>
     })
 })
 
-router.patch('/approve-application', auth.ensureAdminAuthenticated, (req, res) => {
+router.patch('/scholarship/approve-application', auth.ensureAdminAuthenticated, (req, res) => {
     console.log(req.body.applicationNo);
     adminHelper.approveApplication(req.body.applicationNo).then(response => {
         res.json({ status: true })

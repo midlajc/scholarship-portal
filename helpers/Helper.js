@@ -205,5 +205,24 @@ module.exports = {
             reject(err)
           })
     })
+  },
+  getScholarshipCriteria: (scholarshipId) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.SCHOLARSHIP_COLLECTION)
+        .findOne({ ID: parseInt(scholarshipId) }, { criteria: 1 }).then(response => {
+          resolve(response.criteria)
+        }).catch(err => {
+          reject(err)
+        })
+    })
+  },
+  getScholarshipListId: (scholarshipId, academicId) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.SCHOLARSHIP_LIST_COLLECTION)
+        .findOne({ scholarshipId: parseInt(scholarshipId), academicId: parseInt(academicId) })
+        .then(response => {
+          resolve(response.ID)
+        })
+    })
   }
 }

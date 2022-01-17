@@ -5,8 +5,6 @@ var userHelper = require('./user_helper')
 var nodeMailer = require('./nodeMailer')
 const { ObjectID } = require('mongodb')
 const Helper = require('./Helper')
-const { resolve, reject } = require('promise')
-const { response } = require('express')
 
 module.exports = {
     userRegistration: (data) => {
@@ -36,9 +34,14 @@ module.exports = {
             callback(response, null)
         })
     },
-    getApplicantList: () => {
+    getApplicantList: (scholarshipListId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.APPLICATION_COLLECTION).aggregate([
+                {
+                    "$match": {
+                        'scholarshipListId': parseInt(scholarshipListId)
+                    }
+                },
                 {
                     '$lookup': {
                         'from': 'user',
@@ -80,13 +83,14 @@ module.exports = {
             })
         })
     },
-    getSubmittedApplications: () => {
+    getSubmittedApplications: (scholarshipListId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.APPLICATION_COLLECTION)
                 .aggregate([
                     {
                         "$match": {
-                            "applicationStatus": parseInt(2)
+                            "applicationStatus": parseInt(2),
+                            'scholarshipListId': parseInt(scholarshipListId)
                         }
                     },
                     {
@@ -130,13 +134,14 @@ module.exports = {
                 })
         })
     },
-    getVerifiedApplications: () => {
+    getVerifiedApplications: (scholarshipListId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.APPLICATION_COLLECTION)
                 .aggregate([
                     {
                         "$match": {
-                            "applicationStatus": parseInt(3)
+                            "applicationStatus": parseInt(3),
+                            'scholarshipListId': parseInt(scholarshipListId)
                         }
                     },
                     {
@@ -180,13 +185,14 @@ module.exports = {
                 })
         })
     },
-    getApprovedApplications: () => {
+    getApprovedApplications: (scholarshipListId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.APPLICATION_COLLECTION)
                 .aggregate([
                     {
                         "$match": {
-                            "applicationStatus": parseInt(4)
+                            "applicationStatus": parseInt(4),
+                            'scholarshipListId': parseInt(scholarshipListId)
                         }
                     },
                     {
@@ -230,13 +236,14 @@ module.exports = {
                 })
         })
     },
-    getRejectedApplications: () => {
+    getRejectedApplications: (scholarshipListId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.APPLICATION_COLLECTION)
                 .aggregate([
                     {
                         "$match": {
-                            "applicationStatus": parseInt(-1)
+                            "applicationStatus": parseInt(-1),
+                            'scholarshipListId': parseInt(scholarshipListId)
                         }
                     },
                     {
@@ -681,6 +688,141 @@ module.exports = {
                     resolve()
                 }).catch(err => {
                     reject()
+                })
+        })
+    },
+    getPendingApplication: (scholarshipListId) => {
+        let aggregate = [
+            {
+                '$lookup': {
+                    'from': 'applications',
+                    'localField': '_id',
+                    'foreignField': 'userId',
+                    'as': 'application'
+                }
+            }, {
+                '$set': {
+                    'application': {
+                        '$filter': {
+                            'input': '$application',
+                            'as': 'application',
+                            'cond': {
+                                '$eq': [
+                                    '$$application.scholarshipListId', parseInt(scholarshipListId)
+                                ]
+                            }
+                        }
+                    }
+                }
+            }, {
+                '$set': {
+                    'application': {
+                        '$cond': {
+                            'if': {
+                                '$gt': [
+                                    {
+                                        '$size': '$application'
+                                    }, 0
+                                ]
+                            },
+                            'then': '$application',
+                            'else': 0
+                        }
+                    }
+                }
+            }, {
+                '$unwind': {
+                    'path': '$application'
+                }
+            }, {
+                '$match': {
+                    '$or': [
+                        {
+                            'application.applicationStatus': 1
+                        }, {
+                            'application': 0
+                        }
+                    ]
+                }
+            }, {
+                '$lookup': {
+                    'from': 'batches',
+                    'localField': 'batchId',
+                    'foreignField': 'ID',
+                    'as': 'batch'
+                }
+            }, {
+                '$unwind': {
+                    'path': '$batch'
+                }
+            }, {
+                '$lookup': {
+                    'from': 'courses',
+                    'localField': 'batch.COURSEID',
+                    'foreignField': 'ID',
+                    'as': 'course'
+                }
+            }, {
+                '$unwind': {
+                    'path': '$course'
+                }
+            }, {
+                '$lookup': {
+                    'from': 'gender',
+                    'localField': 'genderId',
+                    'foreignField': 'ID',
+                    'as': 'gender'
+                }
+            }, {
+                '$unwind': {
+                    'path': '$gender'
+                }
+            }, {
+                '$set': {
+                    'applicationStatus': {
+                        '$cond': {
+                            'if': {
+                                '$eq': [
+                                    '$application', 0
+                                ]
+                            },
+                            'then': false,
+                            'else': true
+                        }
+                    },
+                    'applicationStatusMessage': {
+                        '$cond': {
+                            'if': {
+                                '$eq': [
+                                    '$application', 0
+                                ]
+                            },
+                            'then': 'not fonud',
+                            'else': 'not submitted'
+                        }
+                    }
+                }
+            }, {
+                '$project': {
+                    'applicationNo': '$application.applicationNo',
+                    'name': 1,
+                    'mobile': 1,
+                    'email': 1,
+                    'batch': 1,
+                    'genderId': 1,
+                    'course': 1,
+                    'applicationStatus': 1,
+                    'applicationStatusMessage': 1,
+                    'gender':1
+                }
+            }
+        ]
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION)
+                .aggregate(aggregate).toArray().then(response => {
+                    resolve(response)
+                }).catch(err => {
+                    reject(err)
                 })
         })
     },
