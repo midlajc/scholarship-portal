@@ -1,6 +1,6 @@
 let viewApplication = (applicationNo) => {
     $.ajax({
-        url: '/admin/fetch-application/?id=' + applicationNo,
+        url: '/admin/scholarship/fetch-application/?id=' + applicationNo,
         method: 'get',
         success: (data) => {
             data = data.data
