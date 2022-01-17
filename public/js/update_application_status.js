@@ -12,7 +12,7 @@ let Toast = Swal.mixin({
 
 let verifyApplication = () => {
     $.ajax({
-        url: '/admin/verify-application',
+        url: '/admin/scholarship/verify-application',
         method: 'patch',
         data: {
             applicationNo: $('#applicationNo').val()
@@ -39,7 +39,7 @@ let verifyApplication = () => {
 
 let rejectApplication = () => {
     $.ajax({
-        url: '/admin/reject-application',
+        url: '/admin/scholarship/reject-application',
         method: 'patch',
         data: {
             applicationNo: $('#applicationNo').val()
@@ -65,7 +65,7 @@ let rejectApplication = () => {
 
 let approveApplication = () => {
     $.ajax({
-        url: '/admin/approve-application',
+        url: '/admin/scholarship/approve-application',
         method: 'patch',
         data: {
             applicationNo: $('#applicationNo').val()

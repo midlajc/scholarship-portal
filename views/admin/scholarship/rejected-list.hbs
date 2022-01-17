@@ -2,7 +2,7 @@
 <style>
   @media (min-width: 993px) {
     .modal-dialog {
-      max-width: 65%;
+      max-width: 70%;
     }
   }
 </style>
@@ -333,7 +333,7 @@
 
 
 <div class="box p-2">
-  <h2 class="text-center">Applicant List</h2>
+  <h2 class="text-center">Rejected List</h2>
   <div class="p-1 table-responsive">
     <table class="table table-striped" id="table">
       <thead>
@@ -354,18 +354,15 @@
           <td>{{this.user.mobile}}</td>
           <td>{{this.course.COURSENAME}}</td>
           <td>{{this.batch.BATCHNAME}}</td>
-          <td>
-            <button class="btn w3-green" type="button" onclick="viewApplication('{{this.applicationNo}}')">
+          <td><button class="btn w3-green" onclick="viewApplication('{{this.applicationNo}}')">
               <i class="fas fa-eye"></i>
-            </button>
-          </td>
+            </button></td>
         </tr>
         {{/each}}
       </tbody>
     </table>
   </div>
 </div>
-<script src="/js/view_application.js"></script>
-<script>
-  console.log({{err}});
+<script src="/js/view_application.js">
+  console.log('{{err}}');
 </script>
