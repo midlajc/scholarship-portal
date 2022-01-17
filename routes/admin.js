@@ -17,6 +17,10 @@ router.get('/', auth.ensureAdminAuthenticated,
     });
 
 
+router.get('/scholarship',auth.ensureAdminAuthenticated,(req,res)=>{
+    res.render('admin/scholarship')
+})
+
 router.get('/applicant-list', auth.ensureAdminAuthenticated, (req, res) => {
     adminHelper.getApplicantList().then(async data => {
         // console.log(data);
