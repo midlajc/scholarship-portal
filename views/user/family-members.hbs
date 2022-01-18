@@ -5,9 +5,82 @@
         font-size: small;
     }
 </style>
+
+
+<div class="modal fade" id="model" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered model-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Member</h5>
+                <button type="button" class="close btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id='form'>
+                    <div class="row m-1 font-weight-light">
+                        <div class="col-lg-6">
+                            <label class="fw-bold text-left">Name
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="form-group">
+                                <input class="form-control" type="text" name="name" id="name" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="fw-bold text-left">Age
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="form-group">
+                                <input class="form-control" type="number" name="age" id="age" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="fw-bold text-left">Relation
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="form-group">
+                                <input class="form-control" type="text" name="relation" id="relation" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="fw-bold text-left">Occupation
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="form-group">
+                                <input class="form-control" type="text" name="occupation" id="occupation" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="fw-bold text-left">Organization/institution
+                                <span class="text-danger"></span>
+                            </label>
+                            <div class="form-group">
+                                <input class="form-control" type="text" name="organization" id="organization">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="fw-bold text-left">Mobile
+                                <span class="text-danger"></span>
+                            </label>
+                            <div class="form-group">
+                                <input class="form-control" type="number" name="mobile" id="mobile">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn w3-green" onclick="addMember()">Add</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="box">
     <div class="mb-5">
-        <button class="btn w3-green float-end" onclick="addMember()">
+        <button class="btn w3-green float-end" onclick="addMemberModel()">
             <i class="fas fa-plus"></i>
             Add Member</button>
     </div>
@@ -66,87 +139,29 @@
             }
         })
     }
+
+    let addMemberModel = () => {
+        $('#model').modal()
+    }
+
     let addMember = () => {
-        Swal.fire({
-            title: 'Add New Member',
-            html: `
-            <form id='form'>
-            <div class="row m-1 font-weight-light">
-    <div class="col-lg-6">
-        <label class="fw-bold text-left">Name
-            <span class="text-danger">*</span>
-        </label>
-        <div class="form-group">
-            <input class="form-control" type="text" name="name" id="name" required>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <label class="fw-bold text-left">Age
-            <span class="text-danger">*</span>
-        </label>
-        <div class="form-group">
-            <input class="form-control" type="number" name="age" id="age" required>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <label class="fw-bold text-left">Relation
-            <span class="text-danger">*</span>
-        </label>
-        <div class="form-group">
-            <input class="form-control" type="text" name="relation" id="relation" required>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <label class="fw-bold text-left">Occupation
-            <span class="text-danger">*</span>
-        </label>
-        <div class="form-group">
-            <input class="form-control" type="text" name="occupation" id="occupation" required>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <label class="fw-bold text-left">Organization/institution
-            <span class="text-danger"></span>
-        </label>
-        <div class="form-group">
-            <input class="form-control" type="text" name="organization" id="organization">
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <label class="fw-bold text-left">Mobile
-            <span class="text-danger"></span>
-        </label>
-        <div class="form-group">
-            <input class="form-control" type="number" name="mobile" id="mobile">
-        </div>
-    </div>
-</div>
-</form>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'Add',
-            showLoaderOnConfirm: true,
-            preConfirm: () => {
-                if (document.getElementById('form').reportValidity()) {
-                    let data = {
-                        name: $('#name').val(),
-                        age: $('#age').val(),
-                        relation: $('#relation').val(),
-                        occupation: $('#occupation').val(),
-                        organization: $('#organization').val(),
-                        mobile: $('#mobile').val(),
-                    }
-                    $.ajax({
-                        url: '/add-family-member',
-                        data: data,
-                        method: 'post',
-                        success: (response => {
-                            location.reload()
-                        })
-                    })
-                }
-            },
-            allowOutsideClick: () => !Swal.isLoading()
-        })
+        if (document.getElementById('form').reportValidity()) {
+            let data = {
+                name: $('#name').val(),
+                age: $('#age').val(),
+                relation: $('#relation').val(),
+                occupation: $('#occupation').val(),
+                organization: $('#organization').val(),
+                mobile: $('#mobile').val(),
+            }
+            $.ajax({
+                url: '/add-family-member',
+                data: data,
+                method: 'post',
+                success: (response => {
+                    location.reload()
+                })
+            })
+        }
     }
 </script>
