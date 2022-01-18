@@ -99,7 +99,6 @@ router.get('/scholarship/pending-list', auth.ensureAdminAuthenticated,
                     data.push(response[x])
                 }
             }
-            console.log(data);
             res.render('admin/scholarship/pending-list', { data })
         }).catch((err) => {
             req.flash('error_msg', err)
