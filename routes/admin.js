@@ -95,11 +95,9 @@ router.get('/scholarship/pending-list', auth.ensureAdminAuthenticated,
             let data = []
             for (x in response) {
                 let isEligible = await Helper.checkEligibility(criteria, response[x])
-                .then(isEligible=>{
-                    if (isEligible.status) {
-                        data.push(response[x])
-                    }
-                })
+                if (isEligible.status) {
+                    data.push(response[x])
+                }
             }
             console.log(data);
             res.render('admin/scholarship/pending-list', { data })
