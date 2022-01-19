@@ -13,37 +13,42 @@ module.exports = {
     })
   },
   findCurrentAcademicYear: () => {
-    //need to write code
-    //resolve({statusId:1,,id:academicId,acdemicName:"2021-2022"})
-    //reject({statusId:-2,message:"Submission not yet Started"})
+    const now = Date.now()
     return new Promise((resolve, reject) => {
-      resolve({ id: 1, acdemicName: "2021-2022" })
-      // db.get().collection(collection.ACADEMIC_YEAR_COLLECTION).find().toArray()
-      // .then(response=>{
-      // })
+      db.get().collection(collection.ACADEMIC_YEAR_COLLECTION)
+        .findOne({
+          "$and": [
+            { 'startDate': { '$lte': now } },
+            { 'endDate': { '$gte': now } }
+          ]
+        }).then(response => {
+          if (response === null) reject({ statusId: -2 })
+          resolve(response)
+        })
     })
   },
   getScholarshipStatus: (scholarshipId, academicId) => {
-    //need to write code
-    //reject({statusId:-2,message:"Submission not yet Started"})
-    //reject({statusId:-3,message:"Submission Ended"})
-    //resolve({statusId:0,scholarshipListId:1,message:"Live"})
     return new Promise((resolve, reject) => {
-      resolve({ id: 2, message: "Live" })
-      // db.get().collection(collection.SCHOLARSHIP_LIST_COLLECTION).find().toArray()
-      //     .then(response => {
-      //     })
+      const now = Date.now()
+      db.get().collection(collection.SCHOLARSHIP_LIST_COLLECTION)
+        .findOne({
+          scholarshipId: parseInt(scholarshipId),
+          academicId: parseInt(academicId)
+        }).then(response => {
+          if (response === null) reject({ statusId: -2 })
+          if (response.startDate > now) reject({ statusId: -2 })
+          if (response.endDate < now) reject({ statusId: -3 })
+          resolve(response)
+        })
     })
   },
   getApplicationStatus: (scholarshipListId, userId) => {
     return new Promise((resolve, reject) => {
       db.get().collection(collection.APPLICATION_COLLECTION)
-        .findOne({ scholarshipListId: scholarshipListId, userId: ObjectId(userId) })
+        .findOne({ scholarshipListId: parseInt(scholarshipListId), userId: ObjectId(userId) })
         .then(response => {
-          if (response == null)
-            resolve({ statusId: 0 })
-          else
-            resolve({ statusId: response.applicationStatus })
+          if (response == null) resolve({ statusId: 0 })
+          resolve({ statusId: response.applicationStatus })
         }).catch(err => {
           reject(err)
         })

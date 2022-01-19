@@ -139,6 +139,8 @@ router.get('/application-status/:id', auth.ensureUserAuthenticated, (req, res) =
         Helper.getApplicationStatusMessage(applicationStatus.statusId).then(message => {
             applicationStatus.message = message
             res.json(applicationStatus)
+        }).catch(err=>{
+            res.json(err)
         })
     })
 })
