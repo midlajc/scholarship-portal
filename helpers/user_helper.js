@@ -5,8 +5,6 @@ const nodeMailer = require('./nodeMailer')
 const crypto = require('crypto')
 const Helper = require('./Helper')
 const { ObjectId } = require('mongodb')
-const { resolve } = require('path')
-const { reject } = require('promise')
 
 module.exports = {
     getUserByEmailForLogin: (email, callback) => {
@@ -251,29 +249,26 @@ module.exports = {
     },
     applicationStatus: (scholarshipId, user) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.SCHOLARSHIP_COLLECTION).findOne({ ID: scholarshipId })
+            db.get().collection(collection.SCHOLARSHIP_COLLECTION).findOne({ ID: parseInt(scholarshipId) })
                 .then(scholarship => {
-                    Helper.checkEligibility(scholarship, user).then(isEligible => {
+                    Helper.checkEligibility(scholarship.criteria, user).then(isEligible => {
                         if (isEligible.status) {
                             Helper.findCurrentAcademicYear().then(academicYear => {
-                                Helper.getScholarshipStatus(scholarshipId, academicYear.id)
+                                Helper.getScholarshipStatus(scholarshipId, academicYear.ID)
                                     .then((scholarshipList) => {
-                                        Helper.getApplicationStatus(scholarshipList.id, user._id)
+                                        Helper.getApplicationStatus(scholarshipList.ID, user._id)
                                             .then(applicationStatus => {
                                                 resolve(
                                                     {
                                                         statusId: applicationStatus.statusId,
-                                                        scholarshipListId: scholarshipList.id,
+                                                        scholarshipListId: scholarshipList.ID,
                                                     })
                                             })
                                     }).catch((response) => {
-                                        //need to write code
-                                        //reject({statusId:-2,message:"Submission not yet Started"})
-                                        //reject({statusId:-3,message:"Submission Ended"})
-                                        resolve({ statusId: -2 })
+                                        resolve(response)
                                     })
                             }).catch((response) => {
-                                resolve({ statusId: -2 })
+                                resolve(response)
                             })
                         } else {
                             resolve({ statusId: -4 })
@@ -311,7 +306,7 @@ module.exports = {
     addFamilyMembers: (data, userId) => {
         return new Promise((resolve, reject) => {
             data.userId = ObjectId(userId)
-            data.name=data.name.toUpperCase()
+            data.name = data.name.toUpperCase()
             db.get().collection(collection.FAMILY_MEMBERS_COLLECTION)
                 .insertOne(data).then(() => {
                     resolve()
