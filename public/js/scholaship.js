@@ -20,7 +20,7 @@ let applyForScholarship = (id) => {
                     url: '/scholarship-status/' + applicationStatus.scholarshipListId,
                     method: 'get',
                     success: (scholarshipStatus) => {
-                        if (applicationStatus.statusId == -1) {
+                        if (applicationStatus.statusId == -1 && scholarshipStatus.statusId == -3) {
                             window.location.replace('/scholarship-form/' + applicationStatus.scholarshipListId)
                         }
                         else if (scholarshipStatus.statusId == -3 || scholarshipStatus.statusId == -2) {

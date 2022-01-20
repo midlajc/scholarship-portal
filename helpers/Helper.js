@@ -227,7 +227,6 @@ module.exports = {
       db.get().collection(collection.SCHOLARSHIP_LIST_COLLECTION)
         .findOne({ scholarshipId: parseInt(scholarshipId), academicId: parseInt(academicId) })
         .then(response => {
-          console.log(response);
           if (response == null) reject()
           else resolve(response.ID)
         })
