@@ -1,6 +1,8 @@
 const db = require('../configs/connection')
 const collection = require('../configs/collection')
 const { ObjectId } = require('mongodb')
+const { resolve } = require('promise')
+const { response } = require('express')
 
 module.exports = {
   checkEligibility: (criteria, user) => {
@@ -214,7 +216,7 @@ module.exports = {
   getScholarshipCriteria: (scholarshipId) => {
     return new Promise((resolve, reject) => {
       db.get().collection(collection.SCHOLARSHIP_COLLECTION)
-        .findOne({ ID: parseInt(scholarshipId) }, { criteria: 1 }).then(response => {
+        .findOne({ ID: parseInt(scholarshipId) }).then(response => {
           resolve(response.criteria)
         }).catch(err => {
           reject(err)
@@ -227,6 +229,68 @@ module.exports = {
         .findOne({ scholarshipId: parseInt(scholarshipId), academicId: parseInt(academicId) })
         .then(response => {
           resolve(response.ID)
+        })
+    })
+  },
+  getUserForEligibilityCheck: (userId) => {
+    return new Promise((resolve, reject) => {
+      const aggregate = [
+        {
+          '$match': {
+            '_id': ObjectId(userId)
+          }
+        },
+        {
+          '$lookup': {
+            'from': 'batches',
+            'localField': 'batchId',
+            'foreignField': 'ID',
+            'as': 'batch'
+          }
+        }, {
+          '$unwind': {
+            'path': '$batch'
+          }
+        }, {
+          '$lookup': {
+            'from': 'courses',
+            'localField': 'batch.COURSEID',
+            'foreignField': 'ID',
+            'as': 'course'
+          }
+        }, {
+          '$unwind': {
+            'path': '$course'
+          }
+        }, {
+          '$lookup': {
+            'from': 'gender',
+            'localField': 'genderId',
+            'foreignField': 'ID',
+            'as': 'gender'
+          }
+        }, {
+          '$unwind': {
+            'path': '$gender'
+          }
+        }, {
+          '$lookup': {
+            'from': 'departments',
+            'localField': 'course.DEPARTMENTID',
+            'foreignField': 'ID',
+            'as': 'department'
+          }
+        }, {
+          '$unwind': {
+            'path': '$department'
+          }
+        }
+      ]
+      db.get().collection(collection.USER_COLLECTION)
+        .aggregate(aggregate).toArray().then(response => {
+          resolve(response[0])
+        }).catch(err => {
+          reject(err)
         })
     })
   }

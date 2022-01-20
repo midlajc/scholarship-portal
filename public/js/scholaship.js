@@ -2,7 +2,7 @@ let applyForScholarship = (id) => {
     $('#apply').prop("disabled", true);
     $('#apply').html("<span class=" + "'spinner-border spinner-border-sm'" + "></span><span class=" + "" + ">Apply for Scholarship</span>")
     $.ajax({
-        url: '/application-status/' + id,
+        url: '/scholarship-status/' + id,
         method: 'get',
         success: (response) => {
             let isSubmitted = response.statusId == 2 || response.statusId == 3 || response.statusId == 4;
@@ -68,7 +68,7 @@ let printApplication = (id) => {
     $('#print').prop("disabled", true);
     $('#print').html("<span class=" + "'spinner-border spinner-border-sm'" + "></span><span class=" + "" + ">Print Application</span>")
     $.ajax({
-        url: '/application-status/' + id,
+        url: '/scholarship-status/' + id,
         method: 'get',
         success: (response) => {
             $('#print').prop("disabled", false);
