@@ -25,22 +25,21 @@ module.exports = {
           ]
         }).then(response => {
           if (response === null) reject({ statusId: -2 })
-          resolve(response)
+          else resolve(response)
         })
     })
   },
-  getScholarshipStatus: (scholarshipId, academicId) => {
+  getScholarshipStatus: (scholarshipListId) => {
     return new Promise((resolve, reject) => {
       const now = Date.now()
       db.get().collection(collection.SCHOLARSHIP_LIST_COLLECTION)
         .findOne({
-          scholarshipId: parseInt(scholarshipId),
-          academicId: parseInt(academicId)
+          ID: parseInt(scholarshipListId)
         }).then(response => {
-          if (response === null) reject({ statusId: -2 })
-          if (response.startDate > now) reject({ statusId: -2 })
-          if (response.endDate < now) reject({ statusId: -3 })
-          resolve(response)
+          if (response == null) reject({ statusId: -2 })
+          else if (response.startDate > now) reject({ statusId: -2 })
+          else if (response.endDate < now) reject({ statusId: -3 })
+          else resolve({ statusId: 0 })
         })
     })
   },
@@ -50,7 +49,7 @@ module.exports = {
         .findOne({ scholarshipListId: parseInt(scholarshipListId), userId: ObjectId(userId) })
         .then(response => {
           if (response == null) resolve({ statusId: 0 })
-          resolve({ statusId: response.applicationStatus })
+          else resolve({ statusId: response.applicationStatus })
         }).catch(err => {
           reject(err)
         })
@@ -228,7 +227,9 @@ module.exports = {
       db.get().collection(collection.SCHOLARSHIP_LIST_COLLECTION)
         .findOne({ scholarshipId: parseInt(scholarshipId), academicId: parseInt(academicId) })
         .then(response => {
-          resolve(response.ID)
+          console.log(response);
+          if (response == null) reject()
+          else resolve(response.ID)
         })
     })
   },

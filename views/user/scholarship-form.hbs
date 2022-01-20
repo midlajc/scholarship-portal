@@ -340,7 +340,9 @@
                 </div>
             </div>
             <div class="modal-footer">
+                {{#if application_details.saveStatus}}
                 <button class="btn w3-blue" id="save" onclick="submitData(1)" type="button"> Save </button>
+                {{/if}}
                 <button class="btn w3-green" id="submit" type="button" onclick="submitData(2)"> Submit </button>
             </div>
         </div>
