@@ -5,42 +5,44 @@
 {{/if}}
 <link rel="stylesheet" href="/stylesheets/user/home.css">
 <div class="box">
-    <div class="profile">
-        <div class="image">
-            <img src="/images/user.png" alt="">
+    <div class="profileBox">
+        <div class="profile">
+            <div class="image">
+                <img src="/images/user.png" alt="">
+            </div>
+            <div class="name">{{user.name}}</div>
         </div>
-        <div class="name">{{user.name}}</div>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Date of Birth</th>
+                    <td>{{user.dob}}</td>
+                </tr>
+                <tr>
+                    <th>Gender</th>
+                    <td>{{user.gender}}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{user.email}}</td>
+                </tr>
+                <tr>
+                    <th>Mobile</th>
+                    <td>{{user.mobile}}</td>
+                </tr>
+                <tr>
+                    <th>Department</th>
+                    <td>{{user.department}}</td>
+                </tr>
+                <tr>
+                    <th>Course</th>
+                    <td>{{user.course}}</td>
+                </tr>
+                <tr>
+                    <th>Batch</th>
+                    <td>{{user.batch}}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Date of Birth</th>
-                <td>{{user.dob}}</td>
-            </tr>
-            <tr>
-                <th>Gender</th>
-                <td>{{user.gender}}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{user.email}}</td>
-            </tr>
-            <tr>
-                <th>Mobile</th>
-                <td>{{user.mobile}}</td>
-            </tr>
-            <tr>
-                <th>Department</th>
-                <td>{{user.department}}</td>
-            </tr>
-            <tr>
-                <th>Course</th>
-                <td>{{user.course}}</td>
-            </tr>
-            <tr>
-                <th>Batch</th>
-                <td>{{user.batch}}</td>
-            </tr>
-        </tbody>
-    </table>
 </div>
