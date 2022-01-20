@@ -234,7 +234,6 @@ module.exports = {
     },
     filterScholarship: (user) => {
         let eligibleList = []
-
         return new Promise((resolve, reject) => {
             db.get().collection(collection.SCHOLARSHIP_COLLECTION).find()
                 .toArray().then(async response => {
@@ -249,24 +248,21 @@ module.exports = {
                 })
         })
     },
-    scholarshipStatus: (scholarshipId) => {
+    scholarshipStatus: (scholarshipListId) => {
         return new Promise((resolve, reject) => {
-            Helper.findCurrentAcademicYear().then(academicYear => {
-                Helper.getScholarshipStatus(scholarshipId, academicYear.ID)
-                    .then((scholarshipList) => {
-                        resolve(scholarshipList.ID)
-                    }).catch((response) => {
-                        reject(response)
-                    })
-            }).catch((response) => {
-                reject(response)
-            })
+            Helper.getScholarshipStatus(scholarshipListId)
+                .then((scholarshipStatus) => {
+                    resolve(scholarshipStatus)
+                }).catch((scholarshipStatus) => {
+                    reject(scholarshipStatus)
+                })
         })
+
     },
     applicationStatus: (scholarshipId, scholarshipListId, userId) => {
         return new Promise(async (resolve, reject) => {
             const criteria = await Helper.getScholarshipCriteria(scholarshipId)
-            const user=await Helper.getUserForEligibilityCheck(userId)
+            const user = await Helper.getUserForEligibilityCheck(userId)
             Helper.checkEligibility(criteria, user).then(isEligible => {
                 if (isEligible.status) {
                     Helper.getApplicationStatus(scholarshipListId, userId)
