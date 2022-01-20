@@ -200,7 +200,7 @@ router.get('/scholarship-form/:id', auth.ensureUserAuthenticated,
                                         [personal_details, academic_details, contact_details, application_details] = applicationDetails
                                         taluks = await Helper.getTaluks(contact_details.districtId)
                                         panchayaths = await Helper.getPanchayaths(contact_details.districtId)
-                                        if (applicationStatus.statusId != -1) application_details.saveStatus = true
+                                        if (application_details.applicationStatus != -1) application_details.saveStatus = true
                                     }
                                     res.render('user/scholarship-form',
                                         {
@@ -514,7 +514,6 @@ router.get('/edit-profile', auth.ensureUserAuthenticated,
 
 router.post('/edit-profile', auth.ensureUserAuthenticated,
     (req, res) => {
-        console.log(req.body);
         userHelper.updateProfile(req.user._id, req.body).then(() => {
             req.flash('success_msg', "Profile Upadated")
             res.redirect('/edit-profile')
