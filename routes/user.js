@@ -7,7 +7,8 @@ const { body, validationResult } = require('express-validator');
 const axios = require('axios');
 const Helper = require('../helpers/Helper');
 const pdfHelper = require('../helpers/pdfHelper');
-const fs = require('fs')
+const fs = require('fs');
+const { response } = require('express');
 
 /* GET home page. */
 
@@ -133,37 +134,73 @@ router.get('/scholarships', auth.ensureUserAuthenticated, (req, res) => {
     })
 })
 
-router.get('/application-status/:id', auth.ensureUserAuthenticated, (req, res) => {
-    let scholarshipId = req.params.id;
-    userHelper.applicationStatus(scholarshipId, req.user).then(applicationStatus => {
-        Helper.getApplicationStatusMessage(applicationStatus.statusId).then(message => {
-            applicationStatus.message = message
-            res.json(applicationStatus)
-        }).catch(err=>{
+router.get('/scholarship-status/:id', auth.ensureUserAuthenticated, (req, res) => {
+    let scholarshipListId = req.params.id;
+    userHelper.scholarshipStatus(scholarshipListId).then((scholarshipStatus) => {
+        res.json(scholarshipStatus)
+    }).catch(scholarshipStatus => {
+        Helper.getApplicationStatusMessage(scholarshipStatus.statusId).then(message => {
+            scholarshipStatus.message = message
+            res.json(scholarshipStatus)
+        }).catch(err => {
             res.json(err)
         })
     })
 })
+router.get('/application-status/:id', auth.ensureUserAuthenticated,
+    (req, res) => {
+        const scholarshipId = req.params.id;
+        Helper.findCurrentAcademicYear().then(academicYear => {
+            Helper.getScholarshipListId(scholarshipId, academicYear.ID)
+                .then(scholarshipListId => {
+                    userHelper.applicationStatus(scholarshipId, scholarshipListId, req.user._id)
+                        .then(applicationStatus => {
+                            Helper.getApplicationStatusMessage(applicationStatus.statusId).then(message => {
+                                applicationStatus.message = message
+                                res.json(applicationStatus)
+                            }).catch(err => {
+                                res.json(err)
+                            })
+                        })
+                }).catch(() => {
+                    let scholarshipStatus = { statusId: -2 }
+                    Helper.getApplicationStatusMessage(scholarshipStatus.statusId).then(message => {
+                        scholarshipStatus.message = message
+                        res.json(scholarshipStatus)
+                    }).catch(err => {
+                        res.json(err)
+                    })
+                })
+        }).catch(academicStatus => {
+            Helper.getApplicationStatusMessage(academicStatus.statusId).then(message => {
+                academicStatus.message = message
+                res.json(academicStatus)
+            }).catch(err => {
+                res.json(err)
+            })
+        })
+    })
 
 router.get('/scholarship-form/:id', auth.ensureUserAuthenticated,
     (req, res) => {
         let scholarshipListId = req.params.id
-        userHelper.getscholarshipListByscholarshipListId(scholarshipListId)
+        userHelper.getScholarshipListByScholarshipListId(scholarshipListId)
             .then((scholarship) => {
-                userHelper.applicationStatus(scholarship.scholarshipId, req.user)
-                    .then(async (response) => {
-                        isTrue = response.statusId == 0 || response.statusId == -1 || response.statusId == 1
-                        if (isTrue) {
+                userHelper.applicationStatus(scholarship.scholarshipId, scholarshipListId, req.user._id)
+                    .then(applicationStatus => {
+                        isTrue = applicationStatus.statusId == 0 || applicationStatus.statusId == -1 || applicationStatus.statusId == 1
+                        let next = async () => {
                             districts = await Helper.getDistrictList()
                             states = await Helper.getStateList()
                             userHelper.getApplicationDetails(scholarshipListId, req.user._id)
-                                .then(async response => {
+                                .then(async applicationDetails => {
                                     let taluks, panchayaths;
                                     let [personal_details, academic_details, contact_details, application_details] = [null, null, null, null];
-                                    if (response) {
-                                        [personal_details, academic_details, contact_details, application_details] = response
+                                    if (applicationDetails) {
+                                        [personal_details, academic_details, contact_details, application_details] = applicationDetails
                                         taluks = await Helper.getTaluks(contact_details.districtId)
                                         panchayaths = await Helper.getPanchayaths(contact_details.districtId)
+                                        if (application_details.applicationStatus != -1) application_details.saveStatus = true
                                     }
                                     res.render('user/scholarship-form',
                                         {
@@ -178,12 +215,31 @@ router.get('/scholarship-form/:id', auth.ensureUserAuthenticated,
                                             taluks,
                                             user: req.user
                                         })
+                                }).catch((err) => {
+                                    req.flash('error_msg', err)
+                                    res.redirect('/scholarships')
+                                })
+
+                        }
+                        if (isTrue) {
+                            userHelper.scholarshipStatus(scholarshipListId)
+                                .then(async scholarshipStatus => {
+                                    next()
+                                }).catch((err) => {
+                                    if (applicationStatus.statusId == -1) next()
+                                    else {
+                                        req.flash('error_msg', err)
+                                        res.redirect('/scholarships')
+                                    }
                                 })
                         }
                         else {
                             req.flash('error_msg', response.message)
                             res.redirect('/scholarships')
                         }
+                    }).catch((err) => {
+                        req.flash('error_msg', err)
+                        res.redirect('/scholarships')
                     })
             }).catch((err) => {
                 req.flash('error_msg', err)
@@ -193,7 +249,6 @@ router.get('/scholarship-form/:id', auth.ensureUserAuthenticated,
 
 router.post('/scholarship-form', auth.ensureUserAuthenticated,
     body('plusTwo', '+2 Mark Percentage must be Numeric').isDecimal(),
-    // body('previousSem', 'Previous Sem Mark Percentage must be Numeric').isDecimal(),
     body('wardMemberMobile', 'Mobile number must be 10 digits').isLength({ min: 10, max: 10 }),
     (req, res) => {
         const errors = validationResult(req);
@@ -217,19 +272,32 @@ router.post('/scholarship-form', auth.ensureUserAuthenticated,
         }
         else {
             let scholarshipListId = req.body.scholarshipListId;
-            userHelper.getscholarshipListByscholarshipListId(scholarshipListId)
+            userHelper.getScholarshipListByScholarshipListId(scholarshipListId)
                 .then((scholarship) => {
-                    userHelper.applicationStatus(scholarship.scholarshipId, req.user)
-                        .then(async (response) => {
-                            isTrue = response.statusId == 0 || response.statusId == -1 || response.statusId == 1
+                    userHelper.applicationStatus(scholarship.scholarshipId, scholarshipListId, req.user._id)
+                        .then((applicationStatus) => {
+                            isTrue = applicationStatus.statusId == 0 || applicationStatus.statusId == -1 || applicationStatus.statusId == 1
                             if (isTrue) {
-                                userHelper.storeScholarshipFrom(req.body, scholarship, req.user).then(() => {
-                                    res.json({ status: true, message: "Application Submitted Successfully" })
-                                })
+                                userHelper.scholarshipStatus(scholarshipListId)
+                                    .then(async scholarshipStatus => {
+                                        userHelper.storeScholarshipFrom(req.body, scholarship, req.user).then(() => {
+                                            res.json({ status: true, message: "Application Submitted Successfully" })
+                                        })
+                                    }).catch(scholarshipStatus => {
+                                        if (applicationStatus.statusId == -1) {
+                                            userHelper.storeScholarshipFrom(req.body, scholarship, req.user).then(() => {
+                                                res.json({ status: true, message: "Application Submitted Successfully" })
+                                            })
+                                        } else {
+                                            res.json({ status: false })
+                                        }
+                                    })
                             }
                             else {
                                 res.json({ status: false })
                             }
+                        }).catch(err => {
+                            res.json({ status: false })
                         })
                 }).catch((err) => {
                     res.json({ status: false })
@@ -256,7 +324,7 @@ router.get('/family-members', auth.ensureUserAuthenticated, (req, res) => {
 })
 
 router.post('/add-family-member', auth.ensureUserAuthenticated, (req, res) => {
-    req.body.age=parseInt(req.body.age)
+    req.body.age = parseInt(req.body.age)
     userHelper.addFamilyMembers(req.body, req.user._id).then(response => {
         res.json({ status: true })
     })
@@ -349,12 +417,11 @@ router.post('/reset-password/:token',
 
 router.get('/print-application', auth.ensureUserAuthenticated, (req, res) => {
     let scholarshipListId = parseInt(req.query.id)
-
-    userHelper.getscholarshipListByscholarshipListId(scholarshipListId)
+    userHelper.getScholarshipListByScholarshipListId(scholarshipListId)
         .then((scholarship) => {
-            userHelper.applicationStatus(scholarship.scholarshipId, req.user)
-                .then(async (response) => {
-                    isTrue = response.statusId == 2 || response.statusId == 3 || response.statusId == 4
+            userHelper.applicationStatus(scholarship.scholarshipId, scholarshipListId, req.user._id)
+                .then(async (applicationStatus) => {
+                    isTrue = applicationStatus.statusId == 2 || applicationStatus.statusId == 3 || applicationStatus.statusId == 4
                     if (isTrue) {
                         Helper.getApplicationDetails(req.user._id, scholarshipListId).then(async data => {
                             const stream = res.writeHead(200, {
@@ -364,7 +431,6 @@ router.get('/print-application', auth.ensureUserAuthenticated, (req, res) => {
                             });
 
                             let batchDetails = await userHelper.getDeptAndCourseAndBatchByBatchId(data.user.batchId)
-
                             data.user.department = batchDetails.department.DEPARTMENTNAME;
                             data.user.batch = batchDetails.BATCHNAME;
                             data.user.course = batchDetails.course.COURSENAME;
@@ -448,7 +514,6 @@ router.get('/edit-profile', auth.ensureUserAuthenticated,
 
 router.post('/edit-profile', auth.ensureUserAuthenticated,
     (req, res) => {
-        console.log(req.body);
         userHelper.updateProfile(req.user._id, req.body).then(() => {
             req.flash('success_msg', "Profile Upadated")
             res.redirect('/edit-profile')

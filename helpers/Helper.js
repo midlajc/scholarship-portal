@@ -1,6 +1,8 @@
 const db = require('../configs/connection')
 const collection = require('../configs/collection')
 const { ObjectId } = require('mongodb')
+const { resolve } = require('promise')
+const { response } = require('express')
 
 module.exports = {
   checkEligibility: (criteria, user) => {
@@ -23,22 +25,21 @@ module.exports = {
           ]
         }).then(response => {
           if (response === null) reject({ statusId: -2 })
-          resolve(response)
+          else resolve(response)
         })
     })
   },
-  getScholarshipStatus: (scholarshipId, academicId) => {
+  getScholarshipStatus: (scholarshipListId) => {
     return new Promise((resolve, reject) => {
       const now = Date.now()
       db.get().collection(collection.SCHOLARSHIP_LIST_COLLECTION)
         .findOne({
-          scholarshipId: parseInt(scholarshipId),
-          academicId: parseInt(academicId)
+          ID: parseInt(scholarshipListId)
         }).then(response => {
-          if (response === null) reject({ statusId: -2 })
-          if (response.startDate > now) reject({ statusId: -2 })
-          if (response.endDate < now) reject({ statusId: -3 })
-          resolve(response)
+          if (response == null) reject({ statusId: -2 })
+          else if (response.startDate > now) reject({ statusId: -2 })
+          else if (response.endDate < now) reject({ statusId: -3 })
+          else resolve({ statusId: 0 })
         })
     })
   },
@@ -48,7 +49,7 @@ module.exports = {
         .findOne({ scholarshipListId: parseInt(scholarshipListId), userId: ObjectId(userId) })
         .then(response => {
           if (response == null) resolve({ statusId: 0 })
-          resolve({ statusId: response.applicationStatus })
+          else resolve({ statusId: response.applicationStatus })
         }).catch(err => {
           reject(err)
         })
@@ -214,7 +215,7 @@ module.exports = {
   getScholarshipCriteria: (scholarshipId) => {
     return new Promise((resolve, reject) => {
       db.get().collection(collection.SCHOLARSHIP_COLLECTION)
-        .findOne({ ID: parseInt(scholarshipId) }, { criteria: 1 }).then(response => {
+        .findOne({ ID: parseInt(scholarshipId) }).then(response => {
           resolve(response.criteria)
         }).catch(err => {
           reject(err)
@@ -226,7 +227,70 @@ module.exports = {
       db.get().collection(collection.SCHOLARSHIP_LIST_COLLECTION)
         .findOne({ scholarshipId: parseInt(scholarshipId), academicId: parseInt(academicId) })
         .then(response => {
-          resolve(response.ID)
+          if (response == null) reject()
+          else resolve(response.ID)
+        })
+    })
+  },
+  getUserForEligibilityCheck: (userId) => {
+    return new Promise((resolve, reject) => {
+      const aggregate = [
+        {
+          '$match': {
+            '_id': ObjectId(userId)
+          }
+        },
+        {
+          '$lookup': {
+            'from': 'batches',
+            'localField': 'batchId',
+            'foreignField': 'ID',
+            'as': 'batch'
+          }
+        }, {
+          '$unwind': {
+            'path': '$batch'
+          }
+        }, {
+          '$lookup': {
+            'from': 'courses',
+            'localField': 'batch.COURSEID',
+            'foreignField': 'ID',
+            'as': 'course'
+          }
+        }, {
+          '$unwind': {
+            'path': '$course'
+          }
+        }, {
+          '$lookup': {
+            'from': 'gender',
+            'localField': 'genderId',
+            'foreignField': 'ID',
+            'as': 'gender'
+          }
+        }, {
+          '$unwind': {
+            'path': '$gender'
+          }
+        }, {
+          '$lookup': {
+            'from': 'departments',
+            'localField': 'course.DEPARTMENTID',
+            'foreignField': 'ID',
+            'as': 'department'
+          }
+        }, {
+          '$unwind': {
+            'path': '$department'
+          }
+        }
+      ]
+      db.get().collection(collection.USER_COLLECTION)
+        .aggregate(aggregate).toArray().then(response => {
+          resolve(response[0])
+        }).catch(err => {
+          reject(err)
         })
     })
   }

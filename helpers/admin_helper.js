@@ -573,7 +573,7 @@ module.exports = {
                         recipient: data.email,
                         subject: "Scholarship Registration",
                         message: "Registration Successful\n\nclick this link to verify email" +
-                            ' https://' + process.env.domaine + '/verifyemail/' + data.emailVerificationToken + '\n\n'
+                            ' https://' + process.env.domaine + '/verify-email/' + data.emailVerificationToken + '\n\n'
                     }).then(() => {
                         resolve()
                     }).catch(err => {

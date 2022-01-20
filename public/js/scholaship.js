@@ -4,25 +4,40 @@ let applyForScholarship = (id) => {
     $.ajax({
         url: '/application-status/' + id,
         method: 'get',
-        success: (response) => {
-            let isSubmitted = response.statusId == 2 || response.statusId == 3 || response.statusId == 4;
+        success: (applicationStatus) => {
+            let isSubmitted = applicationStatus.statusId == 2 || applicationStatus.statusId == 3 || applicationStatus.statusId == 4;
             if (isSubmitted) {
                 $('#apply').prop("disabled", false);
                 $('#apply').html("Apply for Scholarship")
                 swal.fire("Application Already Submitted", "", "success");
-            } else if (response.statusId == -3 || response.statusId == -2) {
+            } else if (applicationStatus.statusId == -3 || applicationStatus.statusId == -2) {
                 $('#apply').prop("disabled", false);
                 $('#apply').html("Apply for Scholarship")
-                swal.fire(response.message, "", "info");
+                swal.fire(applicationStatus.message, "", "info");
             }
             else {
-                $('#apply').prop("disabled", false);
-                $('#apply').html("Apply for Scholarship")
-                window.location.replace('/scholarship-form/' + response.scholarshipListId)
+                $.ajax({
+                    url: '/scholarship-status/' + applicationStatus.scholarshipListId,
+                    method: 'get',
+                    success: (scholarshipStatus) => {
+                        if (applicationStatus.statusId == -1 && scholarshipStatus.statusId == -3) {
+                            window.location.replace('/scholarship-form/' + applicationStatus.scholarshipListId)
+                        }
+                        else if (scholarshipStatus.statusId == -3 || scholarshipStatus.statusId == -2) {
+                            $('#apply').prop("disabled", false);
+                            $('#apply').html("Apply for Scholarship")
+                            swal.fire(scholarshipStatus.message, "", "info");
+                        } else {
+                            window.location.replace('/scholarship-form/' + applicationStatus.scholarshipListId)
+                        }
+                    }
+                })
             }
         }
     })
 }
+
+
 let applicationStatus = (id) => {
     $('#status').prop("disabled", true);
     $('#status').html("<span class=" + "'spinner-border spinner-border-sm'" + "></span><span class=" + "" + ">Application Status</span>")
@@ -88,6 +103,6 @@ let printApplication = (id) => {
     })
 }
 
-let prospectus=(id)=>{
-    location.replace('/prospectus/?id='+id)
+let prospectus = (id) => {
+    location.replace('/prospectus/?id=' + id)
 }
