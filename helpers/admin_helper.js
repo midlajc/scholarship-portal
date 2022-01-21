@@ -5,6 +5,7 @@ var userHelper = require('./user_helper')
 var nodeMailer = require('./nodeMailer')
 const { ObjectID } = require('mongodb')
 const Helper = require('./Helper')
+const { resolve, reject } = require('promise')
 
 module.exports = {
     userRegistration: (data) => {
@@ -679,6 +680,16 @@ module.exports = {
                 }).catch(err => {
                     reject(err)
                 })
+        })
+    },
+    getScholarships:()=>{
+        return new Promise((resolve,reject)=>{
+            db.get().collection(collection.SCHOLARSHIP_COLLECTION)
+            .find().toArray().then(scholarships=>{
+                resolve(scholarships)
+            }).catch(err=>{
+                reject(err)
+            })
         })
     },
     deleteBank: (_id) => {

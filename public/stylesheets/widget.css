@@ -1,6 +1,4 @@
-*{
-    padding: 0;
-    margin: 0;
+.widget a{
     color: #FFF;
 }
 
@@ -10,7 +8,7 @@ body{
 
 .widget{
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     flex-wrap: wrap;
 }
 

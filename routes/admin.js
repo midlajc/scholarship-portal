@@ -239,92 +239,17 @@ router.get('/users/user-bank-list', auth.ensureAdminAuthenticated, (req, res) =>
 router.get('/settings', auth.ensureAdminAuthenticated, (req, res) => {
     res.render('admin/settings')
 })
-//Registration Routers
 
-router.get("/registration", auth.ensureAdminAuthenticated, (req, res) => {
-    res.render('admin/registration')
-})
-
-router.post("/registration", auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.userRegistration(req.body).then((response) => {
-        res.redirect('/admin/registration')
-    })
-
-})
-
-router.get('/view-applications', auth.ensureAdminAuthenticated, (req, res) => {
-    if (req.params.user) {
-    } else {
-        adminHelper.getApplicationData().then(response => {
-            res.render('admin/view-applications', { data: response })
+router.get('/settings/scholarships', auth.ensureAdminAuthenticated,
+    (req, res) => {
+        adminHelper.getScholarships().then(scholarships => {
+            res.render('admin/settings/scholarships', { scholarships })
+        }).catch(err => {
+            console.log(err);
+            req.flash('error_msg', "Error Occured Try Again")
+            res.render('admin/settings/scholarships')
         })
-    }
-})
-
-router.get('/pending-applications', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.getPendingData().then(response => {
-        res.render('admin/view-pending-application', { data: response })
     })
-})
-
-// router.post('/approve-application', auth.ensureAdminAuthenticated, (req, res) => {
-//     adminHelper.approveApplication(req.body.email).then(() => {
-//         res.json({ status: true })
-//     })
-// })
-
-router.get('/verified applications', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.getVerifiedApplication().then(data => {
-        res.render('admin/verifiedapplicatons', { data: data })
-    })
-})
-
-router.get('/emailverificationpending', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.getEmailVerificationPending().then(data => {
-        res.render('admin/emailverificationpending', { data: data })
-    })
-})
-
-router.post('/resendverificationemail', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.resendVerificationEmail(req.body.email, req.headers.host).then(response => {
-        res.json({ status: true, message: response })
-    })
-})
-
-//router for participant list 
-
-router.get('/viewparticipants/:item', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.getParticipantsData(req.params.item).then(data => {
-        res.render('admin/viewparticipants', { data: data })
-    })
-})
-
-
-//routers for it quiz
-
-router.get('/startitquiz', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.startItQuiz().then(response => {
-        res.json({ status: true, message: response })
-    })
-})
-
-router.get('/additquizquestions', auth.ensureAdminAuthenticated, (req, res) => {
-    res.render('admin/additquizquestions')
-})
-
-router.post('/additquizquestions', auth.ensureAdminAuthenticated, async (req, res) => {
-    req.body._id = await adminHelper.getNewQuestionId()
-    adminHelper.addItQuizQustion(req.body).then(() => {
-        req.flash('success_msg', 'Qustion Added')
-        res.redirect('/admin/additquizquestions')
-    })
-})
-
-router.get('/viewquestions', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.getAllQuestions().then(data => {
-        res.render('admin/viewquestions', { data: data })
-    })
-})
 
 //login and log out 
 

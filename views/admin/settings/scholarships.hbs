@@ -1,16 +1,17 @@
 <div class="box">
-    <h3 class="text-center">Settings</h3>
     <div class="widget">
-        <a href="/admin/settings/scholarships" class="widget-container">
+        {{#each scholarships}}
+        <a href="/admin/settings/scholarship-list?id={{this.ID}}" class="widget-container">
             <div class="background">
                 <div class="Circle1"></div>
                 <div class="Circle2"></div>
                 <div class="Circle3"></div>
                 <div class="content">
-                    <h1 class="Condition"><i class="fa fa-users"></i></h1>
-                    <h1 class="Temp">Scholarships</h1>
+                    {{!-- <h1 class="Condition"><i class="fa fa-users"></i></h1> --}}
+                    <h4 class="Temp" style="font-size: 18px;">{{this.scholarshipName}}</h4>
                 </div>
             </div>
         </a>
+        {{/each}}
     </div>
 </div>
