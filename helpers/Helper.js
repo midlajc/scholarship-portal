@@ -1,7 +1,7 @@
 const db = require('../configs/connection')
 const collection = require('../configs/collection')
 const { ObjectId } = require('mongodb')
-const { resolve } = require('promise')
+const { resolve, reject } = require('promise')
 const { response } = require('express')
 
 module.exports = {
@@ -289,6 +289,16 @@ module.exports = {
       db.get().collection(collection.USER_COLLECTION)
         .aggregate(aggregate).toArray().then(response => {
           resolve(response[0])
+        }).catch(err => {
+          reject(err)
+        })
+    })
+  },
+  getScholarship: (scholarshipId) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.SCHOLARSHIP_COLLECTION)
+        .findOne({ ID: parseInt(scholarshipId) }).then(scholarship => {
+          resolve(scholarship)
         }).catch(err => {
           reject(err)
         })
