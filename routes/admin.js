@@ -251,6 +251,20 @@ router.get('/settings/scholarships', auth.ensureAdminAuthenticated,
         })
     })
 
+router.get('/settings/scholarship-list', auth.ensureAdminAuthenticated,
+    async (req, res) => {
+        let scholarshipId = req.query.id
+        let scholarship = await Helper.getScholarship(scholarshipId)
+        adminHelper.getScholarshipList(scholarshipId)
+            .then(scholarshipList => {
+                res.render('admin/settings/scholarship-list', { scholarshipList, scholarship })
+            }).catch(err => {
+                console.log(err);
+                req.flash('error_msg', "Error Occured Try Again")
+                res.render('admin/settings/scholarship-list')
+            })
+    })
+
 //login and log out 
 
 router.get('/login', (req, res) => {

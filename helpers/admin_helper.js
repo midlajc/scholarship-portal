@@ -682,14 +682,14 @@ module.exports = {
                 })
         })
     },
-    getScholarships:()=>{
-        return new Promise((resolve,reject)=>{
+    getScholarships: () => {
+        return new Promise((resolve, reject) => {
             db.get().collection(collection.SCHOLARSHIP_COLLECTION)
-            .find().toArray().then(scholarships=>{
-                resolve(scholarships)
-            }).catch(err=>{
-                reject(err)
-            })
+                .find().toArray().then(scholarships => {
+                    resolve(scholarships)
+                }).catch(err => {
+                    reject(err)
+                })
         })
     },
     deleteBank: (_id) => {
@@ -824,7 +824,7 @@ module.exports = {
                     'course': 1,
                     'applicationStatus': 1,
                     'applicationStatusMessage': 1,
-                    'gender':1
+                    'gender': 1
                 }
             }
         ]
@@ -837,123 +837,46 @@ module.exports = {
                 })
         })
     },
-    //need
-    getApplicationData: () => {
+    getScholarshipList: (scholarshipId) => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.APPLICATION_COLLECTION)
-                .find().toArray().then(response => {
-                    resolve(response)
-                })
-        })
-    },
-    getSingleApplication: (email) => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.APPLICATION_COLLECTION).findOne({ email: email }).then(response => {
-                let data = {
-                    name: response.name,
-                    email: response.email,
-                    phoneno: response.phoneno,
-                    gender: response.gender,
-                    college: response.college,
-                    items: response.items,
-                    emailVerificationStatus: response.emailVerificationStatus,
-                    submissionTime: response.submissionTime
-                }
-                resolve(data)
-            })
-        })
-    },
-    // getVerifiedApplication: () => {
-    //     return new Promise((resolve, reject) => {
-    //         db.get().collection(collection.APPICATION_COLLECTION).find({ applicationStatus: true }).toArray().then(response => {
-    //             resolve(response)
-    //         })
-    //     })
-    // },
-    getEmailVerificationPending: () => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.APPICATION_COLLECTION).find({ emailVerificationStatus: false }).toArray().then(response => {
-                resolve(response)
-            })
-        })
-    },
-    getParticipantsData: (item) => {
-        return new Promise(async (resolve, reject) => {
-            let data = await db.get().collection(collection.ITQUIZ_COLLECTION).aggregate([{
-                '$lookup': {
-                    'from': 'user',
-                    'localField': 'username',
-                    'foreignField': 'username',
-                    'as': 'data'
-                }
-            }, {
-                '$unwind': {
-                    'path': '$data'
-                }
-            }, {
-                '$project': {
-                    'name': '$data.name',
-                    'username': '$username',
-                    'email': '$data.email',
-                    'phoneno': '$data.phoneno'
-                }
-            }]).toArray()
-            resolve(data)
-        })
-    },
-    getItemStatus: (item) => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.ITEM_CONTROLLER).findOne({ item: item }).then(response => {
-                if (response) {
-                    if (response.status) {
-                        if (response.endTime > Date.now())
-                            resolve({ status: true, message: 'ongoing' })
-                        else
-                            resolve({ status: true, message: 'ended' })
-                    } else {
-                        resolve({ status: false, message: "not started" })
+            db.get().collection(collection.SCHOLARSHIP_LIST_COLLECTION)
+                .aggregate([
+                    {
+                        '$match': {
+                            'scholarshipId': parseInt(scholarshipId)
+                        }
+                    },
+                    {
+                        '$lookup': {
+                            'from': 'academic_year',
+                            'localField': 'academicId',
+                            'foreignField': 'ID',
+                            'as': 'academic_year'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$academic_year'
+                        }
                     }
-                } else {
-                    db.get().collection(collection.ITEM_CONTROLLER).insertOne({
-                        item: item,
-                        status: false
-                    }).then(() => {
-                        resolve({ status: false, message: "not started" })
-                    })
-                }
-            })
-        })
-    },
-    startItQuiz: () => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.ITEM_CONTROLLER).updateOne({ item: 'itquiz' }, {
-                '$set': {
-                    status: true,
-                    endTime: Date.now() + 3600000
-                }
-            }).then(() => {
-                resolve("started")
-            })
-        })
-    },
-    addItQuizQustion: (qData) => {
-        return new Promise((resolve, reject) => {
-            qData.answer = qData.options[qData.answer]
-            db.get().collection(collection.QUIZ_BANK).insertOne(qData).then(() => {
-                resolve()
-            })
-        })
-    },
-    getAllQuestions: () => {
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.QUIZ_BANK).find().toArray().then(response => {
-                resolve(response)
-            })
+                ]).toArray()
+                .then(scholarshipList => {
+                    for (x in scholarshipList) {
+                        let date = new Date(scholarshipList[x].startDate)
+                        date = date.toLocaleDateString('en-GB')
+                        scholarshipList[x].startDate=date
+                        date = new Date(scholarshipList[x].endDate)
+                        date = date.toLocaleDateString('en-GB')
+                        scholarshipList[x].endDate=date
+                    }
+                    resolve(scholarshipList)
+                }).catch(err => {
+                    reject(err)
+                })
         })
     }
 }
 
-//to generate unique qustion id
+//to generate unique id
 module.exports.generateQuestionId = () => {
     db.get().collection(collection.ID_GENERATOR).findOne({ _id: "quiz" }).then((response) => {
         if (response == null) {
