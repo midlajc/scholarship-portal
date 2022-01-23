@@ -191,6 +191,7 @@ module.exports = {
           }
         }
       ]).toArray().then(response => {
+        response[0].user.dob = new Date(response[0].user.dob).toLocaleDateString('en-GB')
         resolve(response[0])
       }).catch(err => {
         reject(err)

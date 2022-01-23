@@ -32,7 +32,7 @@ router.get('/home', auth.ensureUserAuthenticated, function (req, res, next) {
             req.user.batch = response.BATCHNAME;
             req.user.course = response.course.COURSENAME;
             req.user.gender = await userHelper.getGenderNameByGenderId(req.user.genderId)
-            req.user.dob = req.user.dob.getDate() + '/' + (req.user.dob.getMonth() + 1) + '/' + req.user.dob.getFullYear();
+            req.user.dob = new Date(req.user.dob).toLocaleDateString('en-GB')
             res.render('user/home');
         }).catch(err => {
             console.log(err);
@@ -432,7 +432,6 @@ router.get('/print-application', auth.ensureUserAuthenticated, (req, res) => {
                             data.user.batch = batchDetails.BATCHNAME;
                             data.user.course = batchDetails.course.COURSENAME;
                             data.user.gender = await userHelper.getGenderNameByGenderId(data.user.genderId)
-                            data.user.dob = data.user.dob.getDate() + '/' + (data.user.dob.getMonth() + 1) + '/' + data.user.dob.getFullYear();
                             pdfHelper.buildPDF(data,
                                 (chunk) => stream.write(chunk),
                                 () => stream.end()
