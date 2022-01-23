@@ -361,9 +361,6 @@ router.post("/bank-details", auth.ensureUserAuthenticated, async (req, res) => {
     }
 })
 
-
-
-
 router.get('/forgot-password', (req, res) => {
     if (req.isAuthenticated()) {
         if (req.user.type === 'user')
@@ -523,15 +520,6 @@ router.post('/edit-profile', auth.ensureUserAuthenticated,
             res.redirect('/edit-profile')
         })
     })
-
-//need
-
-router.post('/change-password', auth.ensureUserAuthenticated, (req, res) => {
-    userHelper.updatePassword(req.user, req.body).then(response => {
-        req.user.password = response;
-        res.redirect('/settings')
-    })
-})
 
 
 module.exports = router;
