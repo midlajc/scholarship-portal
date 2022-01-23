@@ -443,8 +443,46 @@ module.exports = {
                         'path': '$user.gender'
                     }
                 },
-            ]).toArray().then(data => {
-                resolve(data[0])
+            ]).toArray().then(applicationData => {
+                let data = {
+                    dob:new Date(applicationData[0].user.dob).toLocaleDateString('en-GB'),
+                    name: applicationData[0].user.name,
+                    applicationNo: applicationData[0].applicationNo,
+                    applicationStatus: applicationData[0].applicationStatus.message,
+                    email: applicationData[0].user.email,
+                    mobile: applicationData[0].user.mobile,
+                    gender: applicationData[0].user.gender.genderName,
+                    batch: applicationData[0].batch.BATCHNAME,
+                    course: applicationData[0].course.COURSENAME,
+                    department: applicationData[0].department.DEPARTMENTNAME,
+                    competitiveExam: applicationData[0].academic.competitiveExam,
+                    competitiveExamName: applicationData[0].academic.competitiveExamName,
+                    isHostler: applicationData[0].academic.isHostler,
+                    plusTwo: applicationData[0].academic.plusTwo,
+                    otherScholarship: applicationData[0].academic.otherScholarship,
+                    otherScholarshipName: applicationData[0].academic.scholarshipName,
+                    previousSem: applicationData[0].academic.previousSem,
+                    annualIncome: applicationData[0].personal.annualIncome,
+                    cAddress: applicationData[0].personal.cAddress,
+                    pAddress: applicationData[0].personal.pAddress,
+                    partTimeJob: applicationData[0].personal.partTimeJob,
+                    partTimeJobName: applicationData[0].personal.partTimeJobName,
+                    district: applicationData[0].contact.district,
+                    panchayath: applicationData[0].contact.panchayath,
+                    state: applicationData[0].contact.state,
+                    taluk: applicationData[0].contact.taluk,
+                    wardMemberMobile: applicationData[0].contact.wardMemberMobile,
+                    wardMemberName: applicationData[0].contact.wardMemberName,
+                    wardNo: applicationData[0].contact.wardNo,
+                    family_members: applicationData[0].family_members,
+                    accountHolderName: applicationData[0].bank_details.accountHolderName,
+                    accountNo: applicationData[0].bank_details.accountNo,
+                    bankName: applicationData[0].bank_details.bankName,
+                    ifsc: applicationData[0].bank_details.ifsc,
+                    branch: applicationData[0].bank_details.branch,
+                    scholarshipName: applicationData[0].scholarship.scholarshipName
+                }
+                resolve(data)
             }).catch(err => {
                 reject(err)
             })
@@ -863,10 +901,10 @@ module.exports = {
                     for (x in scholarshipList) {
                         let date = new Date(scholarshipList[x].startDate)
                         date = date.toLocaleDateString('en-GB')
-                        scholarshipList[x].startDate=date
+                        scholarshipList[x].startDate = date
                         date = new Date(scholarshipList[x].endDate)
                         date = date.toLocaleDateString('en-GB')
-                        scholarshipList[x].endDate=date
+                        scholarshipList[x].endDate = date
                     }
                     resolve(scholarshipList)
                 }).catch(err => {
