@@ -123,7 +123,7 @@ router.patch('/scholarship/verify-application', auth.ensureAdminAuthenticated, (
 })
 
 router.patch('/scholarship/reject-application', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.rejectApplication(req.body.applicationNo).then(response => {
+    adminHelper.rejectApplication(req.body.applicationNo, req.body.reason).then(response => {
         res.json({ status: true })
     }).catch(err => {
         res.json({ status: false, err: err })

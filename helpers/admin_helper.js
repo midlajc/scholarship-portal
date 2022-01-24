@@ -495,7 +495,7 @@ module.exports = {
             }).catch(err => {
                 reject(err)
             })
-            // function sendVerificationEmail() {
+            // const sendVerificationEmail=()=> {
             //     return new Promise((resolve, reject) => {
             //         nodeMailer({
             //             recipient: email,
@@ -508,7 +508,7 @@ module.exports = {
             // }
         })
     },
-    rejectApplication: (applicationNo) => {
+    rejectApplication: (applicationNo, reason) => {
         return new Promise((resolve, reject) => {
             Promise.all([Helper.updateApplicationStatus(applicationNo, -1)]).then(() => {
                 resolve()
