@@ -445,7 +445,7 @@ module.exports = {
                 },
             ]).toArray().then(applicationData => {
                 let data = {
-                    dob:new Date(applicationData[0].user.dob).toLocaleDateString('en-GB'),
+                    dob: new Date(applicationData[0].user.dob).toLocaleDateString('en-GB'),
                     name: applicationData[0].user.name,
                     applicationNo: applicationData[0].applicationNo,
                     applicationStatus: applicationData[0].applicationStatus.message,
@@ -907,6 +907,24 @@ module.exports = {
                         scholarshipList[x].endDate = date
                     }
                     resolve(scholarshipList)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getAcademicYear: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ACADEMIC_YEAR_COLLECTION)
+                .find().toArray().then(academicYear => {
+                    for (x in academicYear) {
+                        let date = new Date(academicYear[x].startDate)
+                        date = date.toLocaleDateString('en-GB')
+                        academicYear[x].startDate = date
+                        date = new Date(academicYear[x].endDate)
+                        date = date.toLocaleDateString('en-GB')
+                        academicYear[x].endDate = date
+                    }
+                    resolve(academicYear)
                 }).catch(err => {
                     reject(err)
                 })
