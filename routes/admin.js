@@ -225,6 +225,17 @@ router.get('/settings/scholarship-list', auth.ensureAdminAuthenticated,
             })
     })
 
+router.get('/settings/academic-year', auth.ensureAdminAuthenticated,
+    (req, res) => {
+        adminHelper.getAcademicYear().then(academicYear => {
+            res.render('admin/settings/academic-year', { academicYear })
+        }).catch(err => {
+            console.log(err);
+            req.flash('error_msg', "Error Occured Try Again")
+            res.render('admin/settings/academic-year')
+        })
+    })
+
 //login and log out 
 
 router.get('/login', (req, res) => {
