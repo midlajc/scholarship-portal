@@ -15,7 +15,9 @@ let verifyApplication = () => {
         url: '/admin/scholarship/verify-application',
         method: 'patch',
         data: {
-            applicationNo: $('#applicationNo').val()
+            applicationNo: $('#applicationNo').val(),
+            email: $('#email').val(),
+            scholarshipName: $('#scholarshipName').val()
         },
         success: (res) => {
             $('#model').modal('hide')
@@ -58,6 +60,8 @@ let rejectApplication = async () => {
             method: 'patch',
             data: {
                 applicationNo: $('#applicationNo').val(),
+                email: $('#email').val(),
+                scholarshipName: $('#scholarshipName').val(),
                 reason: reason
             },
             success: (res) => {
@@ -84,7 +88,9 @@ let approveApplication = () => {
         url: '/admin/scholarship/approve-application',
         method: 'patch',
         data: {
-            applicationNo: $('#applicationNo').val()
+            applicationNo: $('#applicationNo').val(),
+            email: $('#email').val(),
+            scholarshipName: $('#scholarshipName').val()
         },
         success: (res) => {
             $('#model').modal('hide')

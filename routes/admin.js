@@ -117,7 +117,7 @@ router.get('/scholarship/fetch-application', auth.ensureAdminAuthenticated, (req
 })
 
 router.patch('/scholarship/verify-application', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.verifyApplication(req.body.applicationNo).then(response => {
+    adminHelper.verifyApplication(req.body).then(response => {
         res.json({ status: true })
     }).catch(err => {
         res.json({ status: false, err: err })
