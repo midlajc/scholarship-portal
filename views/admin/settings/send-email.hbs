@@ -1,0 +1,36 @@
+<div class="box">
+    <div style="margin-bottom: 3rem;">
+        <h2 class="text-center">Send Email</h2>
+        <button class="btn mr-1 w3-green float-end" onclick="uploadEmails()">
+            <i class="fas fa-upload"></i> Upload</button>
+        <a class="btn w3-red float-end" href="/admin/files/download-email-template" style="margin-right: 10px;">
+            <i class="fas fa-download"></i> Download
+            Template</a>
+    </div>
+    <div>
+        <form action="" id="form">
+            <div class="row">
+                <div class="mb-1">
+                    <label for="">Emails</label>
+                    <textarea class="form-control" required
+                        placeholder="Email's Eg: name@example.com,name1@example.com,name2@example.com" id="email"
+                        name="bcc" cols="3"></textarea>
+                </div>
+                <div class="mb-1">
+                    <label for="" class="form-label">Subject</label>
+                    <input type="text" required class="form-control" id="subject" name="subject" placeholder="Subject">
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">Message</label>
+                    <textarea class="form-control" required name="message" id="message" placeholder="Message"
+                        rows="5"></textarea>
+                </div>
+                <div>
+                    <button class="btn w3-green float-end" id="submit" type="submit">Send Email</button>
+                    {{!-- <button class="btn w3-green">Send</button> --}}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="/js/admin/send-email.js"></script>

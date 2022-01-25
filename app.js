@@ -4,6 +4,7 @@ require('dotenv').config()
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser')
+var fileUpload=require('express-fileupload')
 var logger = require('morgan');
 var flash = require('connect-flash')
 var passport = require('passport')
@@ -39,6 +40,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(bodyParser.json());
+app.use(fileUpload())
 app.use(session({
     secret: 'secret',
     resave: true,

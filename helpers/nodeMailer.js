@@ -15,7 +15,8 @@ module.exports = sendMail = (data) => {
 
         let mailOptions = {
             from: process.env.org + '<' + email + '>',
-            to: data.recipient,
+            to: data.recipient || '',
+            bcc: data.bcc || '',
             subject: data.subject,
             text: data.message
         };

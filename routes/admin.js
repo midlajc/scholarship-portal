@@ -5,6 +5,7 @@ var passport = require('passport')
 var auth = require('../configs/auth');
 const user_helper = require('../helpers/user_helper');
 const Helper = require('../helpers/Helper');
+const fs = require('fs');
 
 //HOME
 
@@ -115,7 +116,7 @@ router.get('/scholarship/fetch-application', auth.ensureAdminAuthenticated, (req
 })
 
 router.patch('/scholarship/verify-application', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.verifyApplication(req.body.applicationNo).then(response => {
+    adminHelper.verifyApplication(req.body).then(response => {
         res.json({ status: true })
     }).catch(err => {
         res.json({ status: false, err: err })
@@ -123,7 +124,7 @@ router.patch('/scholarship/verify-application', auth.ensureAdminAuthenticated, (
 })
 
 router.patch('/scholarship/reject-application', auth.ensureAdminAuthenticated, (req, res) => {
-    adminHelper.rejectApplication(req.body.applicationNo).then(response => {
+    adminHelper.rejectApplication(req.body.applicationNo, req.body.reason).then(response => {
         res.json({ status: true })
     }).catch(err => {
         res.json({ status: false, err: err })
@@ -234,6 +235,41 @@ router.get('/settings/academic-year', auth.ensureAdminAuthenticated,
             req.flash('error_msg', "Error Occured Try Again")
             res.render('admin/settings/academic-year')
         })
+    })
+
+router.get('/settings/send-email', auth.ensureAdminAuthenticated,
+    (req, res) => {
+        res.render('admin/settings/send-email')
+    })
+
+router.post('/settings/send-email', auth.ensureAdminAuthenticated,
+    (req, res) => {
+        adminHelper.sendEmail(req.body).then(() => {
+            res.json({ status: true })
+        }).catch(err => {
+            res.json({ status: false, err: err })
+        })
+    })
+
+router.post('/settings/send-email/upload-email-csv', auth.ensureAdminAuthenticated,
+    (req, res) => {
+        if (req.files.csv.mimetype === 'text/csv') {
+            let emails = req.files.csv.data.toString()
+            emails = emails.replace('email\n', '').replace(/\n/g, ',')
+            res.json({ status: true, emails: emails })
+        } else {
+            res.json({ status: false, message: 'Given file is not csv' })
+        }
+    })
+
+router.get('/files/download-email-template', auth.ensureAdminAuthenticated,
+    (req, res) => {
+        var file = fs.createReadStream('./public/csv/email_template.csv');
+        var stat = fs.statSync('./public/csv/email_template.csv');
+        res.setHeader('Content-Length', stat.size);
+        res.setHeader('Content-Type', 'application/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename=template.csv');
+        file.pipe(res);
     })
 
 //login and log out 
