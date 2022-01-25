@@ -495,7 +495,7 @@ module.exports = {
             message += ' has been verified successfully.Further updates regarding scholarship will be announce soon.\n\n'
             nodeMailer({
                 recipient: data.email,
-                subject: 'Application Verification',
+                subject: 'Application Verified',
                 message: message
             }).then(() => {
                 resolve()
@@ -931,7 +931,6 @@ module.exports = {
     },
     sendEmail: (data) => {
         return new Promise((resolve, reject) => {
-            console.log(data);
             nodeMailer(data).then(() => {
                 resolve()
             }).catch(err => {

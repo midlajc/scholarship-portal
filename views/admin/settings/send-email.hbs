@@ -26,78 +26,11 @@
                         rows="5"></textarea>
                 </div>
                 <div>
-                    <button class="btn w3-green float-end" type="submit">Send Email</button>
+                    <button class="btn w3-green float-end" id="submit" type="submit">Send Email</button>
                     {{!-- <button class="btn w3-green">Send</button> --}}
                 </div>
             </div>
         </form>
     </div>
 </div>
-<script>
-    let Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-    })
-
-    let uploadEmails = async () => {
-        let formData = new FormData();
-        const { value: csv } = await Swal.fire({
-            title: 'Select CSV',
-            input: 'file',
-            inputAttributes: {
-                'accept': '.csv',
-                'aria-label': 'Upload your csv file'
-            }
-        })
-
-        if (csv) {
-            formData.append("csv", csv);
-            $.ajax({
-                url: 'send-email/upload-email-csv',
-                method: 'post',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: (res) => {
-                    if (res.status) {
-                        $('#email').val(res.emails)
-                    } else {
-                        Swal.fire('Error', res.message, 'error')
-                    }
-                }
-            })
-        }
-    }
-
-    $('#form').submit((e) => {
-        e.preventDefault();
-        console.log("hello")
-        $.ajax({
-            url: 'send-email',
-            method: 'post',
-            data: $('#form').serialize(),
-            success: (res) => {
-                if (res.status) {
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Email has been Sended'
-                    })
-                }
-                else {
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Error Occured,Please try again'
-                    })
-                    console.log(res.err)
-                }
-            }
-        })
-    })
-</script>
+<script src="/js/admin/send-email.js"></script>
