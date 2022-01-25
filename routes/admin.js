@@ -256,9 +256,7 @@ router.post('/settings/send-email/upload-email-csv', auth.ensureAdminAuthenticat
     (req, res) => {
         if (req.files.csv.mimetype === 'text/csv') {
             let emails = req.files.csv.data.toString()
-            console.log(emails);
             emails = emails.replace('email\n', '').replace(/\n/g, ',')
-            console.log(emails);
             res.json({ status: true, emails: emails })
         } else {
             res.json({ status: false, message: 'Given file is not csv' })
