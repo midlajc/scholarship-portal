@@ -929,6 +929,16 @@ module.exports = {
                     reject(err)
                 })
         })
+    },
+    sendEmail: (data) => {
+        return new Promise((resolve, reject) => {
+            console.log(data);
+            nodeMailer(data).then(() => {
+                resolve()
+            }).catch(err => {
+                reject(err)
+            })
+        })
     }
 }
 
