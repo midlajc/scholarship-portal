@@ -1,0 +1,103 @@
+<div class="box">
+    <div style="margin-bottom: 3rem;">
+        <h2 class="text-center">Send Email</h2>
+        <button class="btn mr-1 w3-green float-end" onclick="uploadEmails()">
+            <i class="fas fa-upload"></i> Upload</button>
+        <a class="btn w3-red float-end" href="/admin/files/download-email-template" style="margin-right: 10px;">
+            <i class="fas fa-download"></i> Download
+            Template</a>
+    </div>
+    <div>
+        <form action="" id="form">
+            <div class="row">
+                <div class="mb-1">
+                    <label for="">Emails</label>
+                    <textarea class="form-control" required
+                        placeholder="Email's Eg: name@example.com,name1@example.com,name2@example.com" id="email"
+                        name="bcc" cols="3"></textarea>
+                </div>
+                <div class="mb-1">
+                    <label for="" class="form-label">Subject</label>
+                    <input type="text" required class="form-control" id="subject" name="subject" placeholder="Subject">
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label">Message</label>
+                    <textarea class="form-control" required name="message" id="message" placeholder="Message"
+                        rows="5"></textarea>
+                </div>
+                <div>
+                    <button class="btn w3-green float-end" type="submit">Send Email</button>
+                    {{!-- <button class="btn w3-green">Send</button> --}}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    let Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+    let uploadEmails = async () => {
+        let formData = new FormData();
+        const { value: csv } = await Swal.fire({
+            title: 'Select CSV',
+            input: 'file',
+            inputAttributes: {
+                'accept': '.csv',
+                'aria-label': 'Upload your csv file'
+            }
+        })
+
+        if (csv) {
+            formData.append("csv", csv);
+            $.ajax({
+                url: 'send-email/upload-email-csv',
+                method: 'post',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: (res) => {
+                    if (res.status) {
+                        $('#email').val(res.emails)
+                    } else {
+                        Swal.fire('Error', res.message, 'error')
+                    }
+                }
+            })
+        }
+    }
+
+    $('#form').submit((e) => {
+        e.preventDefault();
+        console.log("hello")
+        $.ajax({
+            url: 'send-email',
+            method: 'post',
+            data: $('#form').serialize(),
+            success: (res) => {
+                if (res.status) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Email has been Sended'
+                    })
+                }
+                else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Error Occured,Please try again'
+                    })
+                    console.log(res.err)
+                }
+            }
+        })
+    })
+</script>
