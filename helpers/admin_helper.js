@@ -488,24 +488,23 @@ module.exports = {
             })
         })
     },
-    verifyApplication: (applicationNo) => {
+    verifyApplication: (data) => {
         return new Promise(async (resolve, reject) => {
-            Promise.all([Helper.updateApplicationStatus(applicationNo, 3)]).then(() => {
+            let message = 'Dear student,\n'
+            message += `\t\tYou'r application for ${data.scholarshipName}(Application No :${data.applicationNo})`
+            message += ' has been verified successfully.Further updates regarding scholarship will be announce soon.\n\n'
+            nodeMailer({
+                recipient: data.email,
+                subject: 'Application Verification',
+                message: message
+            }).then(() => {
+                resolve()
+            })
+            Promise.all([Helper.updateApplicationStatus(data.applicationNo, 3)]).then(() => {
                 resolve()
             }).catch(err => {
                 reject(err)
             })
-            // const sendVerificationEmail=()=> {
-            //     return new Promise((resolve, reject) => {
-            //         nodeMailer({
-            //             recipient: email,
-            //             subject: 'Application Approved',
-            //             message: "Application Approved\nUser Name:" + username + "\n Thank You For Registration"
-            //         }).then(() => {
-            //             resolve()
-            //         })
-            //     })
-            // }
         })
     },
     rejectApplication: (applicationNo, reason) => {
