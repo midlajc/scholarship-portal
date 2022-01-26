@@ -491,7 +491,7 @@ module.exports = {
     verifyApplication: (data) => {
         return new Promise(async (resolve, reject) => {
             let message = 'Dear student,\n'
-            message += `\t\tYou'r application for ${data.scholarshipName}(Application No :${data.applicationNo})`
+            message += `\t\tYour application for ${data.scholarshipName}(Application No :${data.applicationNo})`
             message += ' has been verified successfully.Further updates regarding scholarship will be announce soon.\n\n'
             nodeMailer({
                 recipient: data.email,
