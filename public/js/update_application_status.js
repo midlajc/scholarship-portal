@@ -42,7 +42,7 @@ let verifyApplication = () => {
 let rejectApplication = async () => {
     $('#model').modal('hide')
     const { value: reason } = await Swal.fire({
-        title: 'Enter reason for Rejection',
+        title: 'Enter reason of Rejection',
         input: 'text',
         inputLabel: 'Enter reason',
         inputValue: '',
