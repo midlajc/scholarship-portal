@@ -6,6 +6,7 @@ var auth = require('../configs/auth');
 const user_helper = require('../helpers/user_helper');
 const Helper = require('../helpers/Helper');
 const fs = require('fs');
+const { response } = require('express');
 
 //HOME
 
@@ -138,6 +139,15 @@ router.patch('/scholarship/approve-application', auth.ensureAdminAuthenticated, 
         res.json({ status: false, err: err })
     })
 })
+
+router.delete('/scholarship/delete-application', auth.ensureAdminAuthenticated,
+    ((req, res) => {
+        adminHelper.deleteApplication(req.body.applicationNo).then(response => {
+            res.json({ status: true })
+        }).catch(err => {
+            res.json({ status: false, err: err })
+        })
+    }))
 
 
 router.get('/users/registration-list', auth.ensureAdminAuthenticated, (req, res) => {
