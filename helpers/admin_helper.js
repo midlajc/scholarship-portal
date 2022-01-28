@@ -547,6 +547,16 @@ module.exports = {
             // }
         })
     },
+    deleteApplication: (applicationNo) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.APPLICATION_COLLECTION)
+                .deleteOne({ applicationNo: applicationNo }).then(res => {
+                    resolve(res)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
     fetchRegistrationList: () => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.REGISTRATION_COLLECTION).aggregate(

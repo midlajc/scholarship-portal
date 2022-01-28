@@ -1,0 +1,32 @@
+<div class="box">
+    <div class="mb-2">
+        <h2 class="text-center">APPLICATION LIST</h2>
+        {{!-- <button class="btn w3-green float-end" onclick="addMemberModel()">
+            <i class="fas fa-plus"></i>
+            Add Member</button> --}}
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Application No</th>
+                    <th>Scheme</th>
+                    <th>Academic Year</th>
+                    <th>Application Date</th>
+                    <th>Application Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each applications}}
+                <tr>
+                    <td>{{this.applicationNo}}</td>
+                    <td>{{this.scheme}}</td>
+                    <td>{{this.academic_year}}</td>
+                    <td>{{this.applicationDate}}</td>
+                    <td>{{this.applicationStatus}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
