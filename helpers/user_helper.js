@@ -337,7 +337,8 @@ module.exports = {
                         applicationNo: scholarship.scholarshipCode + user.mobile,
                         userId: ObjectId(user._id),
                         applicationStatus: parseInt(data.applicationStatus),
-                        scholarshipListId: parseInt(data.scholarshipListId)
+                        scholarshipListId: parseInt(data.scholarshipListId),
+                        applicationDate: new Date()
                     }
                 },
                 {
@@ -654,6 +655,68 @@ module.exports = {
                     }).catch(err => {
                         reject(err)
                     })
+        })
+    },
+    getApplicationList: (userId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.APPLICATION_COLLECTION)
+                .aggregate([
+                    {
+                        '$match': {
+                            'userId': ObjectId(userId)
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'application_status',
+                            'localField': 'applicationStatus',
+                            'foreignField': 'id',
+                            'as': 'applicationStatus'
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'scholarship_list',
+                            'localField': 'scholarshipListId',
+                            'foreignField': 'ID',
+                            'as': 'scholarship'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$scholarship'
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'academic_year',
+                            'localField': 'scholarship.academicId',
+                            'foreignField': 'ID',
+                            'as': 'academic_year'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$applicationStatus'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$academic_year'
+                        }
+                    }, {
+                        '$project': {
+                            'scheme': '$scholarship.scholarshipName',
+                            'applicationNo': 1,
+                            'applicationStatus': '$applicationStatus.message',
+                            'academic_year': '$academic_year.academicName',
+                            'applicationDate': {
+                                '$dateToString': {
+                                    'format': '%d-%m-%Y',
+                                    'date': '$applicationDate'
+                                }
+                            }
+                        }
+                    }
+                ]).toArray().then(applications => {
+                    resolve(applications)
+                }).catch(err => {
+                    reject(err)
+                })
         })
     }
 }
