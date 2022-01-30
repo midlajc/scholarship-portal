@@ -73,5 +73,14 @@ let resendVerificationEmail = (id) => {
     })
 }
 $(document).ready(function () {
-    $('#table').DataTable();
+    $('#table').DataTable({
+        "columns": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            { "width": "130px" },
+        ],
+    });
 });

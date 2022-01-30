@@ -1,16 +1,17 @@
-var createError = require('http-errors');
-var express = require('express');
+const createError = require('http-errors');
+const express = require('express');
 require('dotenv').config()
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser')
-var fileUpload=require('express-fileupload')
-var logger = require('morgan');
-var flash = require('connect-flash')
-var passport = require('passport')
-var hbs = require('express-handlebars')
-var db = require('./configs/connection')
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser')
+const fileUpload = require('express-fileupload')
+const logger = require('morgan');
+const flash = require('connect-flash')
+const passport = require('passport')
+const hbs = require('express-handlebars')
+const db = require('./configs/connection')
 const session = require('express-session')
+const hbsHelper = require('./helpers/hbsHelper')
 
 //log create
 require('simple-node-logger').createSimpleFileLogger('project.log');
@@ -33,7 +34,15 @@ db.connect((err) => {
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-app.engine('hbs', hbs({ layoutDir: __dirname + '/views/layouts/', defaultLayout: 'layout', partialsDir: __dirname + '/views/partials/', extname: 'hbs' }))
+app.engine('hbs',
+    hbs({
+        layoutDir: __dirname + '/views/layouts/',
+        defaultLayout: 'layout',
+        partialsDir: __dirname + '/views/partials/',
+        extname: 'hbs',
+        helpers: hbsHelper
+    })
+)
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use(express.json());
@@ -60,7 +69,7 @@ app.use(function (req, res, next) {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
-    res.locals.org=process.env.org
+    res.locals.org = process.env.org
     if (req.user) {
         if (req.user.type === 'user')
             res.locals.user = req.user

@@ -14,10 +14,8 @@ body{
 }
 
 .widget-container{
-    /* flex-grow: 1; */
     margin: 1rem;
     overflow: hidden;
-    /* z-index: 10; */
     position: relative;
     /* margin: 150px auto; */
     height: 90px;

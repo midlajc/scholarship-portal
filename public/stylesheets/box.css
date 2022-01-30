@@ -13,7 +13,24 @@ body{
 }
 @media (min-width: 993px) {
     .box{
-        margin-left:20rem;
-        width:calc(100% - 22rem)
+        margin-left:19rem;
+        width:calc(100% - 21rem)
+    }   
+}
+
+.box2{
+    margin: 0rem;
+    width: calc(100% - 4rem);
+    padding: 0rem;
+    position: relative;
+    /* background-color: white; */
+    /* border: 1px rgb(199, 199, 199) solid; */
+    /* border-radius: .3rem; */
+    /* box-shadow: 0 3px 10px rgb(0 0 0 / 0.2); */
+}
+@media (min-width: 993px) {
+    .box2{
+        margin-left:19rem;
+        width:calc(100% - 21rem)
     }   
 }
