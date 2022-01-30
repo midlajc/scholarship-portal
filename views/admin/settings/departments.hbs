@@ -1,0 +1,18 @@
+<div class="box">
+    <h2 class="text-center">DEPARTMENTS</h2>
+    <div class="widget">
+        {{#each departments}}
+        <a href="/admin/settings/department?id={{this.ID}}" class="widget-container">
+            <div class="background">
+                <div class="Circle1"></div>
+                <div class="Circle2"></div>
+                <div class="Circle3"></div>
+                <div class="content">
+                    {{!-- <h1 class="Condition"><i class="fa fa-users"></i></h1> --}}
+                    <h4 class="Temp" style="font-size: 18px;">{{this.DEPARTMENTNAME}}</h4>
+                </div>
+            </div>
+        </a>
+        {{/each}}
+    </div>
+</div>
