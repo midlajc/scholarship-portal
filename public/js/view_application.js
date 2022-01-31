@@ -59,21 +59,22 @@ let viewApplication = (applicationNo) => {
 }
 
 $(document).ready(function () {
-    let table = $('#table').DataTable({
-        dom: 'Bfrtip',
+    var table = $('#table').DataTable({
+        lengthChange: false,
         lengthMenu: [
-            [5, 10, 25, 50, -1],
-            ['5 rows', '10 rows', '25 rows', '50 rows', 'Show all']
+            [10, 25, 50, -1],
+            ['10 rows', '25 rows', '50 rows', 'Show all']
         ],
+        // buttons: [ 'copy', 'excel', 'pdf', 'colvis' ]
         buttons: [
             {
                 extend: 'pageLength',
-                className: 'btn btn-dark',
+                className: 'btn-dark',
             },
             {
                 extend: 'excel',
                 text: '<i class="fa fa-file-excel-o"></i> Excel',
-                className: 'btn btn-dark',
+                className: 'btn-dark',
                 exportOptions: {
                     columns: 'th:not(:last-child)'
                 }
@@ -81,7 +82,7 @@ $(document).ready(function () {
             {
                 extend: 'pdf',
                 text: '<i class="fa fa-file-pdf-o"></i> PDF',
-                className: 'btn btn-dark',
+                className: 'btn-dark',
                 exportOptions: {
                     columns: 'th:not(:last-child)'
                 }
@@ -89,12 +90,66 @@ $(document).ready(function () {
             {
                 extend: 'print',
                 text: '<i class="fa fa-print"></i> Print',
-                className: 'btn btn-dark',
+                className: 'btn-dark',
                 exportOptions: {
                     columns: 'th:not(:last-child)'
                 }
+            },
+            {
+                extend: 'colvis',
+                // text: '<i class="fa fa-print"></i> Print',
+                className: 'btn-dark',
             }
         ]
     });
+
+    table.buttons().container()
+        .appendTo('#table_wrapper .col-md-6:eq(0)');
+    // let table = $('#table').DataTable({
+    // dom: 'Bfrtip',
+    // lengthMenu: [
+    //     [10, 25, 50, -1],
+    //     ['10 rows', '25 rows', '50 rows', 'Show all']
+    // ],
+    // buttons: [ 'copy', 'excel', 'pdf', 'colvis' ]
+
+    //     {
+    //         extend: 'pageLength',
+    //         className: 'btn-dark',
+    //     },
+    // buttons: [
+    //     {
+    //         extend: 'excel',
+    //         text: '<i class="fa fa-file-excel-o"></i> Excel',
+    //         className: 'btn-dark',
+    //         exportOptions: {
+    //             columns: 'th:not(:last-child)'
+    //         }
+    //     },
+    //     {
+    //         extend: 'pdf',
+    //         text: '<i class="fa fa-file-pdf-o"></i> PDF',
+    //         className: 'btn-dark',
+    //         exportOptions: {
+    //             columns: 'th:not(:last-child)'
+    //         }
+    //     },
+    //     {
+    //         extend: 'print',
+    //         text: '<i class="fa fa-print"></i> Print',
+    //         className: 'btn-dark',
+    //         exportOptions: {
+    //             columns: 'th:not(:last-child)'
+    //         }
+    //     },
+    //     {
+    //         extend: 'colvis',
+    //         // text: '<i class="fa fa-print"></i> Print',
+    //         className: 'btn-dark',
+    //     }
+    // ]
+    // });
+    // table.buttons().container()
+    // .appendTo( $('div.column.is-half', table.table().container()).eq(0) );
 });
 
