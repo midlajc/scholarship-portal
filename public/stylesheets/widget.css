@@ -8,18 +8,18 @@ body{
 
 .widget{
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     flex-wrap: wrap;
+    /* align-content: center; */
 }
 
 .widget-container{
     margin: 1rem;
     overflow: hidden;
-    /* z-index: 10; */
     position: relative;
     /* margin: 150px auto; */
     height: 90px;
-    width: 300px;
+    width: 290px;
     background-color: #ed7262;
     border-radius: 10px;
     box-shadow: 2px 2px 1px rgba(0,0,0,0.2);

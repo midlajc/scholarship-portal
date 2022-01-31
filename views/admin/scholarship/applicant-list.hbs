@@ -333,11 +333,12 @@
 
 
 <div class="box p-2">
-  <h2 class="text-center">Applicant List</h2>
+  <h2 class="text-center mb-4 mt-2">APPLICANT LIST</h2>
   <div class="p-1 table-responsive">
-    <table class="table table-striped" id="table">
+    <table class="table table-striped table-bordered" id="table">
       <thead>
         <tr>
+          <th>Sl No</th>
           <th>Application No</th>
           <th>Name</th>
           <th>Mobile</th>
@@ -350,6 +351,7 @@
       <tbody>
         {{#each data}}
         <tr id="{{this.applicationNo}}">
+          <td>{{inc @index}}</td>
           <td>{{this.applicationNo}}</td>
           <td>{{this.user.name}}</td>
           <td>{{this.user.mobile}}</td>

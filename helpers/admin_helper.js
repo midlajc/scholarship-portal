@@ -947,6 +947,16 @@ module.exports = {
                 reject(err)
             })
         })
+    },
+    getDepartments: () => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.DEPARTMENTS_COLLECTION)
+            .find().toArray().then(departments=>{
+                resolve(departments)
+            }).catch(err=>{
+                reject(err)
+            })
+        })
     }
 }
 

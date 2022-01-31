@@ -59,16 +59,97 @@ let viewApplication = (applicationNo) => {
 }
 
 $(document).ready(function () {
-    $('#table').DataTable({
-        dom: 'Bfrtip',
+    var table = $('#table').DataTable({
+        lengthChange: false,
         lengthMenu: [
             [10, 25, 50, -1],
             ['10 rows', '25 rows', '50 rows', 'Show all']
         ],
+        // buttons: [ 'copy', 'excel', 'pdf', 'colvis' ]
         buttons: [
-            'pageLength', 'excel', 'pdf', 'print'
+            {
+                extend: 'pageLength',
+                className: 'btn-dark',
+            },
+            {
+                extend: 'excel',
+                text: '<i class="fa fa-file-excel-o"></i> Excel',
+                className: 'btn-dark',
+                exportOptions: {
+                    columns: 'th:not(:last-child)'
+                }
+            },
+            {
+                extend: 'pdf',
+                text: '<i class="fa fa-file-pdf-o"></i> PDF',
+                className: 'btn-dark',
+                exportOptions: {
+                    columns: 'th:not(:last-child)'
+                }
+            },
+            {
+                extend: 'print',
+                text: '<i class="fa fa-print"></i> Print',
+                className: 'btn-dark',
+                exportOptions: {
+                    columns: 'th:not(:last-child)'
+                }
+            },
+            {
+                extend: 'colvis',
+                // text: '<i class="fa fa-print"></i> Print',
+                className: 'btn-dark',
+            }
         ]
-    }
-    );
+    });
+
+    table.buttons().container()
+        .appendTo('#table_wrapper .col-md-6:eq(0)');
+    // let table = $('#table').DataTable({
+    // dom: 'Bfrtip',
+    // lengthMenu: [
+    //     [10, 25, 50, -1],
+    //     ['10 rows', '25 rows', '50 rows', 'Show all']
+    // ],
+    // buttons: [ 'copy', 'excel', 'pdf', 'colvis' ]
+
+    //     {
+    //         extend: 'pageLength',
+    //         className: 'btn-dark',
+    //     },
+    // buttons: [
+    //     {
+    //         extend: 'excel',
+    //         text: '<i class="fa fa-file-excel-o"></i> Excel',
+    //         className: 'btn-dark',
+    //         exportOptions: {
+    //             columns: 'th:not(:last-child)'
+    //         }
+    //     },
+    //     {
+    //         extend: 'pdf',
+    //         text: '<i class="fa fa-file-pdf-o"></i> PDF',
+    //         className: 'btn-dark',
+    //         exportOptions: {
+    //             columns: 'th:not(:last-child)'
+    //         }
+    //     },
+    //     {
+    //         extend: 'print',
+    //         text: '<i class="fa fa-print"></i> Print',
+    //         className: 'btn-dark',
+    //         exportOptions: {
+    //             columns: 'th:not(:last-child)'
+    //         }
+    //     },
+    //     {
+    //         extend: 'colvis',
+    //         // text: '<i class="fa fa-print"></i> Print',
+    //         className: 'btn-dark',
+    //     }
+    // ]
+    // });
+    // table.buttons().container()
+    // .appendTo( $('div.column.is-half', table.table().container()).eq(0) );
 });
 

@@ -247,6 +247,16 @@ router.get('/settings/academic-year', auth.ensureAdminAuthenticated,
         })
     })
 
+router.get('/settings/departments', auth.ensureAdminAuthenticated,
+    (req, res) => {
+        adminHelper.getDepartments().then(departments => {
+            res.render('admin/settings/departments', { departments })
+        }).catch(err => {
+            console.log(err);
+            req.flash('error_msg', "Error Occured Try Again")
+        })
+    })
+
 router.get('/settings/send-email', auth.ensureAdminAuthenticated,
     (req, res) => {
         res.render('admin/settings/send-email')
