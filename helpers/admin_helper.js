@@ -951,11 +951,22 @@ module.exports = {
     getDepartments: () => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.DEPARTMENTS_COLLECTION)
-            .find().toArray().then(departments=>{
-                resolve(departments)
-            }).catch(err=>{
-                reject(err)
-            })
+                .find().toArray().then(departments => {
+                    resolve(departments)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getCourses: (departmentId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.COURSES_COLLECTION)
+                .find({ DEPARTMENTID: parseInt(departmentId) })
+                .toArray().then(courses => {
+                    resolve(courses)
+                }).catch(err => {
+                    reject(err)
+                })
         })
     }
 }

@@ -257,6 +257,25 @@ router.get('/settings/departments', auth.ensureAdminAuthenticated,
         })
     })
 
+router.get('/settings/courses', auth.ensureAdminAuthenticated,
+    async (req, res) => {
+        let departmentId = req.query.id
+        let department = await Helper.getDepartment(departmentId)
+        adminHelper.getCourses(departmentId).then(courses => {
+            res.render(
+                'admin/settings/courses',
+                {
+                    courses,
+                    departmentName: department.DEPARTMENTNAME
+                }
+            )
+        }).catch(err => {
+            console.log(err);
+            req.flash('error_msg', "Error Occured Try Again")
+            res.render('admin/settings/courses')
+        })
+    })
+
 router.get('/settings/send-email', auth.ensureAdminAuthenticated,
     (req, res) => {
         res.render('admin/settings/send-email')

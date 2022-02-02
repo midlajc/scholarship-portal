@@ -1,23 +1,24 @@
 <div class="box">
-    <h2 class="text-center mb-31">DEPARTMENTS</h2>
+    <h2 class="text-center mb-31">COURSES</h2>
+    <h5 class="text-center mb-31">{{departmentName}}</h5>
     <div>
         <table class="table table-striped" id="table">
             <thead>
                 <tr>
-                    <th>Department Name</th>
-                    {{!-- <th>Course Code</th> --}}
+                    <th>Course Name</th>
+                    <th>Course Code</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                {{#each departments}}
+                {{#each courses}}
                 <tr>
-                    <td>{{this.DEPARTMENTNAME}}</td>
-                    {{!-- <td>{{this.COURSECODE}}</td> --}}
+                    <td>{{this.COURSENAME}}</td>
+                    <td>{{this.COURSECODE}}</td>
                     <td>
-                        <a class="btn w3-dark-grey" href="/admin/settings/courses?id={{this.ID}}">
-                            Courses </a>
-                        <button class="btn w3-red" onclick="deleteMember('{{this.ID}}')"><i
+                        <a class="btn w3-dark-grey" href="/admin/settings/Batches?id={{this.ID}}">
+                            Batches </a>
+                        <button class="btn w3-red" onclick="deleteMember('{{this._id}}')"><i
                                 class="fas fa-trash"></i></button>
                     </td>
                 </tr>
@@ -31,6 +32,7 @@
     $(document).ready(function () {
         $('#table').DataTable({
             "columns": [
+                null,
                 null,
                 { "width": "120px" },
             ]

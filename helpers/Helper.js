@@ -304,5 +304,16 @@ module.exports = {
           reject(err)
         })
     })
+  },
+  getDepartment: (departmentId) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.DEPARTMENTS_COLLECTION)
+        .findOne({ ID: parseInt(departmentId) })
+        .then(department => {
+          resolve(department)
+        }).catch(err => {
+          reject(err)
+        })
+    })
   }
 }
