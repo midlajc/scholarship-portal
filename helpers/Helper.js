@@ -315,5 +315,16 @@ module.exports = {
           reject(err)
         })
     })
+  },
+  getCourse: (courseId) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.COURSES_COLLECTION)
+        .findOne({ ID: parseInt(courseId) })
+        .then(course => {
+          resolve(course)
+        }).catch(err => {
+          reject(err)
+        })
+    })
   }
 }

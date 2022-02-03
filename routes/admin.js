@@ -276,6 +276,25 @@ router.get('/settings/courses', auth.ensureAdminAuthenticated,
         })
     })
 
+router.get('/settings/batches', auth.ensureAdminAuthenticated,
+    async (req, res) => {
+        let courseId = req.query.id
+        let course = await Helper.getCourse(courseId)
+        adminHelper.getBatches(courseId).then(batches => {
+            res.render(
+                'admin/settings/batches',
+                {
+                    batches,
+                    courseName: course.COURSENAME
+                }
+            )
+        }).catch(err => {
+            console.log(err);
+            req.flash('error_msg', "Error Occured Try Again")
+            res.render('admin/settings/batches')
+        })
+    })
+
 router.get('/settings/send-email', auth.ensureAdminAuthenticated,
     (req, res) => {
         res.render('admin/settings/send-email')
