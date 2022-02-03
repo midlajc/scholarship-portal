@@ -1,23 +1,27 @@
 <div class="box">
-    <h2 class="text-center mb-31">COURSES</h2>
-    <h5 class="text-center mb-31">{{departmentName}}</h5>
+    <h2 class="text-center mb-31">BATCHES</h2>
+    <h5 class="text-center mb-31">{{courseName}}</h5>
     <div>
         <table class="table table-striped" id="table">
             <thead>
                 <tr>
-                    <th>Course Name</th>
-                    <th>Course Code</th>
+                    <th>Batch Name</th>
+                    <th>Batch Code</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                {{#each courses}}
+                {{#each batches}}
                 <tr>
-                    <td>{{this.COURSENAME}}</td>
-                    <td>{{this.COURSECODE}}</td>
+                    <td>{{this.BATCHNAME}}</td>
+                    <td>{{this.BATCHCODE}}</td>
+                    <td>{{this.STARTDATE}}</td>
+                    <td>{{this.LASTDATE}}</td>
                     <td>
-                        <a class="btn w3-dark-grey" href="/admin/settings/batches?id={{this.ID}}">
-                            Batches </a>
+                        <a class="btn w3-dark-grey" href="/admin/settings/students?id={{this.ID}}">
+                            Students </a>
                         <button class="btn w3-red" onclick="deleteMember('{{this._id}}')"><i
                                 class="fas fa-trash"></i></button>
                     </td>
@@ -32,6 +36,8 @@
     $(document).ready(function () {
         $('#table').DataTable({
             "columns": [
+                null,
+                null,
                 null,
                 null,
                 { "width": "120px" },

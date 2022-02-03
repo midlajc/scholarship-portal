@@ -968,6 +968,39 @@ module.exports = {
                     reject(err)
                 })
         })
+    },
+    getBatches: (courseId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.BATCHES_COLLECTION)
+                .find(
+                    {
+                        COURSEID: parseInt(courseId)
+                    }
+                ).project(
+                    {
+                        ID: 1,
+                        BATCHNAME: 1,
+                        BATCHCODE: 1,
+                        STARTDATE: {
+                            '$dateToString': {
+                                'format': '%d-%m-%Y',
+                                'date': '$STARTDATE'
+                            }
+                        },
+                        LASTDATE: {
+                            '$dateToString': {
+                                'format': '%d-%m-%Y',
+                                'date': '$LASTDATE'
+                            }
+                        },
+                        COURSEID: 1
+                    }
+                ).toArray().then(batches => {
+                    resolve(batches)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
     }
 }
 
