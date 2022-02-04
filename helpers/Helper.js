@@ -304,5 +304,38 @@ module.exports = {
           reject(err)
         })
     })
+  },
+  getDepartment: (departmentId) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.DEPARTMENTS_COLLECTION)
+        .findOne({ ID: parseInt(departmentId) })
+        .then(department => {
+          resolve(department)
+        }).catch(err => {
+          reject(err)
+        })
+    })
+  },
+  getCourse: (courseId) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.COURSES_COLLECTION)
+        .findOne({ ID: parseInt(courseId) })
+        .then(course => {
+          resolve(course)
+        }).catch(err => {
+          reject(err)
+        })
+    })
+  },
+  getBatch: (batchId) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.BATCHES_COLLECTION)
+        .findOne({ ID: parseInt(batchId) })
+        .then(batch => {
+          resolve(batch)
+        }).catch(err => {
+          reject(err)
+        })
+    })
   }
 }

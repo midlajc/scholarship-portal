@@ -1,0 +1,50 @@
+<div class="box">
+    <h2 class="text-center mb-31">STUDENTS</h2>
+    <h5 class="text-center mb-31">{{batchName}}</h5>
+    <div>
+        <table class="table table-striped" id="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>DOB</th>
+                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each students}}
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td>{{this.gender}}</td>
+                    <td>{{this.dob}}</td>
+                    <td>{{this.mobile}}</td>
+                    <td>{{this.email}}</td>
+                    <td>
+                        {{!-- <a class="btn w3-dark-grey" href="/admin/settings/students?id={{this.ID}}">
+                            Students </a> --}}
+                        <button class="btn w3-red" onclick="deleteMember('{{this._id}}')"><i
+                                class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#table').DataTable({
+            "columns": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                { "width": "50px" },
+            ]
+        });
+    });
+</script>

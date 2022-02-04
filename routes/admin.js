@@ -257,6 +257,63 @@ router.get('/settings/departments', auth.ensureAdminAuthenticated,
         })
     })
 
+router.get('/settings/courses', auth.ensureAdminAuthenticated,
+    async (req, res) => {
+        let departmentId = req.query.id
+        let department = await Helper.getDepartment(departmentId)
+        adminHelper.getCourses(departmentId).then(courses => {
+            res.render(
+                'admin/settings/courses',
+                {
+                    courses,
+                    departmentName: department.DEPARTMENTNAME
+                }
+            )
+        }).catch(err => {
+            console.log(err);
+            req.flash('error_msg', "Error Occured Try Again")
+            res.render('admin/settings/courses')
+        })
+    })
+
+router.get('/settings/batches', auth.ensureAdminAuthenticated,
+    async (req, res) => {
+        let courseId = req.query.id
+        let course = await Helper.getCourse(courseId)
+        adminHelper.getBatches(courseId).then(batches => {
+            res.render(
+                'admin/settings/batches',
+                {
+                    batches,
+                    courseName: course.COURSENAME
+                }
+            )
+        }).catch(err => {
+            console.log(err);
+            req.flash('error_msg', "Error Occured Try Again")
+            res.render('admin/settings/batches')
+        })
+    })
+
+router.get('/settings/students', auth.ensureAdminAuthenticated,
+    async (req, res) => {
+        let batchId = req.query.id
+        let batch = await Helper.getBatch(batchId)
+        adminHelper.getStudents(batchId).then(students => {
+            res.render(
+                'admin/settings/students',
+                {
+                    students,
+                    batchName: batch.BATCHNAME
+                }
+            )
+        }).catch(err => {
+            console.log(err);
+            req.flash('error_msg', "Error Occured Try Again")
+            res.render('admin/settings/students')
+        })
+    })
+
 router.get('/settings/send-email', auth.ensureAdminAuthenticated,
     (req, res) => {
         res.render('admin/settings/send-email')

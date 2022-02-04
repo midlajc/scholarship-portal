@@ -951,11 +951,95 @@ module.exports = {
     getDepartments: () => {
         return new Promise((resolve, reject) => {
             db.get().collection(collection.DEPARTMENTS_COLLECTION)
-            .find().toArray().then(departments=>{
-                resolve(departments)
-            }).catch(err=>{
-                reject(err)
-            })
+                .find().toArray().then(departments => {
+                    resolve(departments)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getCourses: (departmentId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.COURSES_COLLECTION)
+                .find({ DEPARTMENTID: parseInt(departmentId) })
+                .toArray().then(courses => {
+                    resolve(courses)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getBatches: (courseId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.BATCHES_COLLECTION)
+                .find(
+                    {
+                        COURSEID: parseInt(courseId)
+                    }
+                ).project(
+                    {
+                        ID: 1,
+                        BATCHNAME: 1,
+                        BATCHCODE: 1,
+                        STARTDATE: {
+                            '$dateToString': {
+                                'format': '%d-%m-%Y',
+                                'date': '$STARTDATE'
+                            }
+                        },
+                        LASTDATE: {
+                            '$dateToString': {
+                                'format': '%d-%m-%Y',
+                                'date': '$LASTDATE'
+                            }
+                        },
+                        COURSEID: 1
+                    }
+                ).toArray().then(batches => {
+                    resolve(batches)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    getStudents: (batchId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION)
+                .aggregate([
+                    {
+                        '$match': {
+                            'batchId': parseInt(batchId)
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'gender',
+                            'localField': 'genderId',
+                            'foreignField': 'ID',
+                            'as': 'gender'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$gender'
+                        }
+                    }, {
+                        '$project': {
+                            'name': 1,
+                            'dob': {
+                                '$dateToString': {
+                                    'format': '%d-%m-%Y',
+                                    'date': '$dob'
+                                }
+                            },
+                            'gender': '$gender.genderName',
+                            'mobile': 1,
+                            'email': 1
+                        }
+                    }
+                ]).toArray().then(students => {
+                    resolve(students)
+                }).catch(err => {
+                    reject(err)
+                })
         })
     }
 }
