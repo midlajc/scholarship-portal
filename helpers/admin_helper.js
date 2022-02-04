@@ -1001,6 +1001,46 @@ module.exports = {
                     reject(err)
                 })
         })
+    },
+    getStudents: (batchId) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.USER_COLLECTION)
+                .aggregate([
+                    {
+                        '$match': {
+                            'batchId': parseInt(batchId)
+                        }
+                    }, {
+                        '$lookup': {
+                            'from': 'gender',
+                            'localField': 'genderId',
+                            'foreignField': 'ID',
+                            'as': 'gender'
+                        }
+                    }, {
+                        '$unwind': {
+                            'path': '$gender'
+                        }
+                    }, {
+                        '$project': {
+                            'name': 1,
+                            'dob': {
+                                '$dateToString': {
+                                    'format': '%d-%m-%Y',
+                                    'date': '$dob'
+                                }
+                            },
+                            'gender': '$gender.genderName',
+                            'mobile': 1,
+                            'email': 1
+                        }
+                    }
+                ]).toArray().then(students => {
+                    resolve(students)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
     }
 }
 

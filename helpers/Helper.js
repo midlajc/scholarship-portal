@@ -326,5 +326,16 @@ module.exports = {
           reject(err)
         })
     })
+  },
+  getBatch: (batchId) => {
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.BATCHES_COLLECTION)
+        .findOne({ ID: parseInt(batchId) })
+        .then(batch => {
+          resolve(batch)
+        }).catch(err => {
+          reject(err)
+        })
+    })
   }
 }

@@ -295,6 +295,25 @@ router.get('/settings/batches', auth.ensureAdminAuthenticated,
         })
     })
 
+router.get('/settings/students', auth.ensureAdminAuthenticated,
+    async (req, res) => {
+        let batchId = req.query.id
+        let batch = await Helper.getBatch(batchId)
+        adminHelper.getStudents(batchId).then(students => {
+            res.render(
+                'admin/settings/students',
+                {
+                    students,
+                    batchName: batch.BATCHNAME
+                }
+            )
+        }).catch(err => {
+            console.log(err);
+            req.flash('error_msg', "Error Occured Try Again")
+            res.render('admin/settings/students')
+        })
+    })
+
 router.get('/settings/send-email', auth.ensureAdminAuthenticated,
     (req, res) => {
         res.render('admin/settings/send-email')
