@@ -6,6 +6,8 @@ var nodeMailer = require('./nodeMailer')
 const { ObjectID } = require('mongodb')
 const Helper = require('./Helper')
 const { resolve, reject } = require('promise')
+const dbTrigger = require('./dbTrigger')
+const { response } = require('express')
 
 module.exports = {
     userRegistration: (data) => {
@@ -953,6 +955,20 @@ module.exports = {
             db.get().collection(collection.DEPARTMENTS_COLLECTION)
                 .find().toArray().then(departments => {
                     resolve(departments)
+                }).catch(err => {
+                    reject(err)
+                })
+        })
+    },
+    addDepartment: (data) => {
+        return new Promise(async (resolve, reject) => {
+            db.get().collection(collection.DEPARTMENTS_COLLECTION)
+                .insertOne({
+                    ID: await dbTrigger.generateDepartmentId(collection),
+                    DEPARTMENTNAME: data.departmentName,
+                    DEPARTMENTCODE: data.departmentCode
+                }).then(response => {
+                    resolve()
                 }).catch(err => {
                     reject(err)
                 })
