@@ -257,6 +257,16 @@ router.get('/settings/departments', auth.ensureAdminAuthenticated,
         })
     })
 
+router.put('/settings/add-department', auth.ensureAdminAuthenticated,
+    (req, res) => {
+        adminHelper.addDepartment(req.body).then(response => {
+            res.json({ status: true })
+        }).catch(err => {
+            console.log(err);
+            res.json({ status: false, err: err })
+        })
+    })
+
 router.get('/settings/courses', auth.ensureAdminAuthenticated,
     async (req, res) => {
         let departmentId = req.query.id
